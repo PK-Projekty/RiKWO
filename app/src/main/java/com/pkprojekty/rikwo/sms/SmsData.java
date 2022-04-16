@@ -1,9 +1,9 @@
 package com.pkprojekty.rikwo.sms;
 
-public class Sms {
+public class SmsData {
     /**
      * Struktura danych zawierająca informacje o wiadomości sms
-     * https://developer.android.com/reference/android/provider/Telephony.TextBasedSmsColumns
+     * developer.android.com/reference/android/provider/Telephony.TextBasedSmsColumns
      */
     public String Address;              // The address of the other party.
     public String Body;                 // The body of the message.
