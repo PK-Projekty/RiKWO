@@ -1,5 +1,6 @@
 package com.pkprojekty.rikwo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pkprojekty.rikwo.CallLog.BackupCallLog;
+import com.pkprojekty.rikwo.Entities.CallData;
 import com.pkprojekty.rikwo.Sms.BackupSms;
 import com.pkprojekty.rikwo.Entities.SmsData;
 
@@ -28,35 +31,56 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        boolean ReadSmsPermissionGranted = false;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_SMS)) {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_SMS}, 1);
-            } else {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_SMS}, 1);
-            }
+            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_SMS}, 1);
         } else {
             /* do nothing */
             /* permission is granted */
+            ReadSmsPermissionGranted = true;
+
+        }
+
+        boolean ReadCallLogsPermissionGranted = false;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_CALL_LOG}, 1);
+        } else {
+            /* do nothing */
+            /* permission is granted */
+            ReadCallLogsPermissionGranted = true;
+        }
+
+
+        if (ReadSmsPermissionGranted && ReadCallLogsPermissionGranted) {
             backup();
         }
     }
 
     /* And a method to override */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(MainActivity.this,
-                            Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
+        if (requestCode == 1) {
+            // READ_SMS permission toast
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
                 }
-                break;
+            } else {
+                Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
+            }
+            // READ_CALL_LOG permission toast
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -70,8 +94,29 @@ public class MainActivity extends AppCompatActivity {
         int countMessagesInOutbox = backupSms.countMessagesInOutbox();
         int countMessagesInSent = backupSms.countMessagesInSent();
 
-        TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setText(String.valueOf(countMessagesInSent));
+        TextView textView1 = findViewById(R.id.textView1);
+        String txt1 = textView1.getText() + " " + countMessagesInDraft;
+        textView1.setText(txt1);
+        TextView textView2 = findViewById(R.id.textView2);
+        String txt2 = textView2.getText() + " " + countMessagesInInbox;
+        textView2.setText(txt2);
+        TextView textView3 = findViewById(R.id.textView3);
+        String txt3 = textView3.getText() + " " + countMessagesInOutbox;
+        textView3.setText(txt3);
+        TextView textView4 = findViewById(R.id.textView4);
+        String txt4 = textView4.getText() + " " + countMessagesInSent;
+        textView4.setText(txt4);
+
+        BackupCallLog backupCallLog = new BackupCallLog(this);
+
+        List<CallData> callData = backupCallLog.getAllCalls();
+
+        String countCallsInCallLog = backupCallLog.countCallLog();
+
+        TextView textView5 = findViewById(R.id.textView5);
+        String txt5 = textView5.getText() + " " + countCallsInCallLog;
+        textView5.setText(txt5);
+
     }
 
     public void EmailButton () {

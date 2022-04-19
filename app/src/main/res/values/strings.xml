@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">RiKWO</string>
-    <string name="textView">Hello World!</string>
+    <string name="textView1">Sms Drafts:</string>
+    <string name="textView2">Sms Inbox:</string>
+    <string name="textView3">Sms Outbox:</string>
+    <string name="textView4">Sms Sent:</string>
+    <string name="textView5">Calls:</string>
 </resources>

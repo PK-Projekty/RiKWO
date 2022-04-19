@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.os.Build;
 import android.provider.CallLog;
 
-import androidx.annotation.RequiresApi;
-
 import com.pkprojekty.rikwo.Entities.CallData;
 
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ public class BackupCallLog {
         this.context = context;
     }
 
-    private List<CallData> getAllCalls() {
+    public List<CallData> getAllCalls() {
         List<CallData> callsDataList = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         Cursor query = contentResolver.query(
@@ -35,6 +33,11 @@ public class BackupCallLog {
                 while (query.moveToNext()) {
                     CallData callData = new CallData();
 
+                    callData.Id = query.getString(
+                            query.getColumnIndexOrThrow(
+                                    CallLog.Calls._ID
+                            )
+                    );
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         callData.BlockReason = query.getString(
                                 query.getColumnIndexOrThrow(
@@ -108,16 +111,8 @@ public class BackupCallLog {
                                 )
                         );
                     }
-                    callData.ContentItemType = query.getString(
-                            query.getColumnIndexOrThrow(
-                                    CallLog.Calls.CONTENT_ITEM_TYPE
-                            )
-                    );
-                    callData.ContentType = query.getString(
-                            query.getColumnIndexOrThrow(
-                                    CallLog.Calls.CONTENT_TYPE
-                            )
-                    );
+                    callData.ContentItemType = CallLog.Calls.CONTENT_ITEM_TYPE;
+                    callData.ContentType = CallLog.Calls.CONTENT_TYPE;
                     callData.CountryIso = query.getString(
                             query.getColumnIndexOrThrow(
                                     CallLog.Calls.COUNTRY_ISO
@@ -133,21 +128,13 @@ public class BackupCallLog {
                                     CallLog.Calls.DATE
                             )
                     );
-                    callData.DefaultSortOrder = query.getString(
-                            query.getColumnIndexOrThrow(
-                                    CallLog.Calls.DEFAULT_SORT_ORDER
-                            )
-                    );
+                    callData.DefaultSortOrder = CallLog.Calls.DEFAULT_SORT_ORDER;
                     callData.Duration = query.getString(
                             query.getColumnIndexOrThrow(
                                     CallLog.Calls.DURATION
                             )
                     );
-                    callData.ExtraCallTypeFilter = query.getString(
-                            query.getColumnIndexOrThrow(
-                                    CallLog.Calls.EXTRA_CALL_TYPE_FILTER
-                            )
-                    );
+                    callData.ExtraCallTypeFilter = CallLog.Calls.EXTRA_CALL_TYPE_FILTER;
                     callData.Features = query.getString(
                             query.getColumnIndexOrThrow(
                                     CallLog.Calls.FEATURES
@@ -168,11 +155,7 @@ public class BackupCallLog {
                                     CallLog.Calls.LAST_MODIFIED
                             )
                     );
-                    callData.LimitParamKey = query.getString(
-                            query.getColumnIndexOrThrow(
-                                    CallLog.Calls.LIMIT_PARAM_KEY
-                            )
-                    );
+                    callData.LimitParamKey = CallLog.Calls.LIMIT_PARAM_KEY;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         callData.Location = query.getString(
                                 query.getColumnIndexOrThrow(
@@ -202,11 +185,7 @@ public class BackupCallLog {
                                     CallLog.Calls.NUMBER_PRESENTATION
                             )
                     );
-                    callData.OffsetParamKey = query.getString(
-                            query.getColumnIndexOrThrow(
-                                    CallLog.Calls.OFFSET_PARAM_KEY
-                            )
-                    );
+                    callData.OffsetParamKey = CallLog.Calls.OFFSET_PARAM_KEY;
                     callData.PhoneAccountComponentName = query.getString(
                             query.getColumnIndexOrThrow(
                                     CallLog.Calls.PHONE_ACCOUNT_COMPONENT_NAME
@@ -256,252 +235,92 @@ public class BackupCallLog {
                                     CallLog.Calls.VOICEMAIL_URI
                             )
                     );
-                    callData.AnsweredExternallyType = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.ANSWERED_EXTERNALLY_TYPE)
-                            )
-                    );
-                    callData.BlockedType = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.BLOCKED_TYPE)
-                            )
-                    );
+                    callData.AnsweredExternallyType = CallLog.Calls.ANSWERED_EXTERNALLY_TYPE;
+                    callData.BlockedType = CallLog.Calls.BLOCKED_TYPE;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        callData.BlockReasonBlockedNumber = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.BLOCK_REASON_BLOCKED_NUMBER)
-                                )
-                        );
+                        callData.BlockReasonBlockedNumber = CallLog.Calls.BLOCK_REASON_BLOCKED_NUMBER;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        callData.BlockReasonCallScreeningService = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.BLOCK_REASON_CALL_SCREENING_SERVICE)
-                                )
-                        );
+                        callData.BlockReasonCallScreeningService = CallLog.Calls.BLOCK_REASON_CALL_SCREENING_SERVICE;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        callData.BlockReasonDirectToVoicemail = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.BLOCK_REASON_DIRECT_TO_VOICEMAIL)
-                                )
-                        );
+                        callData.BlockReasonDirectToVoicemail = CallLog.Calls.BLOCK_REASON_DIRECT_TO_VOICEMAIL;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        callData.BlockReasonNotBlocked = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.BLOCK_REASON_NOT_BLOCKED)
-                                )
-                        );
+                        callData.BlockReasonNotBlocked = CallLog.Calls.BLOCK_REASON_NOT_BLOCKED;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        callData.BlockReasonNotInContacts = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.BLOCK_REASON_NOT_IN_CONTACTS)
-                                )
-                        );
+                        callData.BlockReasonNotInContacts = CallLog.Calls.BLOCK_REASON_NOT_IN_CONTACTS;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        callData.BlockReasonPayPhone = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.BLOCK_REASON_PAY_PHONE)
-                                )
-                        );
+                        callData.BlockReasonPayPhone = CallLog.Calls.BLOCK_REASON_PAY_PHONE;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        callData.BlockReasonRestrictedNumber = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.BLOCK_REASON_RESTRICTED_NUMBER)
-                                )
-                        );
+                        callData.BlockReasonRestrictedNumber = CallLog.Calls.BLOCK_REASON_RESTRICTED_NUMBER;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        callData.BlockReasonUnknownNumber = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.BLOCK_REASON_UNKNOWN_NUMBER)
-                                )
-                        );
+                        callData.BlockReasonUnknownNumber = CallLog.Calls.BLOCK_REASON_UNKNOWN_NUMBER;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        callData.FeaturesAssistedDialingUsed = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.FEATURES_ASSISTED_DIALING_USED)
-                                )
-                        );
+                        callData.FeaturesAssistedDialingUsed = CallLog.Calls.FEATURES_ASSISTED_DIALING_USED;
                     }
-                    callData.FeaturesHdCall = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.FEATURES_HD_CALL)
-                            )
-                    );
-                    callData.FeaturePulledExternally = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.FEATURES_PULLED_EXTERNALLY)
-                            )
-                    );
-                    callData.FeatureRtt = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.FEATURES_RTT)
-                            )
-                    );
-                    callData.FeaturesVideo = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.FEATURES_VIDEO)
-                            )
-                    );
+                    callData.FeaturesHdCall = CallLog.Calls.FEATURES_HD_CALL;
+                    callData.FeaturePulledExternally = CallLog.Calls.FEATURES_PULLED_EXTERNALLY;
+                    callData.FeatureRtt = CallLog.Calls.FEATURES_RTT;
+                    callData.FeaturesVideo = CallLog.Calls.FEATURES_VIDEO;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        callData.FeatureVolte = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.FEATURES_VOLTE)
-                                )
-                        );
+                        callData.FeatureVolte = CallLog.Calls.FEATURES_VOLTE;
                     }
-                    callData.FeatureWifi = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.FEATURES_WIFI)
-                            )
-                    );
-                    callData.IncomingType = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.INCOMING_TYPE)
-                            )
-                    );
-                    callData.MissedType = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.MISSED_TYPE)
-                            )
-                    );
-                    callData.OutgoingType = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.OUTGOING_TYPE)
-                            )
-                    );
-                    callData.PresentationAllowed = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.PRESENTATION_ALLOWED)
-                            )
-                    );
-                    callData.PresentationPayPhone = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.PRESENTATION_PAYPHONE)
-                            )
-                    );
-                    callData.PresentationRestricted = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.PRESENTATION_RESTRICTED)
-                            )
-                    );
+                    callData.FeatureWifi = CallLog.Calls.FEATURES_WIFI;
+                    callData.IncomingType = CallLog.Calls.INCOMING_TYPE;
+                    callData.MissedType = CallLog.Calls.MISSED_TYPE;
+                    callData.OutgoingType = CallLog.Calls.OUTGOING_TYPE;
+                    callData.PresentationAllowed = CallLog.Calls.PRESENTATION_ALLOWED;
+                    callData.PresentationPayPhone = CallLog.Calls.PRESENTATION_PAYPHONE;
+                    callData.PresentationRestricted = CallLog.Calls.PRESENTATION_RESTRICTED;
                     //  Added in Android Tiramisu
-//                    callData.PresentationUnavailable = query.getInt(
-//                            query.getColumnIndexOrThrow(
-//                                    String.valueOf(CallLog.Calls.PRESENTATION_UNAVAILABLE)
-//                            )
-//                    );
-                    callData.PresentationUnknown = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.PRESENTATION_UNKNOWN)
-                            )
-                    );
+//                    callData.PresentationUnavailable = CallLog.Calls.PRESENTATION_UNAVAILABLE;
+                    callData.PresentationUnknown = CallLog.Calls.PRESENTATION_UNKNOWN;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.PriorityNormal = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.PRIORITY_NORMAL)
-                                )
-                        );
+                        callData.PriorityNormal = CallLog.Calls.PRIORITY_NORMAL;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.PriorityUrgent = query.getInt(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.PRIORITY_URGENT)
-                                )
-                        );
+                        callData.PriorityUrgent = CallLog.Calls.PRIORITY_URGENT;
                     }
-                    callData.RejectedType = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.REJECTED_TYPE)
-                            )
-                    );
-                    callData.VoicemailType = query.getInt(
-                            query.getColumnIndexOrThrow(
-                                    String.valueOf(CallLog.Calls.VOICEMAIL_TYPE)
-                            )
-                    );
+                    callData.RejectedType = CallLog.Calls.REJECTED_TYPE;
+                    callData.VoicemailType = CallLog.Calls.VOICEMAIL_TYPE;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.AutoMissedEmergencyCall = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.AUTO_MISSED_EMERGENCY_CALL)
-                                )
-                        );
+                        callData.AutoMissedEmergencyCall = CallLog.Calls.AUTO_MISSED_EMERGENCY_CALL;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.AutoMissedMaximumDialing = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.AUTO_MISSED_MAXIMUM_DIALING)
-                                )
-                        );
+                        callData.AutoMissedMaximumDialing = CallLog.Calls.AUTO_MISSED_MAXIMUM_DIALING;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.AutoMissedMaximumRinging = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.AUTO_MISSED_MAXIMUM_RINGING)
-                                )
-                        );
+                        callData.AutoMissedMaximumRinging = CallLog.Calls.AUTO_MISSED_MAXIMUM_RINGING;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.MissedReasonNotMissed = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.MISSED_REASON_NOT_MISSED)
-                                )
-                        );
+                        callData.MissedReasonNotMissed = CallLog.Calls.MISSED_REASON_NOT_MISSED;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.UserMissedCallFiltersTimeout = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.USER_MISSED_CALL_FILTERS_TIMEOUT)
-                                )
-                        );
+                        callData.UserMissedCallFiltersTimeout = CallLog.Calls.USER_MISSED_CALL_FILTERS_TIMEOUT;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.UserMissedCallScreeningServiceSilenced = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.USER_MISSED_CALL_SCREENING_SERVICE_SILENCED)
-                                )
-                        );
+                        callData.UserMissedCallScreeningServiceSilenced = CallLog.Calls.USER_MISSED_CALL_SCREENING_SERVICE_SILENCED;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.UserMissedDndMode = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.USER_MISSED_DND_MODE)
-                                )
-                        );
+                        callData.UserMissedDndMode = CallLog.Calls.USER_MISSED_DND_MODE;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.UserMissedLowRingVolume = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.USER_MISSED_LOW_RING_VOLUME)
-                                )
-                        );
+                        callData.UserMissedLowRingVolume = CallLog.Calls.USER_MISSED_LOW_RING_VOLUME;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.UserMissedNoAnswer = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.USER_MISSED_NO_ANSWER)
-                                )
-                        );
+                        callData.UserMissedNoAnswer = CallLog.Calls.USER_MISSED_NO_ANSWER;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.UserMissedNoVibrate = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.USER_MISSED_NO_VIBRATE)
-                                )
-                        );
+                        callData.UserMissedNoVibrate = CallLog.Calls.USER_MISSED_NO_VIBRATE;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        callData.UserMissedShortRing = query.getLong(
-                                query.getColumnIndexOrThrow(
-                                        String.valueOf(CallLog.Calls.USER_MISSED_SHORT_RING)
-                                )
-                        );
+                        callData.UserMissedShortRing = CallLog.Calls.USER_MISSED_SHORT_RING;
                     }
 
                     callsDataList.add(callData);
@@ -514,5 +333,28 @@ public class BackupCallLog {
         }
 
         return callsDataList;
+    }
+
+    public String countCallLog() {
+        String count = "";
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor query = contentResolver.query(
+                CallLog.Calls.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        if (query != null) {
+            try {
+                if(query.moveToLast())
+                    count = String.valueOf(query.getPosition());
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                query.close();
+            }
+        }
+        return count;
     }
 }

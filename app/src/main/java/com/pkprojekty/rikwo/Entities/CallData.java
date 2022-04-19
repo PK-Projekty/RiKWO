@@ -5,6 +5,8 @@ public class CallData {
      * Struktura danych zawierająca informacje o wiadomości sms
      * developer.android.com/reference/android/provider/CallLog.Calls
      */
+    public String Id;                                       // API level 1 The unique ID for a row.
+
     public String BlockReason;                              // API level 29 Where the CallLog.Calls#TYPE is CallLog.Calls#BLOCKED_TYPE, indicates the reason why a call is blocked.
     public String CachedFormatedNumber;                     // API level 21 The cached phone number, formatted with formatting rules based on the country the user was in when the call was made or received.
     public String CachedLookupUri;                          // API level 21 The cached URI to look up the contact associated with the phone number, if it exists.
