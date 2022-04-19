@@ -1,9 +1,11 @@
-package com.pkprojekty.rikwo.sms;
+package com.pkprojekty.rikwo.Sms;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.Telephony;
+
+import com.pkprojekty.rikwo.Entities.SmsData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,6 +120,61 @@ public class BackupSms {
                     smsData.Type = query.getString(
                             query.getColumnIndexOrThrow(
                                     Telephony.Sms.Inbox.TYPE
+                            )
+                    );
+                    smsData.MessageTypeAll = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.MESSAGE_TYPE_ALL)
+                            )
+                    );
+                    smsData.MessageTypeDraft = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.MESSAGE_TYPE_DRAFT)
+                            )
+                    );
+                    smsData.MessageTypeFailed = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.MESSAGE_TYPE_FAILED)
+                            )
+                    );
+                    smsData.MessageTypeInbox = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.MESSAGE_TYPE_INBOX)
+                            )
+                    );
+                    smsData.MessageTypeOutbox = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.MESSAGE_TYPE_OUTBOX)
+                            )
+                    );
+                    smsData.MessageTypeQueded = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.MESSAGE_TYPE_QUEUED)
+                            )
+                    );
+                    smsData.MessageTypeSent = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.MESSAGE_TYPE_SENT)
+                            )
+                    );
+                    smsData.StatusComplete = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.STATUS_COMPLETE)
+                            )
+                    );
+                    smsData.StatusFailed = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.STATUS_FAILED)
+                            )
+                    );
+                    smsData.StatusNone = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.STATUS_NONE)
+                            )
+                    );
+                    smsData.StatusPending = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Inbox.STATUS_PENDING)
                             )
                     );
 
@@ -238,6 +295,61 @@ public class BackupSms {
                                     Telephony.Sms.Draft.TYPE
                             )
                     );
+                    smsData.MessageTypeAll = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.MESSAGE_TYPE_ALL)
+                            )
+                    );
+                    smsData.MessageTypeDraft = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.MESSAGE_TYPE_DRAFT)
+                            )
+                    );
+                    smsData.MessageTypeFailed = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.MESSAGE_TYPE_FAILED)
+                            )
+                    );
+                    smsData.MessageTypeInbox = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.MESSAGE_TYPE_INBOX)
+                            )
+                    );
+                    smsData.MessageTypeOutbox = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.MESSAGE_TYPE_OUTBOX)
+                            )
+                    );
+                    smsData.MessageTypeQueded = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.MESSAGE_TYPE_QUEUED)
+                            )
+                    );
+                    smsData.MessageTypeSent = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.MESSAGE_TYPE_SENT)
+                            )
+                    );
+                    smsData.StatusComplete = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.STATUS_COMPLETE)
+                            )
+                    );
+                    smsData.StatusFailed = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.STATUS_FAILED)
+                            )
+                    );
+                    smsData.StatusNone = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.STATUS_NONE)
+                            )
+                    );
+                    smsData.StatusPending = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Draft.STATUS_PENDING)
+                            )
+                    );
 
                     smsDraftDataList.add(smsData);
                 }
@@ -356,6 +468,61 @@ public class BackupSms {
                                     Telephony.Sms.Outbox.TYPE
                             )
                     );
+                    smsData.MessageTypeAll = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.MESSAGE_TYPE_ALL)
+                            )
+                    );
+                    smsData.MessageTypeDraft = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.MESSAGE_TYPE_DRAFT)
+                            )
+                    );
+                    smsData.MessageTypeFailed = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.MESSAGE_TYPE_FAILED)
+                            )
+                    );
+                    smsData.MessageTypeInbox = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.MESSAGE_TYPE_INBOX)
+                            )
+                    );
+                    smsData.MessageTypeOutbox = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.MESSAGE_TYPE_OUTBOX)
+                            )
+                    );
+                    smsData.MessageTypeQueded = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.MESSAGE_TYPE_QUEUED)
+                            )
+                    );
+                    smsData.MessageTypeSent = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.MESSAGE_TYPE_SENT)
+                            )
+                    );
+                    smsData.StatusComplete = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.STATUS_COMPLETE)
+                            )
+                    );
+                    smsData.StatusFailed = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.STATUS_FAILED)
+                            )
+                    );
+                    smsData.StatusNone = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.STATUS_NONE)
+                            )
+                    );
+                    smsData.StatusPending = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Outbox.STATUS_PENDING)
+                            )
+                    );
 
                     smsOutboxDataList.add(smsData);
                 }
@@ -472,6 +639,61 @@ public class BackupSms {
                     smsData.Type = query.getString(
                             query.getColumnIndexOrThrow(
                                     Telephony.Sms.Sent.TYPE
+                            )
+                    );
+                    smsData.MessageTypeAll = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.MESSAGE_TYPE_ALL)
+                            )
+                    );
+                    smsData.MessageTypeDraft = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.MESSAGE_TYPE_DRAFT)
+                            )
+                    );
+                    smsData.MessageTypeFailed = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.MESSAGE_TYPE_FAILED)
+                            )
+                    );
+                    smsData.MessageTypeInbox = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.MESSAGE_TYPE_INBOX)
+                            )
+                    );
+                    smsData.MessageTypeOutbox = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.MESSAGE_TYPE_OUTBOX)
+                            )
+                    );
+                    smsData.MessageTypeQueded = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.MESSAGE_TYPE_QUEUED)
+                            )
+                    );
+                    smsData.MessageTypeSent = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.MESSAGE_TYPE_SENT)
+                            )
+                    );
+                    smsData.StatusComplete = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.STATUS_COMPLETE)
+                            )
+                    );
+                    smsData.StatusFailed = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.STATUS_FAILED)
+                            )
+                    );
+                    smsData.StatusNone = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.STATUS_NONE)
+                            )
+                    );
+                    smsData.StatusPending = query.getInt(
+                            query.getColumnIndexOrThrow(
+                                    String.valueOf(Telephony.Sms.Sent.STATUS_PENDING)
                             )
                     );
 

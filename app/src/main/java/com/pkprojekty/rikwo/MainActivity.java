@@ -14,8 +14,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pkprojekty.rikwo.sms.BackupSms;
-import com.pkprojekty.rikwo.sms.SmsData;
+import com.pkprojekty.rikwo.Sms.BackupSms;
+import com.pkprojekty.rikwo.Entities.SmsData;
 
 import java.io.File;
 import java.util.List;

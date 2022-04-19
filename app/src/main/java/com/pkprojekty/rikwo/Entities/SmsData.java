@@ -1,4 +1,4 @@
-package com.pkprojekty.rikwo.sms;
+package com.pkprojekty.rikwo.Entities;
 
 public class SmsData {
     /**
@@ -23,4 +23,17 @@ public class SmsData {
     public String SubscriptionId;       // The subscription to which the message belongs to.
     public String ThreadId;             // The thread ID of the message.
     public String Type;                 // The type of message.
+
+    public int MessageTypeAll;          // Message type: all messages.
+    public int MessageTypeDraft;        // Message type: drafts.
+    public int MessageTypeFailed;       // Message type: failed outgoing message.
+    public int MessageTypeInbox;        // Message type: inbox.
+    public int MessageTypeOutbox;       // Message type: outbox.
+    public int MessageTypeQueded;       // Message type: queued to send later.
+    public int MessageTypeSent;         // Message type: sent messages.
+    public int StatusComplete;          // TP-Status: complete.
+    public int StatusFailed;            // TP-Status: failed.
+    public int StatusNone;              // TP-Status: no status received.
+    public int StatusPending;           // TP-Status: pending.
+
 }
