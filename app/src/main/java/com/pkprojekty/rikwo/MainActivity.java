@@ -106,11 +106,21 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
             }
+            // READ_EXTERNAL_STORAGE permission toast
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
+            }
             // WRITE_EXTERNAL_STORAGE permission toast
             if (grantResults.length > 0 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
                 }
             } else {
@@ -154,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
 
         FileHandler fh = new FileHandler(this);
         fh.storeSmsInXml(smsData);
+        fh.storeCallLogInXml(callData);
 
     }
 
