@@ -536,10 +536,10 @@ public class BackupSms {
     public List<List<SmsData>> getAllSms() {
         List<List<SmsData>> smsDataList = new ArrayList<>();
 
-        smsDataList.add(getAllSmsFromDraft());
         smsDataList.add(getAllSmsFromInbox());
-        smsDataList.add(getAllSmsFromOutbox());
         smsDataList.add(getAllSmsFromSent());
+        smsDataList.add(getAllSmsFromDraft());
+        smsDataList.add(getAllSmsFromOutbox());
 
         return smsDataList;
     }

@@ -19,6 +19,7 @@ import com.pkprojekty.rikwo.CallLog.BackupCallLog;
 import com.pkprojekty.rikwo.Entities.CallData;
 import com.pkprojekty.rikwo.Sms.BackupSms;
 import com.pkprojekty.rikwo.Entities.SmsData;
+import com.pkprojekty.rikwo.Xml.FileHandler;
 
 import java.io.File;
 import java.util.List;
@@ -50,10 +51,34 @@ public class MainActivity extends AppCompatActivity {
             ReadCallLogsPermissionGranted = true;
         }
 
-
-        if (ReadSmsPermissionGranted && ReadCallLogsPermissionGranted) {
-            backup();
+        boolean ReadExternalStoragePermissionGranted = false;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        } else {
+            /* do nothing */
+            /* permission is granted */
+            ReadExternalStoragePermissionGranted = true;
         }
+
+        boolean WriteExternalStoragePermissionGranted = false;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        } else {
+            /* do nothing */
+            /* permission is granted */
+            WriteExternalStoragePermissionGranted = true;
+        }
+
+
+
+
+        if (
+                ReadSmsPermissionGranted &&
+                ReadCallLogsPermissionGranted &&
+                ReadExternalStoragePermissionGranted &&
+                WriteExternalStoragePermissionGranted
+        ) { backup(); }
+
     }
 
     /* And a method to override */
@@ -72,6 +97,16 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
             }
             // READ_CALL_LOG permission toast
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
+            }
+            // WRITE_EXTERNAL_STORAGE permission toast
             if (grantResults.length > 0 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ContextCompat.checkSelfPermission(MainActivity.this,
@@ -116,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
         TextView textView5 = findViewById(R.id.textView5);
         String txt5 = textView5.getText() + " " + countCallsInCallLog;
         textView5.setText(txt5);
+
+        FileHandler fh = new FileHandler(this);
+        fh.storeSmsInXml(smsData);
 
     }
 
