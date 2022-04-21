@@ -166,6 +166,13 @@ public class MainActivity extends AppCompatActivity {
         fh.storeSmsInXml(smsData);
         fh.storeCallLogInXml(callData);
 
+        // /storage/emulated/0/Documents/20220420164709-sms.xml
+        File file = new File(
+                Environment.getExternalStorageDirectory() + "/Documents/",
+                "20220420164709-sms.xml"
+        );
+        fh.restoreSmsFromXml(file);
+
     }
 
     public void EmailButton () {

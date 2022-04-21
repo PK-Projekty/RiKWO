@@ -8,13 +8,17 @@ import android.widget.Toast;
 import com.pkprojekty.rikwo.Entities.CallData;
 import com.pkprojekty.rikwo.Entities.SmsData;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileHandler {
@@ -532,4 +536,498 @@ public class FileHandler {
         }
     }
 
+    public List<List<SmsData>> restoreSmsFromXml(File file) {
+        List<List<SmsData>> smsDataList = new ArrayList<>();
+        List<SmsData> smsInboxDataList = new ArrayList<>();
+        List<SmsData> smsSentDataList = new ArrayList<>();
+        List<SmsData> smsDraftDataList = new ArrayList<>();
+        List<SmsData> smsOutboxDataList = new ArrayList<>();
+        int countInbox = 0;
+        int countSent = 0;
+        int countDraft = 0;
+        int countOutbox = 0;
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser xpp = factory.newPullParser();
+            FileInputStream is = new FileInputStream(file);
+            xpp.setInput(is, null);
+            int eventType = xpp.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if(eventType == XmlPullParser.START_DOCUMENT) {
+                    System.out.println("========================================");
+                    System.out.println("Start document");
+                    System.out.println("========================================");
+                } else if(eventType == XmlPullParser.START_TAG) {
+                    //System.out.println("Start tag "+xpp.getName());
+                    // Inbox Messages
+                    if (xpp.getName().equalsIgnoreCase("Inbox")) {
+                        String parentTag = xpp.getName();
+                        eventType = xpp.next();
+                        while (parentTag.equalsIgnoreCase("Inbox")) {
+                            if(eventType == XmlPullParser.START_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Message")) {
+                                    String messageTag = xpp.getName();
+                                    String messageId = xpp.getAttributeValue(null,"id");
+                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
+                                    countInbox++;
+                                    SmsData smsData = new SmsData();
+                                    String tagName;
+                                    String currentTag = "";
+                                    String value;
+                                    while (messageTag.equalsIgnoreCase("Message")) {
+                                        eventType = xpp.next();
+                                        tagName = xpp.getName();
+                                        if (eventType == XmlPullParser.START_TAG) {
+                                            System.out.println("    => tag: " + tagName);
+                                            currentTag = tagName;
+                                        }
+                                        if (eventType == XmlPullParser.TEXT) {
+                                            value = String.valueOf(xpp.getText());
+                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
+                                            if ("Address".equalsIgnoreCase(currentTag)) smsData.Address = value;
+                                            if ("Body".equalsIgnoreCase(currentTag)) smsData.Body = value;
+                                            if ("Creator".equalsIgnoreCase(currentTag)) smsData.Creator = value;
+                                            if ("Date".equalsIgnoreCase(currentTag)) smsData.Date = value;
+                                            if ("DateSent".equalsIgnoreCase(currentTag)) smsData.DateSent = value;
+                                            if ("ErrorCode".equalsIgnoreCase(currentTag)) smsData.ErrorCode = value;
+                                            if ("Locked".equalsIgnoreCase(currentTag)) smsData.Locked = value;
+                                            if ("Person".equalsIgnoreCase(currentTag)) smsData.Person = value;
+                                            if ("Protocol".equalsIgnoreCase(currentTag)) smsData.Protocol = value;
+                                            if ("Read".equalsIgnoreCase(currentTag)) smsData.Read = value;
+                                            if ("ReplayPathPresent".equalsIgnoreCase(currentTag)) smsData.ReplayPathPresent = value;
+                                            if ("Seen".equalsIgnoreCase(currentTag)) smsData.Seen = value;
+                                            if ("ServiceCenter".equalsIgnoreCase(currentTag)) smsData.ServiceCenter = value;
+                                            if ("Status".equalsIgnoreCase(currentTag)) smsData.Status = value;
+                                            if ("Subject".equalsIgnoreCase(currentTag)) smsData.Subject = value;
+                                            if ("SubscriptionId".equalsIgnoreCase(currentTag)) smsData.SubscriptionId = value;
+                                            if ("ThreadId".equalsIgnoreCase(currentTag)) smsData.ThreadId = value;
+                                            if ("Type".equalsIgnoreCase(currentTag)) smsData.Type = value;
+                                            if ("MessageTypeAll".equalsIgnoreCase(currentTag)) smsData.MessageTypeAll = Integer.parseInt(value);
+                                            if ("MessageTypeDraft".equalsIgnoreCase(currentTag)) smsData.MessageTypeDraft = Integer.parseInt(value);
+                                            if ("MessageTypeFailed".equalsIgnoreCase(currentTag)) smsData.MessageTypeFailed = Integer.parseInt(value);
+                                            if ("MessageTypeInbox".equalsIgnoreCase(currentTag)) smsData.MessageTypeInbox = Integer.parseInt(value);
+                                            if ("MessageTypeOutbox".equalsIgnoreCase(currentTag)) smsData.MessageTypeOutbox = Integer.parseInt(value);
+                                            if ("MessageTypeQueded".equalsIgnoreCase(currentTag)) smsData.MessageTypeQueded = Integer.parseInt(value);
+                                            if ("MessageTypeSent".equalsIgnoreCase(currentTag)) smsData.MessageTypeSent = Integer.parseInt(value);
+                                            if ("StatusComplete".equalsIgnoreCase(currentTag)) smsData.StatusComplete = Integer.parseInt(value);
+                                            if ("StatusFailed".equalsIgnoreCase(currentTag)) smsData.StatusFailed = Integer.parseInt(value);
+                                            if ("StatusNone".equalsIgnoreCase(currentTag)) smsData.StatusNone = Integer.parseInt(value);
+                                            if ("StatusPending".equalsIgnoreCase(currentTag)) smsData.StatusPending = Integer.parseInt(value);
+                                        }
+                                        if (eventType == XmlPullParser.END_TAG) {
+                                            if (xpp.getName().equalsIgnoreCase("Message")) {
+                                                System.out.println("--------------------");
+                                                System.out.println("smsData.Address: "+smsData.Address);
+                                                System.out.println("smsData.Body: "+smsData.Body);
+                                                System.out.println("smsData.Creator: "+smsData.Creator);
+                                                System.out.println("smsData.Date: "+smsData.Date);
+                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
+                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
+                                                System.out.println("smsData.Locked: "+smsData.Locked);
+                                                System.out.println("smsData.Person: "+smsData.Person);
+                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
+                                                System.out.println("smsData.Read: "+smsData.Read);
+                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
+                                                System.out.println("smsData.Seen: "+smsData.Seen);
+                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
+                                                System.out.println("smsData.Status: "+smsData.Status);
+                                                System.out.println("smsData.Subject: "+smsData.Subject);
+                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
+                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
+                                                System.out.println("smsData.Type: "+smsData.Type);
+                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
+                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
+                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
+                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
+                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
+                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
+                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
+                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
+                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
+                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
+                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
+                                                smsSentDataList.add(smsData);
+                                                System.out.println("--------------------");
+                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
+                                                messageTag = "";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if(eventType == XmlPullParser.END_TAG) {
+                                //System.out.println("End tag "+xpp.getName());
+                                //if (xpp.getName().equalsIgnoreCase("Message")) {
+                                //    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+                                //}
+                                if (xpp.getName().equalsIgnoreCase("Inbox")) {
+                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+                                    System.out.println("====================");
+                                    parentTag = "";
+                                }
+                            }
+                            eventType = xpp.next();
+                        }
+                    }
+                    // Sent Messages
+                    if (xpp.getName().equalsIgnoreCase("Sent")) {
+                        String parentTag = xpp.getName();
+                        eventType = xpp.next();
+                        while (parentTag.equalsIgnoreCase("Sent")) {
+                            if(eventType == XmlPullParser.START_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Message")) {
+                                    String messageTag = xpp.getName();
+                                    String messageId = xpp.getAttributeValue(null,"id");
+                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
+                                    countSent++;
+                                    SmsData smsData = new SmsData();
+                                    String tagName;
+                                    String currentTag = "";
+                                    String value;
+                                    while (messageTag.equalsIgnoreCase("Message")) {
+                                        eventType = xpp.next();
+                                        tagName = xpp.getName();
+                                        if (eventType == XmlPullParser.START_TAG) {
+                                            System.out.println("    => tag: " + tagName);
+                                            currentTag = tagName;
+                                        }
+                                        if (eventType == XmlPullParser.TEXT) {
+                                            value = String.valueOf(xpp.getText());
+                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
+                                            if ("Address".equalsIgnoreCase(currentTag)) smsData.Address = value;
+                                            if ("Body".equalsIgnoreCase(currentTag)) smsData.Body = value;
+                                            if ("Creator".equalsIgnoreCase(currentTag)) smsData.Creator = value;
+                                            if ("Date".equalsIgnoreCase(currentTag)) smsData.Date = value;
+                                            if ("DateSent".equalsIgnoreCase(currentTag)) smsData.DateSent = value;
+                                            if ("ErrorCode".equalsIgnoreCase(currentTag)) smsData.ErrorCode = value;
+                                            if ("Locked".equalsIgnoreCase(currentTag)) smsData.Locked = value;
+                                            if ("Person".equalsIgnoreCase(currentTag)) smsData.Person = value;
+                                            if ("Protocol".equalsIgnoreCase(currentTag)) smsData.Protocol = value;
+                                            if ("Read".equalsIgnoreCase(currentTag)) smsData.Read = value;
+                                            if ("ReplayPathPresent".equalsIgnoreCase(currentTag)) smsData.ReplayPathPresent = value;
+                                            if ("Seen".equalsIgnoreCase(currentTag)) smsData.Seen = value;
+                                            if ("ServiceCenter".equalsIgnoreCase(currentTag)) smsData.ServiceCenter = value;
+                                            if ("Status".equalsIgnoreCase(currentTag)) smsData.Status = value;
+                                            if ("Subject".equalsIgnoreCase(currentTag)) smsData.Subject = value;
+                                            if ("SubscriptionId".equalsIgnoreCase(currentTag)) smsData.SubscriptionId = value;
+                                            if ("ThreadId".equalsIgnoreCase(currentTag)) smsData.ThreadId = value;
+                                            if ("Type".equalsIgnoreCase(currentTag)) smsData.Type = value;
+                                            if ("MessageTypeAll".equalsIgnoreCase(currentTag)) smsData.MessageTypeAll = Integer.parseInt(value);
+                                            if ("MessageTypeDraft".equalsIgnoreCase(currentTag)) smsData.MessageTypeDraft = Integer.parseInt(value);
+                                            if ("MessageTypeFailed".equalsIgnoreCase(currentTag)) smsData.MessageTypeFailed = Integer.parseInt(value);
+                                            if ("MessageTypeInbox".equalsIgnoreCase(currentTag)) smsData.MessageTypeInbox = Integer.parseInt(value);
+                                            if ("MessageTypeOutbox".equalsIgnoreCase(currentTag)) smsData.MessageTypeOutbox = Integer.parseInt(value);
+                                            if ("MessageTypeQueded".equalsIgnoreCase(currentTag)) smsData.MessageTypeQueded = Integer.parseInt(value);
+                                            if ("MessageTypeSent".equalsIgnoreCase(currentTag)) smsData.MessageTypeSent = Integer.parseInt(value);
+                                            if ("StatusComplete".equalsIgnoreCase(currentTag)) smsData.StatusComplete = Integer.parseInt(value);
+                                            if ("StatusFailed".equalsIgnoreCase(currentTag)) smsData.StatusFailed = Integer.parseInt(value);
+                                            if ("StatusNone".equalsIgnoreCase(currentTag)) smsData.StatusNone = Integer.parseInt(value);
+                                            if ("StatusPending".equalsIgnoreCase(currentTag)) smsData.StatusPending = Integer.parseInt(value);
+                                        }
+                                        if (eventType == XmlPullParser.END_TAG) {
+                                            if (xpp.getName().equalsIgnoreCase("Message")) {
+                                                System.out.println("--------------------");
+                                                System.out.println("smsData.Address: "+smsData.Address);
+                                                System.out.println("smsData.Body: "+smsData.Body);
+                                                System.out.println("smsData.Creator: "+smsData.Creator);
+                                                System.out.println("smsData.Date: "+smsData.Date);
+                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
+                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
+                                                System.out.println("smsData.Locked: "+smsData.Locked);
+                                                System.out.println("smsData.Person: "+smsData.Person);
+                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
+                                                System.out.println("smsData.Read: "+smsData.Read);
+                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
+                                                System.out.println("smsData.Seen: "+smsData.Seen);
+                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
+                                                System.out.println("smsData.Status: "+smsData.Status);
+                                                System.out.println("smsData.Subject: "+smsData.Subject);
+                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
+                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
+                                                System.out.println("smsData.Type: "+smsData.Type);
+                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
+                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
+                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
+                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
+                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
+                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
+                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
+                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
+                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
+                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
+                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
+                                                smsSentDataList.add(smsData);
+                                                System.out.println("--------------------");
+                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
+                                                messageTag = "";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if(eventType == XmlPullParser.END_TAG) {
+                                //System.out.println("End tag "+xpp.getName());
+                                //if (xpp.getName().equalsIgnoreCase("Message")) {
+                                //    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+                                //}
+                                if (xpp.getName().equalsIgnoreCase("Sent")) {
+                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+                                    System.out.println("====================");
+                                    parentTag = "";
+                                }
+                            }
+                            eventType = xpp.next();
+                        }
+                    }
+                    // Draft Messages
+                    if (xpp.getName().equalsIgnoreCase("Draft")) {
+                        String parentTag = xpp.getName();
+                        eventType = xpp.next();
+                        while (parentTag.equalsIgnoreCase("Draft")) {
+                            if(eventType == XmlPullParser.START_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Message")) {
+                                    String messageTag = xpp.getName();
+                                    String messageId = xpp.getAttributeValue(null,"id");
+                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
+                                    countDraft++;
+                                    SmsData smsData = new SmsData();
+                                    String tagName;
+                                    String currentTag = "";
+                                    String value;
+                                    while (messageTag.equalsIgnoreCase("Message")) {
+                                        eventType = xpp.next();
+                                        tagName = xpp.getName();
+                                        if (eventType == XmlPullParser.START_TAG) {
+                                            System.out.println("    => tag: " + tagName);
+                                            currentTag = tagName;
+                                        }
+                                        if (eventType == XmlPullParser.TEXT) {
+                                            value = String.valueOf(xpp.getText());
+                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
+                                            if ("Address".equalsIgnoreCase(currentTag)) smsData.Address = value;
+                                            if ("Body".equalsIgnoreCase(currentTag)) smsData.Body = value;
+                                            if ("Creator".equalsIgnoreCase(currentTag)) smsData.Creator = value;
+                                            if ("Date".equalsIgnoreCase(currentTag)) smsData.Date = value;
+                                            if ("DateSent".equalsIgnoreCase(currentTag)) smsData.DateSent = value;
+                                            if ("ErrorCode".equalsIgnoreCase(currentTag)) smsData.ErrorCode = value;
+                                            if ("Locked".equalsIgnoreCase(currentTag)) smsData.Locked = value;
+                                            if ("Person".equalsIgnoreCase(currentTag)) smsData.Person = value;
+                                            if ("Protocol".equalsIgnoreCase(currentTag)) smsData.Protocol = value;
+                                            if ("Read".equalsIgnoreCase(currentTag)) smsData.Read = value;
+                                            if ("ReplayPathPresent".equalsIgnoreCase(currentTag)) smsData.ReplayPathPresent = value;
+                                            if ("Seen".equalsIgnoreCase(currentTag)) smsData.Seen = value;
+                                            if ("ServiceCenter".equalsIgnoreCase(currentTag)) smsData.ServiceCenter = value;
+                                            if ("Status".equalsIgnoreCase(currentTag)) smsData.Status = value;
+                                            if ("Subject".equalsIgnoreCase(currentTag)) smsData.Subject = value;
+                                            if ("SubscriptionId".equalsIgnoreCase(currentTag)) smsData.SubscriptionId = value;
+                                            if ("ThreadId".equalsIgnoreCase(currentTag)) smsData.ThreadId = value;
+                                            if ("Type".equalsIgnoreCase(currentTag)) smsData.Type = value;
+                                            if ("MessageTypeAll".equalsIgnoreCase(currentTag)) smsData.MessageTypeAll = Integer.parseInt(value);
+                                            if ("MessageTypeDraft".equalsIgnoreCase(currentTag)) smsData.MessageTypeDraft = Integer.parseInt(value);
+                                            if ("MessageTypeFailed".equalsIgnoreCase(currentTag)) smsData.MessageTypeFailed = Integer.parseInt(value);
+                                            if ("MessageTypeInbox".equalsIgnoreCase(currentTag)) smsData.MessageTypeInbox = Integer.parseInt(value);
+                                            if ("MessageTypeOutbox".equalsIgnoreCase(currentTag)) smsData.MessageTypeOutbox = Integer.parseInt(value);
+                                            if ("MessageTypeQueded".equalsIgnoreCase(currentTag)) smsData.MessageTypeQueded = Integer.parseInt(value);
+                                            if ("MessageTypeSent".equalsIgnoreCase(currentTag)) smsData.MessageTypeSent = Integer.parseInt(value);
+                                            if ("StatusComplete".equalsIgnoreCase(currentTag)) smsData.StatusComplete = Integer.parseInt(value);
+                                            if ("StatusFailed".equalsIgnoreCase(currentTag)) smsData.StatusFailed = Integer.parseInt(value);
+                                            if ("StatusNone".equalsIgnoreCase(currentTag)) smsData.StatusNone = Integer.parseInt(value);
+                                            if ("StatusPending".equalsIgnoreCase(currentTag)) smsData.StatusPending = Integer.parseInt(value);
+                                        }
+                                        if (eventType == XmlPullParser.END_TAG) {
+                                            if (xpp.getName().equalsIgnoreCase("Message")) {
+                                                System.out.println("--------------------");
+                                                System.out.println("smsData.Address: "+smsData.Address);
+                                                System.out.println("smsData.Body: "+smsData.Body);
+                                                System.out.println("smsData.Creator: "+smsData.Creator);
+                                                System.out.println("smsData.Date: "+smsData.Date);
+                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
+                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
+                                                System.out.println("smsData.Locked: "+smsData.Locked);
+                                                System.out.println("smsData.Person: "+smsData.Person);
+                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
+                                                System.out.println("smsData.Read: "+smsData.Read);
+                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
+                                                System.out.println("smsData.Seen: "+smsData.Seen);
+                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
+                                                System.out.println("smsData.Status: "+smsData.Status);
+                                                System.out.println("smsData.Subject: "+smsData.Subject);
+                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
+                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
+                                                System.out.println("smsData.Type: "+smsData.Type);
+                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
+                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
+                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
+                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
+                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
+                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
+                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
+                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
+                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
+                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
+                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
+                                                smsSentDataList.add(smsData);
+                                                System.out.println("--------------------");
+                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
+                                                messageTag = "";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if(eventType == XmlPullParser.END_TAG) {
+                                //System.out.println("End tag "+xpp.getName());
+                                //if (xpp.getName().equalsIgnoreCase("Message")) {
+                                //    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+                                //}
+                                if (xpp.getName().equalsIgnoreCase("Draft")) {
+                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+                                    System.out.println("====================");
+                                    parentTag = "";
+                                }
+                            }
+                            eventType = xpp.next();
+                        }
+                    }
+                    // Outbox Messages
+                    if (xpp.getName().equalsIgnoreCase("Outbox")) {
+                        String parentTag = xpp.getName();
+                        eventType = xpp.next();
+                        while (parentTag.equalsIgnoreCase("Outbox")) {
+                            if(eventType == XmlPullParser.START_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Message")) {
+                                    String messageTag = xpp.getName();
+                                    String messageId = xpp.getAttributeValue(null,"id");
+                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
+                                    countOutbox++;
+                                    SmsData smsData = new SmsData();
+                                    String tagName;
+                                    String currentTag = "";
+                                    String value;
+                                    while (messageTag.equalsIgnoreCase("Message")) {
+                                        eventType = xpp.next();
+                                        tagName = xpp.getName();
+                                        if (eventType == XmlPullParser.START_TAG) {
+                                            System.out.println("    => tag: " + tagName);
+                                            currentTag = tagName;
+                                        }
+                                        if (eventType == XmlPullParser.TEXT) {
+                                            value = String.valueOf(xpp.getText());
+                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
+                                            if ("Address".equalsIgnoreCase(currentTag)) smsData.Address = value;
+                                            if ("Body".equalsIgnoreCase(currentTag)) smsData.Body = value;
+                                            if ("Creator".equalsIgnoreCase(currentTag)) smsData.Creator = value;
+                                            if ("Date".equalsIgnoreCase(currentTag)) smsData.Date = value;
+                                            if ("DateSent".equalsIgnoreCase(currentTag)) smsData.DateSent = value;
+                                            if ("ErrorCode".equalsIgnoreCase(currentTag)) smsData.ErrorCode = value;
+                                            if ("Locked".equalsIgnoreCase(currentTag)) smsData.Locked = value;
+                                            if ("Person".equalsIgnoreCase(currentTag)) smsData.Person = value;
+                                            if ("Protocol".equalsIgnoreCase(currentTag)) smsData.Protocol = value;
+                                            if ("Read".equalsIgnoreCase(currentTag)) smsData.Read = value;
+                                            if ("ReplayPathPresent".equalsIgnoreCase(currentTag)) smsData.ReplayPathPresent = value;
+                                            if ("Seen".equalsIgnoreCase(currentTag)) smsData.Seen = value;
+                                            if ("ServiceCenter".equalsIgnoreCase(currentTag)) smsData.ServiceCenter = value;
+                                            if ("Status".equalsIgnoreCase(currentTag)) smsData.Status = value;
+                                            if ("Subject".equalsIgnoreCase(currentTag)) smsData.Subject = value;
+                                            if ("SubscriptionId".equalsIgnoreCase(currentTag)) smsData.SubscriptionId = value;
+                                            if ("ThreadId".equalsIgnoreCase(currentTag)) smsData.ThreadId = value;
+                                            if ("Type".equalsIgnoreCase(currentTag)) smsData.Type = value;
+                                            if ("MessageTypeAll".equalsIgnoreCase(currentTag)) smsData.MessageTypeAll = Integer.parseInt(value);
+                                            if ("MessageTypeDraft".equalsIgnoreCase(currentTag)) smsData.MessageTypeDraft = Integer.parseInt(value);
+                                            if ("MessageTypeFailed".equalsIgnoreCase(currentTag)) smsData.MessageTypeFailed = Integer.parseInt(value);
+                                            if ("MessageTypeInbox".equalsIgnoreCase(currentTag)) smsData.MessageTypeInbox = Integer.parseInt(value);
+                                            if ("MessageTypeOutbox".equalsIgnoreCase(currentTag)) smsData.MessageTypeOutbox = Integer.parseInt(value);
+                                            if ("MessageTypeQueded".equalsIgnoreCase(currentTag)) smsData.MessageTypeQueded = Integer.parseInt(value);
+                                            if ("MessageTypeSent".equalsIgnoreCase(currentTag)) smsData.MessageTypeSent = Integer.parseInt(value);
+                                            if ("StatusComplete".equalsIgnoreCase(currentTag)) smsData.StatusComplete = Integer.parseInt(value);
+                                            if ("StatusFailed".equalsIgnoreCase(currentTag)) smsData.StatusFailed = Integer.parseInt(value);
+                                            if ("StatusNone".equalsIgnoreCase(currentTag)) smsData.StatusNone = Integer.parseInt(value);
+                                            if ("StatusPending".equalsIgnoreCase(currentTag)) smsData.StatusPending = Integer.parseInt(value);
+                                        }
+                                        if (eventType == XmlPullParser.END_TAG) {
+                                            if (xpp.getName().equalsIgnoreCase("Message")) {
+                                                System.out.println("--------------------");
+                                                System.out.println("smsData.Address: "+smsData.Address);
+                                                System.out.println("smsData.Body: "+smsData.Body);
+                                                System.out.println("smsData.Creator: "+smsData.Creator);
+                                                System.out.println("smsData.Date: "+smsData.Date);
+                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
+                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
+                                                System.out.println("smsData.Locked: "+smsData.Locked);
+                                                System.out.println("smsData.Person: "+smsData.Person);
+                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
+                                                System.out.println("smsData.Read: "+smsData.Read);
+                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
+                                                System.out.println("smsData.Seen: "+smsData.Seen);
+                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
+                                                System.out.println("smsData.Status: "+smsData.Status);
+                                                System.out.println("smsData.Subject: "+smsData.Subject);
+                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
+                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
+                                                System.out.println("smsData.Type: "+smsData.Type);
+                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
+                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
+                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
+                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
+                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
+                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
+                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
+                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
+                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
+                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
+                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
+                                                smsSentDataList.add(smsData);
+                                                System.out.println("--------------------");
+                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
+                                                messageTag = "";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if(eventType == XmlPullParser.END_TAG) {
+                                //System.out.println("End tag "+xpp.getName());
+                                //if (xpp.getName().equalsIgnoreCase("Message")) {
+                                //    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+                                //}
+                                if (xpp.getName().equalsIgnoreCase("Outbox")) {
+                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+                                    System.out.println("====================");
+                                    parentTag = "";
+                                }
+                            }
+                            eventType = xpp.next();
+                        }
+                    }
+                } else if(eventType == XmlPullParser.TEXT) {
+                    //System.out.println("Text "+xpp.getText());
+                }
+                eventType = xpp.next();
+            }
+            System.out.println("========================================");
+            System.out.println("End document");
+            System.out.println("========================================");
+
+            System.out.println("Inbox: "+countInbox);
+            System.out.println("Sent: "+countSent);
+            System.out.println("Draft: "+countDraft);
+            System.out.println("Outbox: "+countOutbox);
+
+            is.close();
+            Toast.makeText(context, "Operation successful", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Operation failed", Toast.LENGTH_SHORT).show();
+        } finally {
+            // Tutaj być może wrzut statusu operacji do logera?
+        }
+
+        smsDataList.add(smsInboxDataList);
+        smsDataList.add(smsSentDataList);
+        smsDataList.add(smsDraftDataList);
+        smsDataList.add(smsOutboxDataList);
+
+        return smsDataList;
+    }
 }
