@@ -1030,4 +1030,240 @@ public class FileHandler {
 
         return smsDataList;
     }
+
+    public List<CallData> restoreCallLogFromXml(File file) {
+        List<CallData> callDataList = new ArrayList<>();
+        int countCallLog = 0;
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser xpp = factory.newPullParser();
+            FileInputStream is = new FileInputStream(file);
+            xpp.setInput(is, null);
+
+            int eventType = xpp.getEventType();
+            xpp.next();
+            String parentTag = xpp.getName();
+            String currentTag = "";
+            CallData callData = new CallData();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                String callTag;
+                String callId;
+                String value;
+                if(eventType == XmlPullParser.START_DOCUMENT) {
+                    System.out.println("========================================");
+                    System.out.println("Start document");
+                    System.out.println("========================================");
+                } else if(eventType == XmlPullParser.START_TAG) {
+                    //System.out.println("Start tag "+xpp.getName());
+                    if (xpp.getName().equalsIgnoreCase("call")) {
+                        callTag = xpp.getName();
+                        callId = xpp.getAttributeValue(null,"id");
+                        System.out.println("Parent tag: " + parentTag + " => Start tag: " + callTag + " => id: " + callId);
+                        countCallLog++;
+                    }
+                    currentTag = xpp.getName();
+                } else if(eventType == XmlPullParser.TEXT) {
+                    //System.out.println("Text "+xpp.getText());
+                    value = String.valueOf(xpp.getText());
+                    System.out.println("    => Tag: " + currentTag + " => value: " + value);
+                    if ("Id".equalsIgnoreCase(currentTag)) callData.Id = value;
+
+                    if ("BlockReason".equalsIgnoreCase(currentTag)) callData.BlockReason = value;
+                    if ("CachedFormatedNumber".equalsIgnoreCase(currentTag)) callData.CachedFormatedNumber = value;
+                    if ("CachedLookupUri".equalsIgnoreCase(currentTag)) callData.CachedLookupUri = value;
+                    if ("CachedMatchedNumber".equalsIgnoreCase(currentTag)) callData.CachedMatchedNumber = value;
+                    if ("CachedName".equalsIgnoreCase(currentTag)) callData.CachedName = value;
+                    if ("CachedNormalizedNumber".equalsIgnoreCase(currentTag)) callData.CachedNormalizedNumber = value;
+                    if ("CachedNumberLabel".equalsIgnoreCase(currentTag)) callData.CachedNumberLabel = value;
+                    if ("CachedNumberType".equalsIgnoreCase(currentTag)) callData.CachedNumberType = value;
+                    if ("CachedPhotoId".equalsIgnoreCase(currentTag)) callData.CachedPhotoId = value;
+                    if ("CachedPhotoUri".equalsIgnoreCase(currentTag)) callData.CachedPhotoUri = value;
+                    if ("CallScreeningAppName".equalsIgnoreCase(currentTag)) callData.CallScreeningAppName = value;
+                    if ("CallScreeningComponentName".equalsIgnoreCase(currentTag)) callData.CallScreeningComponentName = value;
+                    if ("ComposerPhotoUri".equalsIgnoreCase(currentTag)) callData.ComposerPhotoUri = value;
+                    if ("ContentItemType".equalsIgnoreCase(currentTag)) callData.ContentItemType = value;
+                    if ("ContentType".equalsIgnoreCase(currentTag)) callData.ContentType = value;
+                    if ("CountryIso".equalsIgnoreCase(currentTag)) callData.CountryIso = value;
+                    if ("DataUsage".equalsIgnoreCase(currentTag)) callData.DataUsage = value;
+                    if ("Date".equalsIgnoreCase(currentTag)) callData.Date = value;
+                    if ("DefaultSortOrder".equalsIgnoreCase(currentTag)) callData.DefaultSortOrder = value;
+                    if ("Duration".equalsIgnoreCase(currentTag)) callData.Duration = value;
+                    if ("ExtraCallTypeFilter".equalsIgnoreCase(currentTag)) callData.ExtraCallTypeFilter = value;
+                    if ("Features".equalsIgnoreCase(currentTag)) callData.Features = value;
+                    if ("GeocodedLocation".equalsIgnoreCase(currentTag)) callData.GeocodedLocation = value;
+                    if ("IsRead".equalsIgnoreCase(currentTag)) callData.IsRead = value;
+                    if ("LastModified".equalsIgnoreCase(currentTag)) callData.LastModified = value;
+                    if ("LimitParamKey".equalsIgnoreCase(currentTag)) callData.LimitParamKey = value;
+                    if ("Location".equalsIgnoreCase(currentTag)) callData.Location = value;
+                    if ("MissedReason".equalsIgnoreCase(currentTag)) callData.MissedReason = value;
+                    if ("New".equalsIgnoreCase(currentTag)) callData.New = value;
+                    if ("Number".equalsIgnoreCase(currentTag)) callData.Number = value;
+                    if ("NumberPresentation".equalsIgnoreCase(currentTag)) callData.NumberPresentation = value;
+                    if ("OffsetParamKey".equalsIgnoreCase(currentTag)) callData.OffsetParamKey = value;
+                    if ("PhoneAccountComponentName".equalsIgnoreCase(currentTag)) callData.PhoneAccountComponentName = value;
+                    if ("PhoneAccountId".equalsIgnoreCase(currentTag)) callData.PhoneAccountId = value;
+                    if ("PostDialDigits".equalsIgnoreCase(currentTag)) callData.PostDialDigits = value;
+                    if ("Priority".equalsIgnoreCase(currentTag)) callData.Priority = value;
+                    if ("Subject".equalsIgnoreCase(currentTag)) callData.Subject = value;
+                    if ("Transcription".equalsIgnoreCase(currentTag)) callData.Transcription = value;
+                    if ("Type".equalsIgnoreCase(currentTag)) callData.Type = value;
+                    if ("ViaNumber".equalsIgnoreCase(currentTag)) callData.ViaNumber = value;
+                    if ("VoicemailUri".equalsIgnoreCase(currentTag)) callData.VoicemailUri = value;
+
+                    if ("AnsweredExternallyType".equalsIgnoreCase(currentTag)) callData.AnsweredExternallyType = Integer.parseInt(value);
+                    if ("BlockedType".equalsIgnoreCase(currentTag)) callData.BlockedType = Integer.parseInt(value);
+                    if ("BlockReasonBlockedNumber".equalsIgnoreCase(currentTag)) callData.BlockReasonBlockedNumber = Integer.parseInt(value);
+                    if ("BlockReasonCallScreeningService".equalsIgnoreCase(currentTag)) callData.BlockReasonCallScreeningService = Integer.parseInt(value);
+                    if ("BlockReasonDirectToVoicemail".equalsIgnoreCase(currentTag)) callData.BlockReasonDirectToVoicemail = Integer.parseInt(value);
+                    if ("BlockReasonNotBlocked".equalsIgnoreCase(currentTag)) callData.BlockReasonNotBlocked = Integer.parseInt(value);
+                    if ("BlockReasonNotInContacts".equalsIgnoreCase(currentTag)) callData.BlockReasonNotInContacts = Integer.parseInt(value);
+                    if ("BlockReasonPayPhone".equalsIgnoreCase(currentTag)) callData.BlockReasonPayPhone = Integer.parseInt(value);
+                    if ("BlockReasonRestrictedNumber".equalsIgnoreCase(currentTag)) callData.BlockReasonRestrictedNumber = Integer.parseInt(value);
+                    if ("BlockReasonUnknownNumber".equalsIgnoreCase(currentTag)) callData.BlockReasonUnknownNumber = Integer.parseInt(value);
+                    if ("FeaturesAssistedDialingUsed".equalsIgnoreCase(currentTag)) callData.FeaturesAssistedDialingUsed = Integer.parseInt(value);
+                    if ("FeaturesHdCall".equalsIgnoreCase(currentTag)) callData.FeaturesHdCall = Integer.parseInt(value);
+                    if ("FeaturePulledExternally".equalsIgnoreCase(currentTag)) callData.FeaturePulledExternally = Integer.parseInt(value);
+                    if ("FeatureRtt".equalsIgnoreCase(currentTag)) callData.FeatureRtt = Integer.parseInt(value);
+                    if ("FeaturesVideo".equalsIgnoreCase(currentTag)) callData.FeaturesVideo = Integer.parseInt(value);
+                    if ("FeatureVolte".equalsIgnoreCase(currentTag)) callData.FeatureVolte = Integer.parseInt(value);
+                    if ("FeatureWifi".equalsIgnoreCase(currentTag)) callData.FeatureWifi = Integer.parseInt(value);
+                    if ("IncomingType".equalsIgnoreCase(currentTag)) callData.IncomingType = Integer.parseInt(value);
+                    if ("MissedType".equalsIgnoreCase(currentTag)) callData.MissedType = Integer.parseInt(value);
+                    if ("OutgoingType".equalsIgnoreCase(currentTag)) callData.OutgoingType = Integer.parseInt(value);
+                    if ("PresentationAllowed".equalsIgnoreCase(currentTag)) callData.PresentationAllowed = Integer.parseInt(value);
+                    if ("PresentationPayPhone".equalsIgnoreCase(currentTag)) callData.PresentationPayPhone = Integer.parseInt(value);
+                    if ("PresentationRestricted".equalsIgnoreCase(currentTag)) callData.PresentationRestricted = Integer.parseInt(value);
+                    if ("PresentationUnknown".equalsIgnoreCase(currentTag)) callData.PresentationUnknown = Integer.parseInt(value);
+                    if ("PriorityNormal".equalsIgnoreCase(currentTag)) callData.PriorityNormal = Integer.parseInt(value);
+                    if ("PriorityUrgent".equalsIgnoreCase(currentTag)) callData.PriorityUrgent = Integer.parseInt(value);
+                    if ("RejectedType".equalsIgnoreCase(currentTag)) callData.RejectedType = Integer.parseInt(value);
+                    if ("VoicemailType".equalsIgnoreCase(currentTag)) callData.VoicemailType = Integer.parseInt(value);
+
+                    if ("AutoMissedEmergencyCall".equalsIgnoreCase(currentTag)) callData.AutoMissedEmergencyCall = Long.parseLong(value);
+                    if ("AutoMissedMaximumDialing".equalsIgnoreCase(currentTag)) callData.AutoMissedMaximumDialing = Long.parseLong(value);
+                    if ("AutoMissedMaximumRinging".equalsIgnoreCase(currentTag)) callData.AutoMissedMaximumRinging = Long.parseLong(value);
+                    if ("MissedReasonNotMissed".equalsIgnoreCase(currentTag)) callData.MissedReasonNotMissed = Long.parseLong(value);
+                    if ("UserMissedCallFiltersTimeout".equalsIgnoreCase(currentTag)) callData.UserMissedCallFiltersTimeout = Long.parseLong(value);
+                    if ("UserMissedCallScreeningServiceSilenced".equalsIgnoreCase(currentTag)) callData.UserMissedCallScreeningServiceSilenced = Long.parseLong(value);
+                    if ("UserMissedDndMode".equalsIgnoreCase(currentTag)) callData.UserMissedDndMode = Long.parseLong(value);
+                    if ("UserMissedLowRingVolume".equalsIgnoreCase(currentTag)) callData.UserMissedLowRingVolume = Long.parseLong(value);
+                    if ("UserMissedNoAnswer".equalsIgnoreCase(currentTag)) callData.UserMissedNoAnswer = Long.parseLong(value);
+                    if ("UserMissedNoVibrate".equalsIgnoreCase(currentTag)) callData.UserMissedNoVibrate = Long.parseLong(value);
+                    if ("UserMissedShortRing".equalsIgnoreCase(currentTag)) callData.UserMissedShortRing = Long.parseLong(value);
+                } else if(eventType == XmlPullParser.END_TAG) {
+                    //System.out.println("End tag "+xpp.getName());
+                    if (xpp.getName().equalsIgnoreCase("call")) {
+                        System.out.println("--------------------");
+                        System.out.println("callData.Id: " + callData.Id);
+
+                        System.out.println("callData.BlockReason: " + callData.BlockReason);
+                        System.out.println("callData.CachedFormatedNumber: " + callData.CachedFormatedNumber);
+                        System.out.println("callData.CachedLookupUri: " + callData.CachedLookupUri);
+                        System.out.println("callData.CachedMatchedNumber: " + callData.CachedMatchedNumber);
+                        System.out.println("callData.CachedName: " + callData.CachedName);
+                        System.out.println("callData.CachedNormalizedNumber: " + callData.CachedNormalizedNumber);
+                        System.out.println("callData.CachedNumberLabel: " + callData.CachedNumberLabel);
+                        System.out.println("callData.CachedNumberType: " + callData.CachedNumberType);
+                        System.out.println("callData.CachedPhotoId: " + callData.CachedPhotoId);
+                        System.out.println("callData.CachedPhotoUri: " + callData.CachedPhotoUri);
+                        System.out.println("callData.CallScreeningAppName: " + callData.CallScreeningAppName);
+                        System.out.println("callData.CallScreeningComponentName: " + callData.CallScreeningComponentName);
+                        System.out.println("callData.ComposerPhotoUri: " + callData.ComposerPhotoUri);
+                        System.out.println("callData.ContentItemType: " + callData.ContentItemType);
+                        System.out.println("callData.ContentType: " + callData.ContentType);
+                        System.out.println("callData.CountryIso: " + callData.CountryIso);
+                        System.out.println("callData.DataUsage: " + callData.DataUsage);
+                        System.out.println("callData.Date: " + callData.Date);
+                        System.out.println("callData.DefaultSortOrder: " + callData.DefaultSortOrder);
+                        System.out.println("callData.Duration: " + callData.Duration);
+                        System.out.println("callData.ExtraCallTypeFilter: " + callData.ExtraCallTypeFilter);
+                        System.out.println("callData.Features: " + callData.Features);
+                        System.out.println("callData.GeocodedLocation: " + callData.GeocodedLocation);
+                        System.out.println("callData.IsRead: " + callData.IsRead);
+                        System.out.println("callData.LastModified: " + callData.LastModified);
+                        System.out.println("callData.LimitParamKey: " + callData.LimitParamKey);
+                        System.out.println("callData.Location: " + callData.Location);
+                        System.out.println("callData.MissedReason: " + callData.MissedReason);
+                        System.out.println("callData.New: " + callData.New);
+                        System.out.println("callData.Number: " + callData.Number);
+                        System.out.println("callData.NumberPresentation: " + callData.NumberPresentation);
+                        System.out.println("callData.OffsetParamKey: " + callData.OffsetParamKey);
+                        System.out.println("callData.PhoneAccountComponentName: " + callData.PhoneAccountComponentName);
+                        System.out.println("callData.PhoneAccountId: " + callData.PhoneAccountId);
+                        System.out.println("callData.PostDialDigits: " + callData.PostDialDigits);
+                        System.out.println("callData.Priority: " + callData.Priority);
+                        System.out.println("callData.Subject: " + callData.Subject);
+                        System.out.println("callData.Transcription: " + callData.Transcription);
+                        System.out.println("callData.Type: " + callData.Type);
+                        System.out.println("callData.ViaNumber: " + callData.ViaNumber);
+                        System.out.println("callData.VoicemailUri: " + callData.VoicemailUri);
+
+                        System.out.println("callData.AnsweredExternallyType: " + callData.AnsweredExternallyType);
+                        System.out.println("callData.BlockedType: " + callData.BlockedType);
+                        System.out.println("callData.BlockReasonBlockedNumber: " + callData.BlockReasonBlockedNumber);
+                        System.out.println("callData.BlockReasonCallScreeningService: " + callData.BlockReasonCallScreeningService);
+                        System.out.println("callData.BlockReasonDirectToVoicemail: " + callData.BlockReasonDirectToVoicemail);
+                        System.out.println("callData.BlockReasonNotBlocked: " + callData.BlockReasonNotBlocked);
+                        System.out.println("callData.BlockReasonNotInContacts: " + callData.BlockReasonNotInContacts);
+                        System.out.println("callData.BlockReasonPayPhone: " + callData.BlockReasonPayPhone);
+                        System.out.println("callData.BlockReasonRestrictedNumber: " + callData.BlockReasonRestrictedNumber);
+                        System.out.println("callData.BlockReasonUnknownNumber: " + callData.BlockReasonUnknownNumber);
+                        System.out.println("callData.FeaturesAssistedDialingUsed: " + callData.FeaturesAssistedDialingUsed);
+                        System.out.println("callData.FeaturesHdCall: " + callData.FeaturesHdCall);
+                        System.out.println("callData.FeaturePulledExternally: " + callData.FeaturePulledExternally);
+                        System.out.println("callData.FeatureRtt: " + callData.FeatureRtt);
+                        System.out.println("callData.FeaturesVideo: " + callData.FeaturesVideo);
+                        System.out.println("callData.FeatureVolte: " + callData.FeatureVolte);
+                        System.out.println("callData.FeatureWifi: " + callData.FeatureWifi);
+                        System.out.println("callData.IncomingType: " + callData.IncomingType);
+                        System.out.println("callData.MissedType: " + callData.MissedType);
+                        System.out.println("callData.OutgoingType: " + callData.OutgoingType);
+                        System.out.println("callData.PresentationAllowed: " + callData.PresentationAllowed);
+                        System.out.println("callData.PresentationPayPhone: " + callData.PresentationPayPhone);
+                        System.out.println("callData.PresentationRestricted: " + callData.PresentationRestricted);
+                        System.out.println("callData.PresentationUnknown: " + callData.PresentationUnknown);
+                        System.out.println("callData.PriorityNormal: " + callData.PriorityNormal);
+                        System.out.println("callData.PriorityUrgent: " + callData.PriorityUrgent);
+                        System.out.println("callData.RejectedType: " + callData.RejectedType);
+                        System.out.println("callData.VoicemailType: " + callData.VoicemailType);
+
+                        System.out.println("callData.AutoMissedEmergencyCall: " + callData.AutoMissedEmergencyCall);
+                        System.out.println("callData.AutoMissedMaximumDialing: " + callData.AutoMissedMaximumDialing);
+                        System.out.println("callData.AutoMissedMaximumRinging: " + callData.AutoMissedMaximumRinging);
+                        System.out.println("callData.MissedReasonNotMissed: " + callData.MissedReasonNotMissed);
+                        System.out.println("callData.UserMissedCallFiltersTimeout: " + callData.UserMissedCallFiltersTimeout);
+                        System.out.println("callData.UserMissedCallScreeningServiceSilenced: " + callData.UserMissedCallScreeningServiceSilenced);
+                        System.out.println("callData.UserMissedDndMode: " + callData.UserMissedDndMode);
+                        System.out.println("callData.UserMissedLowRingVolume: " + callData.UserMissedLowRingVolume);
+                        System.out.println("callData.UserMissedNoAnswer: " + callData.UserMissedNoAnswer);
+                        System.out.println("callData.UserMissedNoVibrate: " + callData.UserMissedNoVibrate);
+                        System.out.println("callData.UserMissedShortRing: " + callData.UserMissedShortRing);
+                        callDataList.add(callData);
+                        System.out.println("--------------------");
+                        System.out.println("Parent tag: " + parentTag + " => End tag: " + xpp.getName());
+                        System.out.println("====================");
+
+
+                    }
+                }
+
+                eventType = xpp.next();
+            }
+            System.out.println("========================================");
+            System.out.println("End document");
+            System.out.println("========================================");
+            System.out.println("CallLog: "+countCallLog);
+            is.close();
+            Toast.makeText(context, "Operation successful", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Operation failed", Toast.LENGTH_SHORT).show();
+        } finally {
+            // Tutaj być może wrzut statusu operacji do logera?
+        }
+
+
+        return callDataList;
+    }
 }

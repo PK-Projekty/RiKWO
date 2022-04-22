@@ -167,12 +167,18 @@ public class MainActivity extends AppCompatActivity {
         fh.storeCallLogInXml(callData);
 
         // /storage/emulated/0/Documents/20220420164709-sms.xml
-        File file = new File(
+        File smsXml = new File(
                 Environment.getExternalStorageDirectory() + "/Documents/",
                 "20220420164709-sms.xml"
         );
-        fh.restoreSmsFromXml(file);
+        fh.restoreSmsFromXml(smsXml);
 
+        // /storage/emulated/0/Documents/20220421194442-calls.xml
+        File callLogXml = new File(
+                Environment.getExternalStorageDirectory() + "/Documents/",
+                "20220421194442-calls.xml"
+        );
+        fh.restoreCallLogFromXml(callLogXml);
     }
 
     public void EmailButton () {
