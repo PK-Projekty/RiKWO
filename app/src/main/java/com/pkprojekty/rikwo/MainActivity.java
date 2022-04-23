@@ -193,7 +193,8 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Kopia zapasowa z aplikacji");
         emailIntent.putExtra(Intent.EXTRA_STREAM, path);
         try{
-            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            //startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            startActivity(Intent.createChooser(emailIntent, "Send mail with ..."));
             finish();
             Log.i("Finished sending email...","");
         }
