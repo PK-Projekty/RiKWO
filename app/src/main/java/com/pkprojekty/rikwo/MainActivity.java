@@ -11,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
+import android.provider.Telephony;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +21,7 @@ import com.pkprojekty.rikwo.CallLog.BackupCallLog;
 import com.pkprojekty.rikwo.Entities.CallData;
 import com.pkprojekty.rikwo.Sms.BackupSms;
 import com.pkprojekty.rikwo.Entities.SmsData;
+import com.pkprojekty.rikwo.Sms.RestoreSms;
 import com.pkprojekty.rikwo.Xml.FileHandler;
 
 import java.io.File;
@@ -69,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
             WriteExternalStoragePermissionGranted = true;
         }
 
-
-
-
         if (
                 ReadSmsPermissionGranted &&
                 ReadCallLogsPermissionGranted &&
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 WriteExternalStoragePermissionGranted
         ) { backup(); }
 
+        restore();
     }
 
     /* And a method to override */
@@ -106,21 +107,21 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
             }
-            // READ_EXTERNAL_STORAGE permission toast
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
-            }
             // WRITE_EXTERNAL_STORAGE permission toast
             if (grantResults.length > 0 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ContextCompat.checkSelfPermission(MainActivity.this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
+            }
+            // READ_EXTERNAL_STORAGE permission toast
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
                 }
             } else {
@@ -166,12 +167,17 @@ public class MainActivity extends AppCompatActivity {
         fh.storeSmsInXml(smsData);
         fh.storeCallLogInXml(callData);
 
+    }
+    public void restore() {
+        System.out.println("Wczytano sms");
+        FileHandler fh = new FileHandler(this);
+
         // /storage/emulated/0/Documents/20220420164709-sms.xml
         File smsXml = new File(
                 Environment.getExternalStorageDirectory() + "/Documents/",
                 "20220420164709-sms.xml"
         );
-        fh.restoreSmsFromXml(smsXml);
+        List<List<SmsData>> smsDataList = fh.restoreSmsFromXml(smsXml);
 
         // /storage/emulated/0/Documents/20220421194442-calls.xml
         File callLogXml = new File(
@@ -179,6 +185,26 @@ public class MainActivity extends AppCompatActivity {
                 "20220421194442-calls.xml"
         );
         fh.restoreCallLogFromXml(callLogXml);
+
+        if (! this.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(this)))
+        {
+            System.out.println("Na czas przywracania wiadomości ustaw ta aplikacje jako domyslna");
+            System.out.println("Następnie uruchom przywracanie wiadomości sms ponownie");
+            //Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+            startActivity(intent);
+        }
+
+        RestoreSms restoreSms = new RestoreSms(this);
+        restoreSms.setAllSms(smsDataList);
+
+        if (this.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(this)))
+        {
+            System.out.println("Wiadomości przywrócone, ustaw pierwotną aplikację jako domyślną");
+            //Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+            startActivity(intent);
+        }
     }
 
     public void EmailButton () {

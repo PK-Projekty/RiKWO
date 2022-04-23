@@ -555,9 +555,9 @@ public class FileHandler {
             int eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if(eventType == XmlPullParser.START_DOCUMENT) {
-                    System.out.println("========================================");
-                    System.out.println("Start document");
-                    System.out.println("========================================");
+//                    System.out.println("========================================");
+//                    System.out.println("Start document");
+//                    System.out.println("========================================");
                 } else if(eventType == XmlPullParser.START_TAG) {
                     //System.out.println("Start tag "+xpp.getName());
                     // Inbox Messages
@@ -569,7 +569,7 @@ public class FileHandler {
                                 if (xpp.getName().equalsIgnoreCase("Message")) {
                                     String messageTag = xpp.getName();
                                     String messageId = xpp.getAttributeValue(null,"id");
-                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
+//                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
                                     countInbox++;
                                     SmsData smsData = new SmsData();
                                     String tagName;
@@ -579,12 +579,12 @@ public class FileHandler {
                                         eventType = xpp.next();
                                         tagName = xpp.getName();
                                         if (eventType == XmlPullParser.START_TAG) {
-                                            System.out.println("    => tag: " + tagName);
+//                                            System.out.println("    => tag: " + tagName);
                                             currentTag = tagName;
                                         }
                                         if (eventType == XmlPullParser.TEXT) {
                                             value = String.valueOf(xpp.getText());
-                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
+//                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
                                             if ("Address".equalsIgnoreCase(currentTag)) smsData.Address = value;
                                             if ("Body".equalsIgnoreCase(currentTag)) smsData.Body = value;
                                             if ("Creator".equalsIgnoreCase(currentTag)) smsData.Creator = value;
@@ -617,39 +617,39 @@ public class FileHandler {
                                         }
                                         if (eventType == XmlPullParser.END_TAG) {
                                             if (xpp.getName().equalsIgnoreCase("Message")) {
-                                                System.out.println("--------------------");
-                                                System.out.println("smsData.Address: "+smsData.Address);
-                                                System.out.println("smsData.Body: "+smsData.Body);
-                                                System.out.println("smsData.Creator: "+smsData.Creator);
-                                                System.out.println("smsData.Date: "+smsData.Date);
-                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
-                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
-                                                System.out.println("smsData.Locked: "+smsData.Locked);
-                                                System.out.println("smsData.Person: "+smsData.Person);
-                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
-                                                System.out.println("smsData.Read: "+smsData.Read);
-                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
-                                                System.out.println("smsData.Seen: "+smsData.Seen);
-                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
-                                                System.out.println("smsData.Status: "+smsData.Status);
-                                                System.out.println("smsData.Subject: "+smsData.Subject);
-                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
-                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
-                                                System.out.println("smsData.Type: "+smsData.Type);
-                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
-                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
-                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
-                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
-                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
-                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
-                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
-                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
-                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
-                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
-                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
-                                                smsSentDataList.add(smsData);
-                                                System.out.println("--------------------");
-                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
+//                                                System.out.println("--------------------");
+//                                                System.out.println("smsData.Address: "+smsData.Address);
+//                                                System.out.println("smsData.Body: "+smsData.Body);
+//                                                System.out.println("smsData.Creator: "+smsData.Creator);
+//                                                System.out.println("smsData.Date: "+smsData.Date);
+//                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
+//                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
+//                                                System.out.println("smsData.Locked: "+smsData.Locked);
+//                                                System.out.println("smsData.Person: "+smsData.Person);
+//                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
+//                                                System.out.println("smsData.Read: "+smsData.Read);
+//                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
+//                                                System.out.println("smsData.Seen: "+smsData.Seen);
+//                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
+//                                                System.out.println("smsData.Status: "+smsData.Status);
+//                                                System.out.println("smsData.Subject: "+smsData.Subject);
+//                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
+//                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
+//                                                System.out.println("smsData.Type: "+smsData.Type);
+//                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
+//                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
+//                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
+//                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
+//                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
+//                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
+//                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
+//                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
+//                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
+//                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
+//                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
+                                                smsInboxDataList.add(smsData);
+//                                                System.out.println("--------------------");
+//                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
                                                 messageTag = "";
                                             }
                                         }
@@ -662,8 +662,8 @@ public class FileHandler {
                                 //    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
                                 //}
                                 if (xpp.getName().equalsIgnoreCase("Inbox")) {
-                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
-                                    System.out.println("====================");
+//                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+//                                    System.out.println("====================");
                                     parentTag = "";
                                 }
                             }
@@ -679,7 +679,7 @@ public class FileHandler {
                                 if (xpp.getName().equalsIgnoreCase("Message")) {
                                     String messageTag = xpp.getName();
                                     String messageId = xpp.getAttributeValue(null,"id");
-                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
+//                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
                                     countSent++;
                                     SmsData smsData = new SmsData();
                                     String tagName;
@@ -689,12 +689,12 @@ public class FileHandler {
                                         eventType = xpp.next();
                                         tagName = xpp.getName();
                                         if (eventType == XmlPullParser.START_TAG) {
-                                            System.out.println("    => tag: " + tagName);
+//                                            System.out.println("    => tag: " + tagName);
                                             currentTag = tagName;
                                         }
                                         if (eventType == XmlPullParser.TEXT) {
                                             value = String.valueOf(xpp.getText());
-                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
+//                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
                                             if ("Address".equalsIgnoreCase(currentTag)) smsData.Address = value;
                                             if ("Body".equalsIgnoreCase(currentTag)) smsData.Body = value;
                                             if ("Creator".equalsIgnoreCase(currentTag)) smsData.Creator = value;
@@ -727,39 +727,39 @@ public class FileHandler {
                                         }
                                         if (eventType == XmlPullParser.END_TAG) {
                                             if (xpp.getName().equalsIgnoreCase("Message")) {
-                                                System.out.println("--------------------");
-                                                System.out.println("smsData.Address: "+smsData.Address);
-                                                System.out.println("smsData.Body: "+smsData.Body);
-                                                System.out.println("smsData.Creator: "+smsData.Creator);
-                                                System.out.println("smsData.Date: "+smsData.Date);
-                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
-                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
-                                                System.out.println("smsData.Locked: "+smsData.Locked);
-                                                System.out.println("smsData.Person: "+smsData.Person);
-                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
-                                                System.out.println("smsData.Read: "+smsData.Read);
-                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
-                                                System.out.println("smsData.Seen: "+smsData.Seen);
-                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
-                                                System.out.println("smsData.Status: "+smsData.Status);
-                                                System.out.println("smsData.Subject: "+smsData.Subject);
-                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
-                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
-                                                System.out.println("smsData.Type: "+smsData.Type);
-                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
-                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
-                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
-                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
-                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
-                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
-                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
-                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
-                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
-                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
-                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
+//                                                System.out.println("--------------------");
+//                                                System.out.println("smsData.Address: "+smsData.Address);
+//                                                System.out.println("smsData.Body: "+smsData.Body);
+//                                                System.out.println("smsData.Creator: "+smsData.Creator);
+//                                                System.out.println("smsData.Date: "+smsData.Date);
+//                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
+//                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
+//                                                System.out.println("smsData.Locked: "+smsData.Locked);
+//                                                System.out.println("smsData.Person: "+smsData.Person);
+//                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
+//                                                System.out.println("smsData.Read: "+smsData.Read);
+//                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
+//                                                System.out.println("smsData.Seen: "+smsData.Seen);
+//                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
+//                                                System.out.println("smsData.Status: "+smsData.Status);
+//                                                System.out.println("smsData.Subject: "+smsData.Subject);
+//                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
+//                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
+//                                                System.out.println("smsData.Type: "+smsData.Type);
+//                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
+//                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
+//                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
+//                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
+//                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
+//                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
+//                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
+//                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
+//                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
+//                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
+//                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
                                                 smsSentDataList.add(smsData);
-                                                System.out.println("--------------------");
-                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
+//                                                System.out.println("--------------------");
+//                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
                                                 messageTag = "";
                                             }
                                         }
@@ -772,8 +772,8 @@ public class FileHandler {
                                 //    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
                                 //}
                                 if (xpp.getName().equalsIgnoreCase("Sent")) {
-                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
-                                    System.out.println("====================");
+//                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+//                                    System.out.println("====================");
                                     parentTag = "";
                                 }
                             }
@@ -789,7 +789,7 @@ public class FileHandler {
                                 if (xpp.getName().equalsIgnoreCase("Message")) {
                                     String messageTag = xpp.getName();
                                     String messageId = xpp.getAttributeValue(null,"id");
-                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
+//                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
                                     countDraft++;
                                     SmsData smsData = new SmsData();
                                     String tagName;
@@ -799,12 +799,12 @@ public class FileHandler {
                                         eventType = xpp.next();
                                         tagName = xpp.getName();
                                         if (eventType == XmlPullParser.START_TAG) {
-                                            System.out.println("    => tag: " + tagName);
+//                                            System.out.println("    => tag: " + tagName);
                                             currentTag = tagName;
                                         }
                                         if (eventType == XmlPullParser.TEXT) {
                                             value = String.valueOf(xpp.getText());
-                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
+//                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
                                             if ("Address".equalsIgnoreCase(currentTag)) smsData.Address = value;
                                             if ("Body".equalsIgnoreCase(currentTag)) smsData.Body = value;
                                             if ("Creator".equalsIgnoreCase(currentTag)) smsData.Creator = value;
@@ -837,39 +837,39 @@ public class FileHandler {
                                         }
                                         if (eventType == XmlPullParser.END_TAG) {
                                             if (xpp.getName().equalsIgnoreCase("Message")) {
-                                                System.out.println("--------------------");
-                                                System.out.println("smsData.Address: "+smsData.Address);
-                                                System.out.println("smsData.Body: "+smsData.Body);
-                                                System.out.println("smsData.Creator: "+smsData.Creator);
-                                                System.out.println("smsData.Date: "+smsData.Date);
-                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
-                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
-                                                System.out.println("smsData.Locked: "+smsData.Locked);
-                                                System.out.println("smsData.Person: "+smsData.Person);
-                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
-                                                System.out.println("smsData.Read: "+smsData.Read);
-                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
-                                                System.out.println("smsData.Seen: "+smsData.Seen);
-                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
-                                                System.out.println("smsData.Status: "+smsData.Status);
-                                                System.out.println("smsData.Subject: "+smsData.Subject);
-                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
-                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
-                                                System.out.println("smsData.Type: "+smsData.Type);
-                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
-                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
-                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
-                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
-                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
-                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
-                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
-                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
-                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
-                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
-                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
-                                                smsSentDataList.add(smsData);
-                                                System.out.println("--------------------");
-                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
+//                                                System.out.println("--------------------");
+//                                                System.out.println("smsData.Address: "+smsData.Address);
+//                                                System.out.println("smsData.Body: "+smsData.Body);
+//                                                System.out.println("smsData.Creator: "+smsData.Creator);
+//                                                System.out.println("smsData.Date: "+smsData.Date);
+//                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
+//                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
+//                                                System.out.println("smsData.Locked: "+smsData.Locked);
+//                                                System.out.println("smsData.Person: "+smsData.Person);
+//                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
+//                                                System.out.println("smsData.Read: "+smsData.Read);
+//                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
+//                                                System.out.println("smsData.Seen: "+smsData.Seen);
+//                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
+//                                                System.out.println("smsData.Status: "+smsData.Status);
+//                                                System.out.println("smsData.Subject: "+smsData.Subject);
+//                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
+//                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
+//                                                System.out.println("smsData.Type: "+smsData.Type);
+//                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
+//                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
+//                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
+//                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
+//                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
+//                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
+//                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
+//                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
+//                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
+//                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
+//                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
+                                                smsDraftDataList.add(smsData);
+//                                                System.out.println("--------------------");
+//                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
                                                 messageTag = "";
                                             }
                                         }
@@ -882,8 +882,8 @@ public class FileHandler {
                                 //    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
                                 //}
                                 if (xpp.getName().equalsIgnoreCase("Draft")) {
-                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
-                                    System.out.println("====================");
+//                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+//                                    System.out.println("====================");
                                     parentTag = "";
                                 }
                             }
@@ -899,7 +899,7 @@ public class FileHandler {
                                 if (xpp.getName().equalsIgnoreCase("Message")) {
                                     String messageTag = xpp.getName();
                                     String messageId = xpp.getAttributeValue(null,"id");
-                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
+//                                    System.out.println("Parent tag: " + parentTag + " => Start tag: " + messageTag + " => id: " + messageId);
                                     countOutbox++;
                                     SmsData smsData = new SmsData();
                                     String tagName;
@@ -909,12 +909,12 @@ public class FileHandler {
                                         eventType = xpp.next();
                                         tagName = xpp.getName();
                                         if (eventType == XmlPullParser.START_TAG) {
-                                            System.out.println("    => tag: " + tagName);
+//                                            System.out.println("    => tag: " + tagName);
                                             currentTag = tagName;
                                         }
                                         if (eventType == XmlPullParser.TEXT) {
                                             value = String.valueOf(xpp.getText());
-                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
+//                                            System.out.println("       value: " + value + " => Tag: " + currentTag);
                                             if ("Address".equalsIgnoreCase(currentTag)) smsData.Address = value;
                                             if ("Body".equalsIgnoreCase(currentTag)) smsData.Body = value;
                                             if ("Creator".equalsIgnoreCase(currentTag)) smsData.Creator = value;
@@ -947,39 +947,39 @@ public class FileHandler {
                                         }
                                         if (eventType == XmlPullParser.END_TAG) {
                                             if (xpp.getName().equalsIgnoreCase("Message")) {
-                                                System.out.println("--------------------");
-                                                System.out.println("smsData.Address: "+smsData.Address);
-                                                System.out.println("smsData.Body: "+smsData.Body);
-                                                System.out.println("smsData.Creator: "+smsData.Creator);
-                                                System.out.println("smsData.Date: "+smsData.Date);
-                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
-                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
-                                                System.out.println("smsData.Locked: "+smsData.Locked);
-                                                System.out.println("smsData.Person: "+smsData.Person);
-                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
-                                                System.out.println("smsData.Read: "+smsData.Read);
-                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
-                                                System.out.println("smsData.Seen: "+smsData.Seen);
-                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
-                                                System.out.println("smsData.Status: "+smsData.Status);
-                                                System.out.println("smsData.Subject: "+smsData.Subject);
-                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
-                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
-                                                System.out.println("smsData.Type: "+smsData.Type);
-                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
-                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
-                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
-                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
-                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
-                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
-                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
-                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
-                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
-                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
-                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
-                                                smsSentDataList.add(smsData);
-                                                System.out.println("--------------------");
-                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
+//                                                System.out.println("--------------------");
+//                                                System.out.println("smsData.Address: "+smsData.Address);
+//                                                System.out.println("smsData.Body: "+smsData.Body);
+//                                                System.out.println("smsData.Creator: "+smsData.Creator);
+//                                                System.out.println("smsData.Date: "+smsData.Date);
+//                                                System.out.println("smsData.DateSent: "+smsData.DateSent);
+//                                                System.out.println("smsData.ErrorCode: "+smsData.ErrorCode);
+//                                                System.out.println("smsData.Locked: "+smsData.Locked);
+//                                                System.out.println("smsData.Person: "+smsData.Person);
+//                                                System.out.println("smsData.Protocol: "+smsData.Protocol);
+//                                                System.out.println("smsData.Read: "+smsData.Read);
+//                                                System.out.println("smsData.ReplayPathPresent: "+smsData.ReplayPathPresent);
+//                                                System.out.println("smsData.Seen: "+smsData.Seen);
+//                                                System.out.println("smsData.ServiceCenter: "+smsData.ServiceCenter);
+//                                                System.out.println("smsData.Status: "+smsData.Status);
+//                                                System.out.println("smsData.Subject: "+smsData.Subject);
+//                                                System.out.println("smsData.SubscriptionId: "+smsData.SubscriptionId);
+//                                                System.out.println("smsData.ThreadId: "+smsData.ThreadId);
+//                                                System.out.println("smsData.Type: "+smsData.Type);
+//                                                System.out.println("smsData.MessageTypeAll: "+smsData.MessageTypeAll);
+//                                                System.out.println("smsData.MessageTypeDraft: "+smsData.MessageTypeDraft);
+//                                                System.out.println("smsData.MessageTypeFailed: "+smsData.MessageTypeFailed);
+//                                                System.out.println("smsData.MessageTypeInbox: "+smsData.MessageTypeInbox);
+//                                                System.out.println("smsData.MessageTypeOutbox: "+smsData.MessageTypeOutbox);
+//                                                System.out.println("smsData.MessageTypeQueded: "+smsData.MessageTypeQueded);
+//                                                System.out.println("smsData.MessageTypeSent: "+smsData.MessageTypeSent);
+//                                                System.out.println("smsData.StatusComplete: "+smsData.StatusComplete);
+//                                                System.out.println("smsData.StatusFailed: "+smsData.StatusFailed);
+//                                                System.out.println("smsData.StatusNone: "+smsData.StatusNone);
+//                                                System.out.println("smsData.StatusPending: "+smsData.StatusPending);
+                                                smsOutboxDataList.add(smsData);
+//                                                System.out.println("--------------------");
+//                                                System.out.println("Parent tag: " + parentTag + " => End tag: " + tagName + " => id: " + messageId);
                                                 messageTag = "";
                                             }
                                         }
@@ -992,8 +992,8 @@ public class FileHandler {
                                 //    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
                                 //}
                                 if (xpp.getName().equalsIgnoreCase("Outbox")) {
-                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
-                                    System.out.println("====================");
+//                                    System.out.println("Parent tag:" + parentTag + " => End tag:" + xpp.getName());
+//                                    System.out.println("====================");
                                     parentTag = "";
                                 }
                             }
@@ -1005,14 +1005,14 @@ public class FileHandler {
                 }
                 eventType = xpp.next();
             }
-            System.out.println("========================================");
-            System.out.println("End document");
-            System.out.println("========================================");
-
-            System.out.println("Inbox: "+countInbox);
-            System.out.println("Sent: "+countSent);
-            System.out.println("Draft: "+countDraft);
-            System.out.println("Outbox: "+countOutbox);
+//            System.out.println("========================================");
+//            System.out.println("End document");
+//            System.out.println("========================================");
+//
+//            System.out.println("Inbox: "+countInbox);
+//            System.out.println("Sent: "+countSent);
+//            System.out.println("Draft: "+countDraft);
+//            System.out.println("Outbox: "+countOutbox);
 
             is.close();
             Toast.makeText(context, "Operation successful", Toast.LENGTH_SHORT).show();
@@ -1051,22 +1051,22 @@ public class FileHandler {
                 String callId;
                 String value;
                 if(eventType == XmlPullParser.START_DOCUMENT) {
-                    System.out.println("========================================");
-                    System.out.println("Start document");
-                    System.out.println("========================================");
+//                    System.out.println("========================================");
+//                    System.out.println("Start document");
+//                    System.out.println("========================================");
                 } else if(eventType == XmlPullParser.START_TAG) {
                     //System.out.println("Start tag "+xpp.getName());
                     if (xpp.getName().equalsIgnoreCase("call")) {
                         callTag = xpp.getName();
                         callId = xpp.getAttributeValue(null,"id");
-                        System.out.println("Parent tag: " + parentTag + " => Start tag: " + callTag + " => id: " + callId);
+//                        System.out.println("Parent tag: " + parentTag + " => Start tag: " + callTag + " => id: " + callId);
                         countCallLog++;
                     }
                     currentTag = xpp.getName();
                 } else if(eventType == XmlPullParser.TEXT) {
                     //System.out.println("Text "+xpp.getText());
                     value = String.valueOf(xpp.getText());
-                    System.out.println("    => Tag: " + currentTag + " => value: " + value);
+//                    System.out.println("    => Tag: " + currentTag + " => value: " + value);
                     if ("Id".equalsIgnoreCase(currentTag)) callData.Id = value;
 
                     if ("BlockReason".equalsIgnoreCase(currentTag)) callData.BlockReason = value;
@@ -1154,95 +1154,95 @@ public class FileHandler {
                 } else if(eventType == XmlPullParser.END_TAG) {
                     //System.out.println("End tag "+xpp.getName());
                     if (xpp.getName().equalsIgnoreCase("call")) {
-                        System.out.println("--------------------");
-                        System.out.println("callData.Id: " + callData.Id);
+//                        System.out.println("--------------------");
+//                        System.out.println("callData.Id: " + callData.Id);
 
-                        System.out.println("callData.BlockReason: " + callData.BlockReason);
-                        System.out.println("callData.CachedFormatedNumber: " + callData.CachedFormatedNumber);
-                        System.out.println("callData.CachedLookupUri: " + callData.CachedLookupUri);
-                        System.out.println("callData.CachedMatchedNumber: " + callData.CachedMatchedNumber);
-                        System.out.println("callData.CachedName: " + callData.CachedName);
-                        System.out.println("callData.CachedNormalizedNumber: " + callData.CachedNormalizedNumber);
-                        System.out.println("callData.CachedNumberLabel: " + callData.CachedNumberLabel);
-                        System.out.println("callData.CachedNumberType: " + callData.CachedNumberType);
-                        System.out.println("callData.CachedPhotoId: " + callData.CachedPhotoId);
-                        System.out.println("callData.CachedPhotoUri: " + callData.CachedPhotoUri);
-                        System.out.println("callData.CallScreeningAppName: " + callData.CallScreeningAppName);
-                        System.out.println("callData.CallScreeningComponentName: " + callData.CallScreeningComponentName);
-                        System.out.println("callData.ComposerPhotoUri: " + callData.ComposerPhotoUri);
-                        System.out.println("callData.ContentItemType: " + callData.ContentItemType);
-                        System.out.println("callData.ContentType: " + callData.ContentType);
-                        System.out.println("callData.CountryIso: " + callData.CountryIso);
-                        System.out.println("callData.DataUsage: " + callData.DataUsage);
-                        System.out.println("callData.Date: " + callData.Date);
-                        System.out.println("callData.DefaultSortOrder: " + callData.DefaultSortOrder);
-                        System.out.println("callData.Duration: " + callData.Duration);
-                        System.out.println("callData.ExtraCallTypeFilter: " + callData.ExtraCallTypeFilter);
-                        System.out.println("callData.Features: " + callData.Features);
-                        System.out.println("callData.GeocodedLocation: " + callData.GeocodedLocation);
-                        System.out.println("callData.IsRead: " + callData.IsRead);
-                        System.out.println("callData.LastModified: " + callData.LastModified);
-                        System.out.println("callData.LimitParamKey: " + callData.LimitParamKey);
-                        System.out.println("callData.Location: " + callData.Location);
-                        System.out.println("callData.MissedReason: " + callData.MissedReason);
-                        System.out.println("callData.New: " + callData.New);
-                        System.out.println("callData.Number: " + callData.Number);
-                        System.out.println("callData.NumberPresentation: " + callData.NumberPresentation);
-                        System.out.println("callData.OffsetParamKey: " + callData.OffsetParamKey);
-                        System.out.println("callData.PhoneAccountComponentName: " + callData.PhoneAccountComponentName);
-                        System.out.println("callData.PhoneAccountId: " + callData.PhoneAccountId);
-                        System.out.println("callData.PostDialDigits: " + callData.PostDialDigits);
-                        System.out.println("callData.Priority: " + callData.Priority);
-                        System.out.println("callData.Subject: " + callData.Subject);
-                        System.out.println("callData.Transcription: " + callData.Transcription);
-                        System.out.println("callData.Type: " + callData.Type);
-                        System.out.println("callData.ViaNumber: " + callData.ViaNumber);
-                        System.out.println("callData.VoicemailUri: " + callData.VoicemailUri);
+//                        System.out.println("callData.BlockReason: " + callData.BlockReason);
+//                        System.out.println("callData.CachedFormatedNumber: " + callData.CachedFormatedNumber);
+//                        System.out.println("callData.CachedLookupUri: " + callData.CachedLookupUri);
+//                        System.out.println("callData.CachedMatchedNumber: " + callData.CachedMatchedNumber);
+//                        System.out.println("callData.CachedName: " + callData.CachedName);
+//                        System.out.println("callData.CachedNormalizedNumber: " + callData.CachedNormalizedNumber);
+//                        System.out.println("callData.CachedNumberLabel: " + callData.CachedNumberLabel);
+//                        System.out.println("callData.CachedNumberType: " + callData.CachedNumberType);
+//                        System.out.println("callData.CachedPhotoId: " + callData.CachedPhotoId);
+//                        System.out.println("callData.CachedPhotoUri: " + callData.CachedPhotoUri);
+//                        System.out.println("callData.CallScreeningAppName: " + callData.CallScreeningAppName);
+//                        System.out.println("callData.CallScreeningComponentName: " + callData.CallScreeningComponentName);
+//                        System.out.println("callData.ComposerPhotoUri: " + callData.ComposerPhotoUri);
+//                        System.out.println("callData.ContentItemType: " + callData.ContentItemType);
+//                        System.out.println("callData.ContentType: " + callData.ContentType);
+//                        System.out.println("callData.CountryIso: " + callData.CountryIso);
+//                        System.out.println("callData.DataUsage: " + callData.DataUsage);
+//                        System.out.println("callData.Date: " + callData.Date);
+//                        System.out.println("callData.DefaultSortOrder: " + callData.DefaultSortOrder);
+//                        System.out.println("callData.Duration: " + callData.Duration);
+//                        System.out.println("callData.ExtraCallTypeFilter: " + callData.ExtraCallTypeFilter);
+//                        System.out.println("callData.Features: " + callData.Features);
+//                        System.out.println("callData.GeocodedLocation: " + callData.GeocodedLocation);
+//                        System.out.println("callData.IsRead: " + callData.IsRead);
+//                        System.out.println("callData.LastModified: " + callData.LastModified);
+//                        System.out.println("callData.LimitParamKey: " + callData.LimitParamKey);
+//                        System.out.println("callData.Location: " + callData.Location);
+//                        System.out.println("callData.MissedReason: " + callData.MissedReason);
+//                        System.out.println("callData.New: " + callData.New);
+//                        System.out.println("callData.Number: " + callData.Number);
+//                        System.out.println("callData.NumberPresentation: " + callData.NumberPresentation);
+//                        System.out.println("callData.OffsetParamKey: " + callData.OffsetParamKey);
+//                        System.out.println("callData.PhoneAccountComponentName: " + callData.PhoneAccountComponentName);
+//                        System.out.println("callData.PhoneAccountId: " + callData.PhoneAccountId);
+//                        System.out.println("callData.PostDialDigits: " + callData.PostDialDigits);
+//                        System.out.println("callData.Priority: " + callData.Priority);
+//                        System.out.println("callData.Subject: " + callData.Subject);
+//                        System.out.println("callData.Transcription: " + callData.Transcription);
+//                        System.out.println("callData.Type: " + callData.Type);
+//                        System.out.println("callData.ViaNumber: " + callData.ViaNumber);
+//                        System.out.println("callData.VoicemailUri: " + callData.VoicemailUri);
 
-                        System.out.println("callData.AnsweredExternallyType: " + callData.AnsweredExternallyType);
-                        System.out.println("callData.BlockedType: " + callData.BlockedType);
-                        System.out.println("callData.BlockReasonBlockedNumber: " + callData.BlockReasonBlockedNumber);
-                        System.out.println("callData.BlockReasonCallScreeningService: " + callData.BlockReasonCallScreeningService);
-                        System.out.println("callData.BlockReasonDirectToVoicemail: " + callData.BlockReasonDirectToVoicemail);
-                        System.out.println("callData.BlockReasonNotBlocked: " + callData.BlockReasonNotBlocked);
-                        System.out.println("callData.BlockReasonNotInContacts: " + callData.BlockReasonNotInContacts);
-                        System.out.println("callData.BlockReasonPayPhone: " + callData.BlockReasonPayPhone);
-                        System.out.println("callData.BlockReasonRestrictedNumber: " + callData.BlockReasonRestrictedNumber);
-                        System.out.println("callData.BlockReasonUnknownNumber: " + callData.BlockReasonUnknownNumber);
-                        System.out.println("callData.FeaturesAssistedDialingUsed: " + callData.FeaturesAssistedDialingUsed);
-                        System.out.println("callData.FeaturesHdCall: " + callData.FeaturesHdCall);
-                        System.out.println("callData.FeaturePulledExternally: " + callData.FeaturePulledExternally);
-                        System.out.println("callData.FeatureRtt: " + callData.FeatureRtt);
-                        System.out.println("callData.FeaturesVideo: " + callData.FeaturesVideo);
-                        System.out.println("callData.FeatureVolte: " + callData.FeatureVolte);
-                        System.out.println("callData.FeatureWifi: " + callData.FeatureWifi);
-                        System.out.println("callData.IncomingType: " + callData.IncomingType);
-                        System.out.println("callData.MissedType: " + callData.MissedType);
-                        System.out.println("callData.OutgoingType: " + callData.OutgoingType);
-                        System.out.println("callData.PresentationAllowed: " + callData.PresentationAllowed);
-                        System.out.println("callData.PresentationPayPhone: " + callData.PresentationPayPhone);
-                        System.out.println("callData.PresentationRestricted: " + callData.PresentationRestricted);
-                        System.out.println("callData.PresentationUnknown: " + callData.PresentationUnknown);
-                        System.out.println("callData.PriorityNormal: " + callData.PriorityNormal);
-                        System.out.println("callData.PriorityUrgent: " + callData.PriorityUrgent);
-                        System.out.println("callData.RejectedType: " + callData.RejectedType);
-                        System.out.println("callData.VoicemailType: " + callData.VoicemailType);
+//                        System.out.println("callData.AnsweredExternallyType: " + callData.AnsweredExternallyType);
+//                        System.out.println("callData.BlockedType: " + callData.BlockedType);
+//                        System.out.println("callData.BlockReasonBlockedNumber: " + callData.BlockReasonBlockedNumber);
+//                        System.out.println("callData.BlockReasonCallScreeningService: " + callData.BlockReasonCallScreeningService);
+//                        System.out.println("callData.BlockReasonDirectToVoicemail: " + callData.BlockReasonDirectToVoicemail);
+//                        System.out.println("callData.BlockReasonNotBlocked: " + callData.BlockReasonNotBlocked);
+//                        System.out.println("callData.BlockReasonNotInContacts: " + callData.BlockReasonNotInContacts);
+//                        System.out.println("callData.BlockReasonPayPhone: " + callData.BlockReasonPayPhone);
+//                        System.out.println("callData.BlockReasonRestrictedNumber: " + callData.BlockReasonRestrictedNumber);
+//                        System.out.println("callData.BlockReasonUnknownNumber: " + callData.BlockReasonUnknownNumber);
+//                        System.out.println("callData.FeaturesAssistedDialingUsed: " + callData.FeaturesAssistedDialingUsed);
+//                        System.out.println("callData.FeaturesHdCall: " + callData.FeaturesHdCall);
+//                        System.out.println("callData.FeaturePulledExternally: " + callData.FeaturePulledExternally);
+//                        System.out.println("callData.FeatureRtt: " + callData.FeatureRtt);
+//                        System.out.println("callData.FeaturesVideo: " + callData.FeaturesVideo);
+//                        System.out.println("callData.FeatureVolte: " + callData.FeatureVolte);
+//                        System.out.println("callData.FeatureWifi: " + callData.FeatureWifi);
+//                        System.out.println("callData.IncomingType: " + callData.IncomingType);
+//                        System.out.println("callData.MissedType: " + callData.MissedType);
+//                        System.out.println("callData.OutgoingType: " + callData.OutgoingType);
+//                        System.out.println("callData.PresentationAllowed: " + callData.PresentationAllowed);
+//                        System.out.println("callData.PresentationPayPhone: " + callData.PresentationPayPhone);
+//                        System.out.println("callData.PresentationRestricted: " + callData.PresentationRestricted);
+//                        System.out.println("callData.PresentationUnknown: " + callData.PresentationUnknown);
+//                        System.out.println("callData.PriorityNormal: " + callData.PriorityNormal);
+//                        System.out.println("callData.PriorityUrgent: " + callData.PriorityUrgent);
+//                        System.out.println("callData.RejectedType: " + callData.RejectedType);
+//                        System.out.println("callData.VoicemailType: " + callData.VoicemailType);
 
-                        System.out.println("callData.AutoMissedEmergencyCall: " + callData.AutoMissedEmergencyCall);
-                        System.out.println("callData.AutoMissedMaximumDialing: " + callData.AutoMissedMaximumDialing);
-                        System.out.println("callData.AutoMissedMaximumRinging: " + callData.AutoMissedMaximumRinging);
-                        System.out.println("callData.MissedReasonNotMissed: " + callData.MissedReasonNotMissed);
-                        System.out.println("callData.UserMissedCallFiltersTimeout: " + callData.UserMissedCallFiltersTimeout);
-                        System.out.println("callData.UserMissedCallScreeningServiceSilenced: " + callData.UserMissedCallScreeningServiceSilenced);
-                        System.out.println("callData.UserMissedDndMode: " + callData.UserMissedDndMode);
-                        System.out.println("callData.UserMissedLowRingVolume: " + callData.UserMissedLowRingVolume);
-                        System.out.println("callData.UserMissedNoAnswer: " + callData.UserMissedNoAnswer);
-                        System.out.println("callData.UserMissedNoVibrate: " + callData.UserMissedNoVibrate);
-                        System.out.println("callData.UserMissedShortRing: " + callData.UserMissedShortRing);
+//                        System.out.println("callData.AutoMissedEmergencyCall: " + callData.AutoMissedEmergencyCall);
+//                        System.out.println("callData.AutoMissedMaximumDialing: " + callData.AutoMissedMaximumDialing);
+//                        System.out.println("callData.AutoMissedMaximumRinging: " + callData.AutoMissedMaximumRinging);
+//                        System.out.println("callData.MissedReasonNotMissed: " + callData.MissedReasonNotMissed);
+//                        System.out.println("callData.UserMissedCallFiltersTimeout: " + callData.UserMissedCallFiltersTimeout);
+//                        System.out.println("callData.UserMissedCallScreeningServiceSilenced: " + callData.UserMissedCallScreeningServiceSilenced);
+//                        System.out.println("callData.UserMissedDndMode: " + callData.UserMissedDndMode);
+//                        System.out.println("callData.UserMissedLowRingVolume: " + callData.UserMissedLowRingVolume);
+//                        System.out.println("callData.UserMissedNoAnswer: " + callData.UserMissedNoAnswer);
+//                        System.out.println("callData.UserMissedNoVibrate: " + callData.UserMissedNoVibrate);
+//                        System.out.println("callData.UserMissedShortRing: " + callData.UserMissedShortRing);
                         callDataList.add(callData);
-                        System.out.println("--------------------");
-                        System.out.println("Parent tag: " + parentTag + " => End tag: " + xpp.getName());
-                        System.out.println("====================");
+//                        System.out.println("--------------------");
+//                        System.out.println("Parent tag: " + parentTag + " => End tag: " + xpp.getName());
+//                        System.out.println("====================");
 
 
                     }
@@ -1250,10 +1250,10 @@ public class FileHandler {
 
                 eventType = xpp.next();
             }
-            System.out.println("========================================");
-            System.out.println("End document");
-            System.out.println("========================================");
-            System.out.println("CallLog: "+countCallLog);
+//            System.out.println("========================================");
+//            System.out.println("End document");
+//            System.out.println("========================================");
+//            System.out.println("CallLog: "+countCallLog);
             is.close();
             Toast.makeText(context, "Operation successful", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
