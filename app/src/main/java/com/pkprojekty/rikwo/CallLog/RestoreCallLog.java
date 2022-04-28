@@ -1,8 +1,11 @@
 package com.pkprojekty.rikwo.CallLog;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.CallLog;
 import android.telecom.Call;
@@ -18,11 +21,35 @@ public class RestoreCallLog {
         this.context = context;
     }
 
-    public void setAllCallLog(List<CallData> callDataList) {
-        for (CallData callData : callDataList) {
-            ContentResolver contentResolver = context.getContentResolver();
-            ContentValues values = new ContentValues();
+    public void deleteAllCallLog() {
+        //contentResolver.delete(CallLog.Calls.CONTENT_URI,null,null);
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor cursor = contentResolver.query(CallLog.Calls.CONTENT_URI, null, null, null, null);
+        System.out.println("USUWAM CALL LOG");
+        if (cursor != null) {
+            try {
+                while (cursor.moveToNext()) {
+                    long id = cursor.getLong(cursor.getColumnIndexOrThrow(CallLog.Calls._ID));
+                    Uri deleteUri = ContentUris.withAppendedId(CallLog.Calls.CONTENT_URI, id);
+                    System.out.println("PhoneCall: " + "My delete PhoneCall " + deleteUri);
+                    //context.getContentResolver().delete(CallLog.Calls.CONTENT_URI, "type=" + CallLog.Calls.TYPE, null);
+                    context.getContentResolver().delete(CallLog.Calls.CONTENT_URI, CallLog.Calls._ID + " = " + id, null);
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                cursor.close();
+            }
 
+        }
+    }
+
+    public void setAllCallLog(List<CallData> callDataList) {
+        ContentResolver contentResolver = context.getContentResolver();
+
+        for (CallData callData : callDataList) {
+            System.out.println(callData.Number);
+            ContentValues values = new ContentValues();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 values.put(CallLog.Calls.BLOCK_REASON, callData.BlockReason);
             }
@@ -79,7 +106,7 @@ public class RestoreCallLog {
             values.put(CallLog.Calls.TRANSCRIPTION, callData.Transcription);
             values.put(CallLog.Calls.TYPE, callData.Type);
             values.put(CallLog.Calls.VIA_NUMBER, callData.ViaNumber);
-            values.put(CallLog.Calls.VOICEMAIL_URI, callData.VoicemailUri);
+//            values.put(CallLog.Calls.VOICEMAIL_URI, callData.VoicemailUri);
             contentResolver.insert(CallLog.Calls.CONTENT_URI,values);
         }
     }

@@ -192,17 +192,18 @@ public class MainActivity extends AppCompatActivity {
         textView5.setText(txt5);
 
         FileHandler fh = new FileHandler(this);
-        fh.storeSmsInXml(smsData);
-        fh.storeCallLogInXml(callData);
+        //fh.storeSmsInXml(smsData);
+        //fh.storeCallLogInXml(callData);
 
     }
+
     public void restore() {
         FileHandler fh = new FileHandler(this);
 
-        String SmsFileName = "20220424131744-sms.xml";
-        String CallLogFileName = "20220424131745-calls.xml";
+        String SmsFileName = "20220428151028-sms.xml";
+        String CallLogFileName = "20220428171724-calls.xml";
 
-        // /storage/emulated/0/Documents/20220424131744-sms.xml
+        // /storage/emulated/0/Documents/20220428151028-sms.xml
         File smsXml = new File(
                 Environment.getExternalStorageDirectory() + "/Documents/",
                 //Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
@@ -210,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         );
         List<List<SmsData>> smsDataLists = fh.restoreSmsFromXml(smsXml);
         RestoreSms restoreSms = new RestoreSms(this);
-        restoreSms.setAllSms(smsDataLists);
+        //restoreSms.setAllSms(smsDataLists);
         if (this.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(this)))
         {
             System.out.println("Wiadomości przywrócone, ustaw pierwotną aplikację jako domyślną");
@@ -219,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        // /storage/emulated/0/Documents/20220424131745-calls.xml
+        // /storage/emulated/0/Documents/20220428171724-calls.xml
         File callLogXml = new File(
                 Environment.getExternalStorageDirectory() + "/Documents/",
                 CallLogFileName
@@ -229,8 +230,11 @@ public class MainActivity extends AppCompatActivity {
         restoreCallLog.setAllCallLog(callDataList);
         System.out.println("Rejestr połączeń przywrócony");
 
+        //restoreCallLog.deleteAllCallLog();
 
-
+        for (CallData callData : callDataList) {
+            System.out.println(callData.Number);
+        }
 
     }
 
