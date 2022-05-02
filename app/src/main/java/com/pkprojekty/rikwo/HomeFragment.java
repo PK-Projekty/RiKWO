@@ -14,6 +14,7 @@ import android.provider.Telephony;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -132,22 +133,44 @@ public class HomeFragment extends Fragment {
         if (ReadCallLogsPermissionGranted) { showCountofCallLog(textViewCallLogCount); }
         else { textViewCallLogCount.setText(getResources().getString(R.string.textViewCallLogCount)); }
 
+        Button buttonHomeMakeBackupNow = view.findViewById(R.id.buttonHomeMakeBackupNow);
+
         SwitchMaterial switchBackupSms = view.findViewById(R.id.switchBackupSms);
-        restoreSwitchStateFromAppPreferences(switchBackupSms, "switchBackupSms");
-        switchBackupSms.setOnCheckedChangeListener((compoundButton, b) -> storeSwitchStateInAppPreferences(switchBackupSms, "switchBackupSms"));
-
         SwitchMaterial switchBackupCallLog = view.findViewById(R.id.switchBackupCallLog);
+
+        restoreSwitchStateFromAppPreferences(switchBackupSms, "switchBackupSms");
+        switchBackupSms.setOnCheckedChangeListener((compoundButton, b) -> {
+            storeSwitchStateInAppPreferences(switchBackupSms, "switchBackupSms");
+            if (b) { buttonHomeMakeBackupNow.setEnabled(true); }
+            else { if (!switchBackupCallLog.isChecked()) { buttonHomeMakeBackupNow.setEnabled(false); } }
+        });
+
         restoreSwitchStateFromAppPreferences(switchBackupCallLog,"switchBackupCallLog");
-        switchBackupCallLog.setOnCheckedChangeListener((compoundButton, b) -> storeSwitchStateInAppPreferences(switchBackupCallLog, "switchBackupCallLog"));
+        switchBackupCallLog.setOnCheckedChangeListener((compoundButton, b) -> {
+            storeSwitchStateInAppPreferences(switchBackupCallLog, "switchBackupCallLog");
+            if (b) { buttonHomeMakeBackupNow.setEnabled(true); }
+            else { if (!switchBackupSms.isChecked()) { buttonHomeMakeBackupNow.setEnabled(false); } }
+        });
 
-        if (ReadSmsPermissionGranted &&
-            ReadCallLogsPermissionGranted &&
-            ReadExternalStoragePermissionGranted &&
-            WriteExternalStoragePermissionGranted) { backup(switchBackupSms.isChecked(), switchBackupCallLog.isChecked()); }
+        if (switchBackupSms.isChecked() || switchBackupCallLog.isChecked()) {
+            buttonHomeMakeBackupNow.setEnabled(true);
+        } else {
+            buttonHomeMakeBackupNow.setEnabled(false);
+        }
 
-        if (WriteCallLogsPermissionGranted &&
-            ReadExternalStoragePermissionGranted &&
-            WriteExternalStoragePermissionGranted) { restore(); }
+        buttonHomeMakeBackupNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ReadSmsPermissionGranted &&
+                    ReadCallLogsPermissionGranted &&
+                    ReadExternalStoragePermissionGranted &&
+                    WriteExternalStoragePermissionGranted) { backup(switchBackupSms.isChecked(), switchBackupCallLog.isChecked()); }
+            }
+        });
+
+//        if (WriteCallLogsPermissionGranted &&
+//            ReadExternalStoragePermissionGranted &&
+//            WriteExternalStoragePermissionGranted) { restore(); }
 
         return view;
     }

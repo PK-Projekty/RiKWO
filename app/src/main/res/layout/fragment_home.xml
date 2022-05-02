@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="Uwzględnij w kopii zapasowej" />
+                android:text="@string/switchBackupSmsLabel" />
 
             <View
                 android:id="@+id/divider"
@@ -84,7 +84,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:text="Uwzględnij w kopii zapasowej" />
+                android:text="@string/switchBackupCallLogLabel" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="?android:attr/listDivider" />
+
+            <Button
+                android:id="@+id/buttonHomeMakeBackupNow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/buttonBackup" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
