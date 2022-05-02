@@ -50,11 +50,18 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/textViewSmsCount" />
 
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchBackupSms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="Uwzględnij w kopii zapasowej" />
+
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:background="?android:attr/listDivider" />
 
@@ -71,6 +78,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/textViewCallLogCount" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchBackupCallLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="Uwzględnij w kopii zapasowej" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

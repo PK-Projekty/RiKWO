@@ -1,8 +1,11 @@
 package com.pkprojekty.rikwo;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,6 +24,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.pkprojekty.rikwo.CallLog.BackupCallLog;
 import com.pkprojekty.rikwo.CallLog.RestoreCallLog;
 import com.pkprojekty.rikwo.Entities.CallData;
@@ -122,22 +126,45 @@ public class HomeFragment extends Fragment {
 
         TextView textViewSmsCount = view.findViewById(R.id.textViewSmsCount);
         if (ReadSmsPermissionGranted) { showCountofMessages(textViewSmsCount); }
-        else { textViewSmsCount.setText("Brak uprawnień odczytu do api SMS"); }
+        else { textViewSmsCount.setText(getResources().getString(R.string.textViewSmsCount)); }
 
         TextView textViewCallLogCount = view.findViewById(R.id.textViewCallLogCount);
         if (ReadCallLogsPermissionGranted) { showCountofCallLog(textViewCallLogCount); }
-        else { textViewCallLogCount.setText("Brak uprawnień odczytu do api CallLog"); }
+        else { textViewCallLogCount.setText(getResources().getString(R.string.textViewCallLogCount)); }
+
+        SwitchMaterial switchBackupSms = view.findViewById(R.id.switchBackupSms);
+        restoreSwitchStateFromAppPreferences(switchBackupSms, "switchBackupSms");
+        switchBackupSms.setOnCheckedChangeListener((compoundButton, b) -> storeSwitchStateInAppPreferences(switchBackupSms, "switchBackupSms"));
+
+        SwitchMaterial switchBackupCallLog = view.findViewById(R.id.switchBackupCallLog);
+        restoreSwitchStateFromAppPreferences(switchBackupCallLog,"switchBackupCallLog");
+        switchBackupCallLog.setOnCheckedChangeListener((compoundButton, b) -> storeSwitchStateInAppPreferences(switchBackupCallLog, "switchBackupCallLog"));
 
         if (ReadSmsPermissionGranted &&
             ReadCallLogsPermissionGranted &&
             ReadExternalStoragePermissionGranted &&
-            WriteExternalStoragePermissionGranted) { backup(view); }
+            WriteExternalStoragePermissionGranted) { backup(switchBackupSms.isChecked(), switchBackupCallLog.isChecked()); }
 
         if (WriteCallLogsPermissionGranted &&
             ReadExternalStoragePermissionGranted &&
             WriteExternalStoragePermissionGranted) { restore(); }
 
         return view;
+    }
+
+    private void restoreSwitchStateFromAppPreferences(SwitchMaterial switchMaterial, String key) {
+        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        if (preferences.contains(key)) {
+            boolean switchState = preferences.getBoolean(key,false);
+            switchMaterial.setChecked(switchState);
+        }
+    }
+
+    private void storeSwitchStateInAppPreferences(SwitchMaterial switchMaterial, String key) {
+        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(key,switchMaterial.isChecked());
+        editor.apply();
     }
 
     public void showCountofMessages (TextView textView) {
@@ -159,21 +186,18 @@ public class HomeFragment extends Fragment {
         textView.setText(text);
     }
 
-    public void backup(View view) {
-        BackupSms backupSms =  new BackupSms(homeContext);
-
-        List<List<SmsData>> smsData = backupSms.getAllSms();
-
-        BackupCallLog backupCallLog = new BackupCallLog(homeContext);
-        List<CallData> callData = backupCallLog.getAllCalls();
-//        String countCallsInCallLog = backupCallLog.countCallLog();
-//        TextView textView5 = view.findViewById(R.id.textView5);
-//        String txt5 = textView5.getText() + " " + countCallsInCallLog;
-//        textView5.setText(txt5);
-
+    public void backup(boolean smsSwitchState, boolean callLogSwitchState) {
         FileHandler fh = new FileHandler(homeContext);
-        fh.storeSmsInXml(smsData);
-        fh.storeCallLogInXml(callData);
+        if (smsSwitchState) {
+            BackupSms backupSms = new BackupSms(homeContext);
+            List<List<SmsData>> smsData = backupSms.getAllSms();
+            fh.storeSmsInXml(smsData);
+        }
+        if (callLogSwitchState) {
+            BackupCallLog backupCallLog = new BackupCallLog(homeContext);
+            List<CallData> callData = backupCallLog.getAllCalls();
+            fh.storeCallLogInXml(callData);
+        }
     }
 
     public void restore() {
