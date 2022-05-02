@@ -1,4 +1,4 @@
-package com.pkprojekty.rikwo;
+package com.pkprojekty.rikwo.Sms.DefaultApp;
 
 import android.app.Service;
 import android.content.Intent;

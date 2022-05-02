@@ -1,8 +1,31 @@
 <resources>
     <string name="app_name">RiKWO</string>
-    <string name="textView1">Sms Drafts:</string>
+    <string name="textViewSmsCount">Nie posiadasz żadnych wiadomości sms</string>
     <string name="textView2">Sms Inbox:</string>
     <string name="textView3">Sms Outbox:</string>
     <string name="textView4">Sms Sent:</string>
     <string name="textView5">Calls:</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_home_fragment">Hello home fragment</string>
+    <string name="hello_backup_fragment">Hello backup fragment</string>
+    <string name="hello_restore_fragment">Hello restore fragment</string>
+    <string name="hello_logs_fragment">Hello logs fragment</string>
+    <string name="hello_permissions_fragment">Hello permissions fragment</string>
+    <string name="hello_localization_fragment">Hello localization fragment</string>
+    <string name="hello_encryption_fragment">Hello encryption fragment</string>
+    <string name="hello_privacy_fragment">Hello privacy fragment</string>
+    <string name="hello_about_fragment">Hello about fragment</string>
+    <!-- Menu strings -->
+    <string name="homeFragmentTitle">RiKWO</string>
+    <string name="backupFragmentTitle">Wykonaj kopię zapasową</string>
+    <string name="restoreFragmentTitle">Przywróć kopię zapasową</string>
+    <string name="logsFragmentTitle">Logi</string>
+    <string name="itemsGroupSettingsTitle">Ustawienia</string>
+    <string name="permissionsFragmentTitle">Uprawnienia</string>
+    <string name="localizationFragmentTitle">Lokalizacja kopii zapasowej</string>
+    <string name="encryptionFragmentTitle">Szyfrownie</string>
+    <string name="itemsGroupOthersTitle">Pozostałe</string>
+    <string name="privacyFragmentTitle">Polityka prywatności</string>
+    <string name="aboutFragmentTitle">O nas</string>
+    <string name="aboutSms">Informacje o wiadomościach sms</string>
 </resources>

@@ -1,35 +1,27 @@
 package com.pkprojekty.rikwo;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
-import android.provider.Telephony;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pkprojekty.rikwo.CallLog.BackupCallLog;
-import com.pkprojekty.rikwo.CallLog.RestoreCallLog;
-import com.pkprojekty.rikwo.Entities.CallData;
-import com.pkprojekty.rikwo.Sms.BackupSms;
-import com.pkprojekty.rikwo.Entities.SmsData;
-import com.pkprojekty.rikwo.Sms.RestoreSms;
-import com.pkprojekty.rikwo.Xml.FileHandler;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
-import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+    private NavController navController;
+    private AppBarConfiguration appBarConfiguration;
 
     public static final String KEY_TASK_DESC = "key_task_desc";
     @Override
@@ -37,205 +29,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        boolean ReadSmsPermissionGranted = false;
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_SMS}, 1);
-        } else {
-            /* do nothing */
-            /* permission is granted */
-            ReadSmsPermissionGranted = true;
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navView = findViewById(R.id.navigationView);
 
-        }
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+        navController = Objects.requireNonNull(navHostFragment).getNavController();
 
-        boolean ReadCallLogsPermissionGranted = false;
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_CALL_LOG}, 1);
-        } else {
-            /* do nothing */
-            /* permission is granted */
-            ReadCallLogsPermissionGranted = true;
-        }
+        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).setOpenableLayout(drawerLayout).build();
 
-        boolean ReadExternalStoragePermissionGranted = false;
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        } else {
-            /* do nothing */
-            /* permission is granted */
-            ReadExternalStoragePermissionGranted = true;
-        }
-
-        boolean WriteExternalStoragePermissionGranted = false;
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        } else {
-            /* do nothing */
-            /* permission is granted */
-            WriteExternalStoragePermissionGranted = true;
-        }
-
-        if (
-                ReadSmsPermissionGranted &&
-                ReadCallLogsPermissionGranted &&
-                ReadExternalStoragePermissionGranted &&
-                WriteExternalStoragePermissionGranted
-        ) { backup(); }
-
-        boolean IsDefaultSmsApp = false;
-        if (! this.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(this)))
-        {
-            System.out.println("Na czas przywracania wiadomości ustaw ta aplikacje jako domyslna");
-            System.out.println("Następnie uruchom przywracanie wiadomości sms ponownie");
-            //Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
-            startActivity(intent);
-        } else {
-            IsDefaultSmsApp = true;
-        }
-
-        boolean WriteCallLogsPermissionGranted = false;
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.WRITE_CALL_LOG}, 1);
-        } else {
-            /* do nothing */
-            /* permission is granted */
-            WriteCallLogsPermissionGranted = true;
-        }
-
-        if (
-                IsDefaultSmsApp &&
-                WriteCallLogsPermissionGranted &&
-                ReadExternalStoragePermissionGranted &&
-                WriteExternalStoragePermissionGranted
-        ) { restore(); }
+        NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
+        NavigationUI.setupWithNavController(navView,navController);
     }
 
-    /* And a method to override */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            // READ_SMS permission toast
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
-            }
-            // READ_CALL_LOG permission toast
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
-            }
-            // WRITE_EXTERNAL_STORAGE permission toast
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
-            }
-            // READ_EXTERNAL_STORAGE permission toast
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "No Permission granted", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    public void backup() {
-        BackupSms backupSms =  new BackupSms(this);
-
-        List<List<SmsData>> smsData = backupSms.getAllSms();
-
-        int countMessagesInDraft = backupSms.countMessagesInDraft();
-        int countMessagesInInbox = backupSms.countMessagesInInbox();
-        int countMessagesInOutbox = backupSms.countMessagesInOutbox();
-        int countMessagesInSent = backupSms.countMessagesInSent();
-
-        TextView textView1 = findViewById(R.id.textView1);
-        String txt1 = textView1.getText() + " " + countMessagesInDraft;
-        textView1.setText(txt1);
-        TextView textView2 = findViewById(R.id.textView2);
-        String txt2 = textView2.getText() + " " + countMessagesInInbox;
-        textView2.setText(txt2);
-        TextView textView3 = findViewById(R.id.textView3);
-        String txt3 = textView3.getText() + " " + countMessagesInOutbox;
-        textView3.setText(txt3);
-        TextView textView4 = findViewById(R.id.textView4);
-        String txt4 = textView4.getText() + " " + countMessagesInSent;
-        textView4.setText(txt4);
-
-        BackupCallLog backupCallLog = new BackupCallLog(this);
-
-        List<CallData> callData = backupCallLog.getAllCalls();
-
-        String countCallsInCallLog = backupCallLog.countCallLog();
-
-        TextView textView5 = findViewById(R.id.textView5);
-        String txt5 = textView5.getText() + " " + countCallsInCallLog;
-        textView5.setText(txt5);
-
-        FileHandler fh = new FileHandler(this);
-        //fh.storeSmsInXml(smsData);
-        //fh.storeCallLogInXml(callData);
-
-    }
-
-    public void restore() {
-        FileHandler fh = new FileHandler(this);
-
-        String SmsFileName = "20220428151028-sms.xml";
-        String CallLogFileName = "20220428171724-calls.xml";
-
-        // /storage/emulated/0/Documents/20220428151028-sms.xml
-        File smsXml = new File(
-                Environment.getExternalStorageDirectory() + "/Documents/",
-                //Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-                SmsFileName
-        );
-        List<List<SmsData>> smsDataLists = fh.restoreSmsFromXml(smsXml);
-        RestoreSms restoreSms = new RestoreSms(this);
-        //restoreSms.setAllSms(smsDataLists);
-        if (this.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(this)))
-        {
-            System.out.println("Wiadomości przywrócone, ustaw pierwotną aplikację jako domyślną");
-            //Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Intent intent = new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
-            startActivity(intent);
-        }
-
-        // /storage/emulated/0/Documents/20220428171724-calls.xml
-        File callLogXml = new File(
-                Environment.getExternalStorageDirectory() + "/Documents/",
-                CallLogFileName
-        );
-        List<CallData> callDataList = fh.restoreCallLogFromXml(callLogXml);
-        RestoreCallLog restoreCallLog = new RestoreCallLog(this);
-        restoreCallLog.setAllCallLog(callDataList);
-        System.out.println("Rejestr połączeń przywrócony");
-
-        //restoreCallLog.deleteAllCallLog();
-
-        for (CallData callData : callDataList) {
-            System.out.println(callData.Number);
-        }
-
+    public boolean onSupportNavigateUp() {
+        return NavigationUI.navigateUp(navController,appBarConfiguration) || super.onSupportNavigateUp();
     }
 
     public void EmailButton () {

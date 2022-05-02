@@ -1,4 +1,4 @@
-package com.pkprojekty.rikwo;
+package com.pkprojekty.rikwo.Sms.DefaultApp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

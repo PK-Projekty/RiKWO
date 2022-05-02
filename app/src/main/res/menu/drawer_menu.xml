@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@id/homeFragment"
+            android:title="@string/homeFragmentTitle" />
+        <item
+            android:id="@id/backupFragment"
+            android:title="@string/backupFragmentTitle" />
+        <item
+            android:id="@id/restoreFragment"
+            android:title="@string/restoreFragmentTitle" />
+        <item
+            android:id="@id/logsFragment"
+            android:title="@string/logsFragmentTitle" />
+        <item android:title="@string/itemsGroupSettingsTitle">
+            <menu>
+                <item
+                    android:id="@id/permissionsFragment"
+                    android:title="@string/permissionsFragmentTitle" />
+                <item
+                    android:id="@id/localizationFragment"
+                    android:title="@string/localizationFragmentTitle" />
+                <item
+                    android:id="@id/encryptionFragment"
+                    android:title="@string/encryptionFragmentTitle" />
+            </menu>
+        </item>
+        <item android:title="@string/itemsGroupOthersTitle">
+            <menu>
+                <item
+                    android:id="@id/privacyFragment"
+                    android:title="@string/privacyFragmentTitle" />
+                <item
+                    android:id="@id/aboutFragment"
+                    android:title="@string/aboutFragmentTitle" />
+            </menu>
+        </item>
+    </group>
+</menu>
