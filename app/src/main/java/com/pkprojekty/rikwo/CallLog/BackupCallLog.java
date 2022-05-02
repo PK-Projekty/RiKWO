@@ -335,8 +335,8 @@ public class BackupCallLog {
         return callsDataList;
     }
 
-    public String countCallLog() {
-        String count = "";
+    public int countCallLog() {
+        int count = 0;
         ContentResolver contentResolver = context.getContentResolver();
         Cursor query = contentResolver.query(
                 CallLog.Calls.CONTENT_URI,
@@ -347,8 +347,7 @@ public class BackupCallLog {
         );
         if (query != null) {
             try {
-                if(query.moveToLast())
-                    count = String.valueOf(query.getPosition());
+                count = query.getCount();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

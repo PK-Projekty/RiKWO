@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">RiKWO</string>
+    <string name="textViewSmsAbout">Informacje o wiadomościach sms</string>
     <string name="textViewSmsCount">Nie posiadasz żadnych wiadomości sms</string>
-    <string name="textView2">Sms Inbox:</string>
+    <string name="textViewCallLogAbout">Informacje o rejestrze połączeń</string>
+    <string name="textViewCallLogCount">Nie posiadasz żadnych wpisów w rejestrze połączeń</string>
     <string name="textView3">Sms Outbox:</string>
     <string name="textView4">Sms Sent:</string>
     <string name="textView5">Calls:</string>
@@ -27,5 +29,5 @@
     <string name="itemsGroupOthersTitle">Pozostałe</string>
     <string name="privacyFragmentTitle">Polityka prywatności</string>
     <string name="aboutFragmentTitle">O nas</string>
-    <string name="aboutSms">Informacje o wiadomościach sms</string>
+
 </resources>

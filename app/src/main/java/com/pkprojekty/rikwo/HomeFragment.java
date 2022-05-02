@@ -120,9 +120,13 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        TextView textView1 = view.findViewById(R.id.textViewSmsCount);
-        if (ReadSmsPermissionGranted) { showCountofMessages(view, textView1); }
-        else { textView1.setText("Brak uprawnień odczytu do api SMS"); }
+        TextView textViewSmsCount = view.findViewById(R.id.textViewSmsCount);
+        if (ReadSmsPermissionGranted) { showCountofMessages(textViewSmsCount); }
+        else { textViewSmsCount.setText("Brak uprawnień odczytu do api SMS"); }
+
+        TextView textViewCallLogCount = view.findViewById(R.id.textViewCallLogCount);
+        if (ReadCallLogsPermissionGranted) { showCountofCallLog(textViewCallLogCount); }
+        else { textViewCallLogCount.setText("Brak uprawnień odczytu do api CallLog"); }
 
         if (ReadSmsPermissionGranted &&
             ReadCallLogsPermissionGranted &&
@@ -136,14 +140,22 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    public void showCountofMessages (View view, TextView textView) {
+    public void showCountofMessages (TextView textView) {
         BackupSms backupSms =  new BackupSms(homeContext);
         int countMessagesInDraft = backupSms.countMessagesInDraft();
         int countMessagesInInbox = backupSms.countMessagesInInbox();
         int countMessagesInOutbox = backupSms.countMessagesInOutbox();
         int countMessagesInSent = backupSms.countMessagesInSent();
         int overallCount = countMessagesInDraft + countMessagesInInbox + countMessagesInOutbox + countMessagesInSent;
-        String text = "Posiadasz łącznie " + overallCount + " wiadomości sms";
+        String pluralMessage = (overallCount >= 2) ? "wiadomości" : "wiadomość";
+        String text = "Posiadasz łącznie " + overallCount + " " + pluralMessage + " wiadomości sms";
+        textView.setText(text);
+    }
+    public void showCountofCallLog (TextView textView) {
+        BackupCallLog backupCallLog = new BackupCallLog(homeContext);
+        int countCallLog = backupCallLog.countCallLog();
+        String pluralEntry = (countCallLog >= 2) ? "wpisy" : "wpis";
+        String text = "Posiadasz łącznie " + countCallLog + " " + pluralEntry + " w rejestrze połączeń";
         textView.setText(text);
     }
 
@@ -160,8 +172,8 @@ public class HomeFragment extends Fragment {
 //        textView5.setText(txt5);
 
         FileHandler fh = new FileHandler(homeContext);
-        //fh.storeSmsInXml(smsData);
-        //fh.storeCallLogInXml(callData);
+        fh.storeSmsInXml(smsData);
+        fh.storeCallLogInXml(callData);
     }
 
     public void restore() {
@@ -180,7 +192,7 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
             startActivity(intent);
         }
-        restoreSms.setAllSms(smsDataLists);
+        //restoreSms.setAllSms(smsDataLists);
         if (homeContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(homeContext)))
         {
             System.out.println("Wiadomości przywrócone, ustaw pierwotną aplikację jako domyślną");
@@ -196,7 +208,7 @@ public class HomeFragment extends Fragment {
         );
         List<CallData> callDataList = fh.restoreCallLogFromXml(callLogXml);
         RestoreCallLog restoreCallLog = new RestoreCallLog(homeContext);
-        restoreCallLog.setAllCallLog(callDataList);
+        //restoreCallLog.setAllCallLog(callDataList);
         System.out.println("Rejestr połączeń przywrócony");
         //restoreCallLog.deleteAllCallLog();
         for (CallData callData : callDataList) {

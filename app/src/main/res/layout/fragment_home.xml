@@ -40,7 +40,7 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/aboutSms"
+                android:text="@string/textViewSmsAbout"
                 android:textSize="20sp" />
 
             <TextView
@@ -49,6 +49,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/textViewSmsCount" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/textViewCallLogAbout"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textViewCallLogCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/textViewCallLogCount" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
