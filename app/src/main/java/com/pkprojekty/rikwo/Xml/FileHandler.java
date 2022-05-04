@@ -543,7 +543,7 @@ public class FileHandler {
         }
     }
 
-    public List<List<SmsData>> restoreSmsFromXml(File file) {
+    public List<List<SmsData>> restoreSmsFromXml(Context context,Uri uriFile) {
         List<List<SmsData>> smsDataList = new ArrayList<>();
         List<SmsData> smsInboxDataList = new ArrayList<>();
         List<SmsData> smsSentDataList = new ArrayList<>();
@@ -557,7 +557,8 @@ public class FileHandler {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser xpp = factory.newPullParser();
-            FileInputStream is = new FileInputStream(file);
+            //FileInputStream is = new FileInputStream(file);
+            InputStream is = context.getContentResolver().openInputStream(uriFile);
             xpp.setInput(is, null);
             int eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -1038,14 +1039,15 @@ public class FileHandler {
         return smsDataList;
     }
 
-    public List<CallData> restoreCallLogFromXml(File file) {
+    public List<CallData> restoreCallLogFromXml(Context context, Uri uriFile) {
         List<CallData> callDataList = new ArrayList<>();
         int countCallLog = 0;
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser xpp = factory.newPullParser();
-            FileInputStream is = new FileInputStream(file);
+            //FileInputStream is = new FileInputStream(file);
+            InputStream is = context.getContentResolver().openInputStream(uriFile);
             xpp.setInput(is, null);
             int eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {

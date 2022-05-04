@@ -31,6 +31,7 @@ import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.pkprojekty.rikwo.CallLog.BackupCallLog;
@@ -199,7 +200,13 @@ public class HomeFragment extends Fragment {
                 textViewHomeLastCallLogBackupAbout.setText(text);
             }
         });
-        Button button = view.findViewById(R.id.buttonHomeRestoreBackupNow);
+        Button buttonHomeRestoreBackupNow = view.findViewById(R.id.buttonHomeRestoreBackupNow);
+        buttonHomeRestoreBackupNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_restoreFragment);
+            }
+        });
 
         TextView textViewSmsCount = view.findViewById(R.id.textViewSmsCount);
         if (ReadSmsPermissionGranted) { showCountofMessages(textViewSmsCount); }
@@ -426,45 +433,45 @@ public class HomeFragment extends Fragment {
         return humanReadableDatetime;
     }
 
-    public void restore() {
-        FileHandler fh = new FileHandler(homeContext);
-
-        // /storage/emulated/0/Documents/20220428151028-sms.xml
-        String SmsFileName = "20220428151028-sms.xml";
-        File smsXml = new File(
-                Environment.getExternalStorageDirectory() + "/Documents/", SmsFileName
-        );
-        List<List<SmsData>> smsDataLists = fh.restoreSmsFromXml(smsXml);
-        RestoreSms restoreSms = new RestoreSms(homeContext);
-        if (! homeContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(homeContext))) {
-            System.out.println("Na czas przywracania wiadomości ustaw ta aplikacje jako domyslna");
-            System.out.println("Następnie uruchom przywracanie wiadomości sms ponownie");
-            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
-            startActivity(intent);
-        }
-        //restoreSms.setAllSms(smsDataLists);
-        if (homeContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(homeContext)))
-        {
-            System.out.println("Wiadomości przywrócone, ustaw pierwotną aplikację jako domyślną");
-            Intent intent = new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
-            startActivity(intent);
-        }
-
-        // /storage/emulated/0/Documents/20220428171724-calls.xml
-        String CallLogFileName = "20220428171724-calls.xml";
-        File callLogXml = new File(
-                Environment.getExternalStorageDirectory() + "/Documents/",
-                CallLogFileName
-        );
-        List<CallData> callDataList = fh.restoreCallLogFromXml(callLogXml);
-        RestoreCallLog restoreCallLog = new RestoreCallLog(homeContext);
-        //restoreCallLog.setAllCallLog(callDataList);
-        System.out.println("Rejestr połączeń przywrócony");
-        //restoreCallLog.deleteAllCallLog();
-        for (CallData callData : callDataList) {
-            System.out.println(callData.Number);
-        }
-
-    }
+//    public void restore() {
+//        FileHandler fh = new FileHandler(homeContext);
+//
+//        // /storage/emulated/0/Documents/20220428151028-sms.xml
+//        String SmsFileName = "20220428151028-sms.xml";
+//        File smsXml = new File(
+//                Environment.getExternalStorageDirectory() + "/Documents/", SmsFileName
+//        );
+//        List<List<SmsData>> smsDataLists = fh.restoreSmsFromXml(smsXml);
+//        RestoreSms restoreSms = new RestoreSms(homeContext);
+//        if (! homeContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(homeContext))) {
+//            System.out.println("Na czas przywracania wiadomości ustaw ta aplikacje jako domyslna");
+//            System.out.println("Następnie uruchom przywracanie wiadomości sms ponownie");
+//            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+//            startActivity(intent);
+//        }
+//        //restoreSms.setAllSms(smsDataLists);
+//        if (homeContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(homeContext)))
+//        {
+//            System.out.println("Wiadomości przywrócone, ustaw pierwotną aplikację jako domyślną");
+//            Intent intent = new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+//            startActivity(intent);
+//        }
+//
+//        // /storage/emulated/0/Documents/20220428171724-calls.xml
+//        String CallLogFileName = "20220428171724-calls.xml";
+//        File callLogXml = new File(
+//                Environment.getExternalStorageDirectory() + "/Documents/",
+//                CallLogFileName
+//        );
+//        List<CallData> callDataList = fh.restoreCallLogFromXml(callLogXml);
+//        RestoreCallLog restoreCallLog = new RestoreCallLog(homeContext);
+//        //restoreCallLog.setAllCallLog(callDataList);
+//        System.out.println("Rejestr połączeń przywrócony");
+//        //restoreCallLog.deleteAllCallLog();
+//        for (CallData callData : callDataList) {
+//            System.out.println(callData.Number);
+//        }
+//
+//    }
 
 }

@@ -1,8 +1,12 @@
 package com.pkprojekty.rikwo.Sms;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.CallLog;
 import android.provider.Telephony;
 
 import com.pkprojekty.rikwo.Entities.SmsData;
@@ -14,6 +18,26 @@ public class RestoreSms {
 
     public RestoreSms(Context context) {
         this.context = context;
+    }
+
+    public void deleteAllSms() {
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor cursor = contentResolver.query(Telephony.Sms.CONTENT_URI, null, null, null, null);
+        System.out.println("USUWAM SMS");
+        if (cursor != null) {
+            try {
+                while (cursor.moveToNext()) {
+                    long id = cursor.getLong(cursor.getColumnIndexOrThrow(Telephony.Sms._ID));
+                    Uri deleteUri = ContentUris.withAppendedId(Telephony.Sms.CONTENT_URI, id);
+                    System.out.println("SMS: " + "My delete SMS " + deleteUri);
+                    context.getContentResolver().delete(Telephony.Sms.CONTENT_URI, Telephony.Sms._ID + " = " + id, null);
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                cursor.close();
+            }
+        }
     }
 
     public void setAllSms(List<List<SmsData>> smsDataList) {
