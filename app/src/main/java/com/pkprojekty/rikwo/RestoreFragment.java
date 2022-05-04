@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,10 +14,12 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
@@ -61,8 +64,6 @@ import java.util.Objects;
 public class RestoreFragment extends Fragment {
     private Context restoreContext;
     private Uri uriTree = Uri.EMPTY;
-    //private Uri choosedSmsBackupFile = Uri.EMPTY;
-    //private Uri choosedCallLogBackupFile = Uri.EMPTY;
 
     MutableLiveData<Uri> choosedSmsBackupFile = new MutableLiveData<>();
     MutableLiveData<Uri> choosedCallLogBackupFile = new MutableLiveData<>();
@@ -153,6 +154,23 @@ public class RestoreFragment extends Fragment {
                     if (ContextCompat.checkSelfPermission(restoreContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                         Toast.makeText(restoreContext, "Permission granted", Toast.LENGTH_SHORT).show(); }
                 } else { Toast.makeText(restoreContext, "No Permission granted", Toast.LENGTH_SHORT).show(); }
+            });
+
+    private ActivityResultLauncher<Intent> changeToDefaultSmsAppLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                restoreSms();
+                new AlertDialog.Builder(restoreContext)
+                        .setTitle("Informacja")
+                        .setMessage("Kopia zapasowa wiadomości sms została przywrócona pomyślnie." +
+                                "\n\nMożesz teraz przywrócić dotychczas używaną aplikację do obsługi wiadomości sms jako domyślną.")
+                        .setPositiveButton("Kontynuuj", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+                                startActivity(intent);
+                            }
+                        }).create().show();
+                System.out.println("Wiadomości przywrócone, ustaw pierwotną aplikację jako domyślną");
             });
 
     public RestoreFragment() {
@@ -431,71 +449,49 @@ public class RestoreFragment extends Fragment {
     }
 
     public void restore(boolean smsSwitchState, boolean callLogSwitchState) {
-        FileHandler fh = new FileHandler(restoreContext);
+
         System.out.println("Przywracanie kopii zapasowej: "+uriTree);
 
         if (smsSwitchState) {
-            if (! restoreContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(restoreContext))) {
-                System.out.println("Na czas przywracania wiadomości ustaw ta aplikacje jako domyslna");
-                System.out.println("Następnie uruchom przywracanie wiadomości sms ponownie");
-                Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
-                startActivity(intent);
+            if (!restoreContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(restoreContext))) {
+                new AlertDialog.Builder(restoreContext)
+                        .setTitle("Informacja")
+                        .setMessage("W celu przywrócenia wiadomości sms należy tymczasowo ustawić tą aplikację jako domyślną dla wiadomości sms." +
+                                "\n\nPo zakończeniu przywracania należy ustawić jako domyślną, dotychczas używaną aplikację dla wiadomości sms." +
+                                "\n\nMożesz także zrezygnować, co wiąże się z nieprzywróceniem wiadomości sms.")
+                        .setPositiveButton("Kontynuuj", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                System.out.println("Na czas przywracania wiadomości ustaw ta aplikacje jako domyslna");
+                                System.out.println("Następnie uruchom przywracanie wiadomości sms ponownie");
+                                Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+                                changeToDefaultSmsAppLauncher.launch(intent);
+                            }
+                        })
+                        .setNegativeButton("Zrezygnuj", null).create().show();
+            } else {
+                restoreSms();
             }
-
+        }
+        if (callLogSwitchState) {
+            restoreCallLog();
+        }
+    }
+    private void restoreSms() {
+        if (restoreContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(restoreContext))) {
+            FileHandler fh = new FileHandler(restoreContext);
             List<List<SmsData>> smsDataLists = fh.restoreSmsFromXml(restoreContext, choosedSmsBackupFile.getValue());
             RestoreSms restoreSms = new RestoreSms(restoreContext);
             restoreSms.deleteAllSms();
             restoreSms.setAllSms(smsDataLists);
-
-            if (restoreContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(restoreContext)))
-            {
-                System.out.println("Wiadomości przywrócone, ustaw pierwotną aplikację jako domyślną");
-                Intent intent = new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
-                startActivity(intent);
-            }
         }
-        if (callLogSwitchState) {
-            List<CallData> callDataList = fh.restoreCallLogFromXml(restoreContext, choosedCallLogBackupFile.getValue());
-            RestoreCallLog restoreCallLog = new RestoreCallLog(restoreContext);
-            restoreCallLog.deleteAllCallLog();
-            restoreCallLog.setAllCallLog(callDataList);
-        }
-
-//        // /storage/emulated/0/Documents/20220428151028-sms.xml
-//        String SmsFileName = "20220428151028-sms.xml";
-//        File smsXml = new File(
-//                Environment.getExternalStorageDirectory() + "/Documents/", SmsFileName
-//        );
-//        List<List<SmsData>> smsDataLists = fh.restoreSmsFromXml(smsXml);
-//        RestoreSms restoreSms = new RestoreSms(restoreContext);
-//        if (! restoreContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(restoreContext))) {
-//            System.out.println("Na czas przywracania wiadomości ustaw ta aplikacje jako domyslna");
-//            System.out.println("Następnie uruchom przywracanie wiadomości sms ponownie");
-//            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
-//            startActivity(intent);
-//        }
-//        //restoreSms.setAllSms(smsDataLists);
-//        if (restoreContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(restoreContext)))
-//        {
-//            System.out.println("Wiadomości przywrócone, ustaw pierwotną aplikację jako domyślną");
-//            Intent intent = new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
-//            startActivity(intent);
-//        }
-//
-//        // /storage/emulated/0/Documents/20220428171724-calls.xml
-//        String CallLogFileName = "20220428171724-calls.xml";
-//        File callLogXml = new File(
-//                Environment.getExternalStorageDirectory() + "/Documents/",
-//                CallLogFileName
-//        );
-//        List<CallData> callDataList = fh.restoreCallLogFromXml(callLogXml);
-//        RestoreCallLog restoreCallLog = new RestoreCallLog(restoreContext);
-//        //restoreCallLog.setAllCallLog(callDataList);
-//        System.out.println("Rejestr połączeń przywrócony");
-//        //restoreCallLog.deleteAllCallLog();
-//        for (CallData callData : callDataList) {
-//            System.out.println(callData.Number);
-//        }
     }
 
+    private void restoreCallLog() {
+        FileHandler fh = new FileHandler(restoreContext);
+        List<CallData> callDataList = fh.restoreCallLogFromXml(restoreContext, choosedCallLogBackupFile.getValue());
+        RestoreCallLog restoreCallLog = new RestoreCallLog(restoreContext);
+        restoreCallLog.deleteAllCallLog();
+        restoreCallLog.setAllCallLog(callDataList);
+    }
 }
