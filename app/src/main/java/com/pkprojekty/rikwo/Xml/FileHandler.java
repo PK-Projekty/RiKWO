@@ -1,9 +1,12 @@
 package com.pkprojekty.rikwo.Xml;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Xml;
 import android.widget.Toast;
+
+import androidx.documentfile.provider.DocumentFile;
 
 import com.pkprojekty.rikwo.Entities.CallData;
 import com.pkprojekty.rikwo.Entities.SmsData;
@@ -15,6 +18,7 @@ import org.xmlpull.v1.XmlSerializer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,20 +32,22 @@ public class FileHandler {
         this.context = context;
     }
 
-    public void storeSmsInXml(List<List<SmsData>> smsData) {
-        ZoneId z = ZoneId.of("Europe/Warsaw");
-        ZonedDateTime zdt = ZonedDateTime.now(z);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String filename = zdt.format(formatter) + "-sms.xml";
+    public void storeSmsInXml(List<List<SmsData>> smsData, DocumentFile file) {
+//        ZoneId z = ZoneId.of("Europe/Warsaw");
+//        ZonedDateTime zdt = ZonedDateTime.now(z);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+//        String filename = zdt.format(formatter) + "-sms.xml";
         //System.out.println(context.getFilesDir() + filename);
         //System.out.println(Environment.getExternalStorageDirectory() + "/Documents/" + filename);
+        FileOutputStream os;
         try {
             XmlSerializer serializer = Xml.newSerializer();
-            File file = new File(
-                    Environment.getExternalStorageDirectory() + "/Documents/",
-                    filename
-            );
-            FileOutputStream os = new FileOutputStream(file);
+//            File file = new File(
+//                    Environment.getExternalStorageDirectory() + "/Documents/",
+//                    filename
+//            );
+            //FileOutputStream os = new FileOutputStream(file);
+            os = (FileOutputStream) context.getContentResolver().openOutputStream(file.getUri());
             serializer.setOutput(os, "UTF-8");
             serializer.startDocument("UTF-8", true);
 
@@ -215,19 +221,20 @@ public class FileHandler {
         }
     }
 
-    public void storeCallLogInXml(List<CallData> callData) {
-        ZoneId z = ZoneId.of("Europe/Warsaw");
-        ZonedDateTime zdt = ZonedDateTime.now(z);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String filename = zdt.format(formatter) + "-calls.xml";
-
+    public void storeCallLogInXml(List<CallData> callData, DocumentFile file) {
+//        ZoneId z = ZoneId.of("Europe/Warsaw");
+//        ZonedDateTime zdt = ZonedDateTime.now(z);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+//        String filename = zdt.format(formatter) + "-calls.xml";
+        FileOutputStream os;
         try {
             XmlSerializer serializer = Xml.newSerializer();
-            File file = new File(
-                    Environment.getExternalStorageDirectory() + "/Documents/",
-                    filename
-            );
-            FileOutputStream os = new FileOutputStream(file);
+//            File file = new File(
+//                    Environment.getExternalStorageDirectory() + "/Documents/",
+//                    filename
+//            );
+//            FileOutputStream os = new FileOutputStream(file);
+            os = (FileOutputStream) context.getContentResolver().openOutputStream(file.getUri());
             serializer.setOutput(os, "UTF-8");
             serializer.startDocument("UTF-8", true);
             serializer.startTag(null, "CallLog");
@@ -1292,4 +1299,166 @@ public class FileHandler {
 
         return callDataList;
     }
+
+
+
+    public int countEntriesInSmsXml(Context context,Uri uriFile) {
+        int countSms = 0;
+        int countInbox = 0;
+        int countSent = 0;
+        int countDraft = 0;
+        int countOutbox = 0;
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser xpp = factory.newPullParser();
+            //FileInputStream is = new FileInputStream(file);
+            InputStream is = context.getContentResolver().openInputStream(uriFile);
+            xpp.setInput(is, null);
+            int eventType = xpp.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if(eventType == XmlPullParser.START_DOCUMENT) {
+                } else if(eventType == XmlPullParser.START_TAG) {
+                    // Inbox Messages
+                    if (xpp.getName().equalsIgnoreCase("Inbox")) {
+                        String parentTag = xpp.getName();
+                        eventType = xpp.next();
+                        while (parentTag.equalsIgnoreCase("Inbox")) {
+                            if(eventType == XmlPullParser.START_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Message")) {
+                                    countInbox++;
+                                }
+                            }
+                            if(eventType == XmlPullParser.END_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Inbox")) {
+                                    parentTag = "";
+                                }
+                            }
+                            eventType = xpp.next();
+                        }
+                    }
+                    // Sent Messages
+                    if (xpp.getName().equalsIgnoreCase("Sent")) {
+                        String parentTag = xpp.getName();
+                        eventType = xpp.next();
+                        while (parentTag.equalsIgnoreCase("Sent")) {
+                            if(eventType == XmlPullParser.START_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Message")) {
+                                    countSent++;
+                                }
+                            }
+                            if(eventType == XmlPullParser.END_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Sent")) {
+                                    parentTag = "";
+                                }
+                            }
+                            eventType = xpp.next();
+                        }
+                    }
+                    // Draft Messages
+                    if (xpp.getName().equalsIgnoreCase("Draft")) {
+                        String parentTag = xpp.getName();
+                        eventType = xpp.next();
+                        while (parentTag.equalsIgnoreCase("Draft")) {
+                            if(eventType == XmlPullParser.START_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Message")) {
+                                    String messageTag = xpp.getName();
+                                    countDraft++;
+                                }
+                            }
+                            if(eventType == XmlPullParser.END_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Draft")) {
+                                    parentTag = "";
+                                }
+                            }
+                            eventType = xpp.next();
+                        }
+                    }
+                    // Outbox Messages
+                    if (xpp.getName().equalsIgnoreCase("Outbox")) {
+                        String parentTag = xpp.getName();
+                        eventType = xpp.next();
+                        while (parentTag.equalsIgnoreCase("Outbox")) {
+                            if(eventType == XmlPullParser.START_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Message")) {
+                                    String messageTag = xpp.getName();
+                                    countOutbox++;
+                                }
+                            }
+                            if(eventType == XmlPullParser.END_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("Outbox")) {
+                                    parentTag = "";
+                                }
+                            }
+                            eventType = xpp.next();
+                        }
+                    }
+                } else if(eventType == XmlPullParser.TEXT) {  }
+                eventType = xpp.next();
+            }
+            System.out.println("Inbox: "+countInbox);
+            System.out.println("Sent: "+countSent);
+            System.out.println("Draft: "+countDraft);
+            System.out.println("Outbox: "+countOutbox);
+            is.close();
+            Toast.makeText(context, "Operation successful", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Operation failed", Toast.LENGTH_SHORT).show();
+        } finally {
+            // Tutaj być może wrzut statusu operacji do logera?
+        }
+        countSms = countInbox + countSent + countDraft + countOutbox;
+        return countSms;
+    }
+
+
+    public int countEntriesInCallLogXml(Context context,Uri uriFile) {
+        int countCallLog = 0;
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser xpp = factory.newPullParser();
+            //FileInputStream is = new FileInputStream(file);
+            InputStream is = context.getContentResolver().openInputStream(uriFile);
+            xpp.setInput(is, null);
+            int eventType = xpp.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if(eventType == XmlPullParser.START_DOCUMENT) {
+                } else if(eventType == XmlPullParser.START_TAG) {
+                    if (xpp.getName().equalsIgnoreCase("CallLog")) {
+                        String parentTag = xpp.getName();
+                        eventType = xpp.next();
+                        while (parentTag.equalsIgnoreCase("CallLog")) {
+                            if(eventType == XmlPullParser.START_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("call")) {
+                                    String messageTag = xpp.getName();
+                                    countCallLog++;
+                                }
+                            }
+                            if(eventType == XmlPullParser.END_TAG) {
+                                if (xpp.getName().equalsIgnoreCase("CallLog")) {
+                                    parentTag = "";
+                                }
+                            }
+                            eventType = xpp.next();
+                        }
+                    }
+                } else if(eventType == XmlPullParser.TEXT) {  }
+                eventType = xpp.next();
+            }
+            System.out.println("CallLog: "+countCallLog);
+            is.close();
+            Toast.makeText(context, "Operation successful", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Operation failed", Toast.LENGTH_SHORT).show();
+        } finally {
+            // Tutaj być może wrzut statusu operacji do logera?
+        }
+
+        return countCallLog;
+    }
+
+
 }

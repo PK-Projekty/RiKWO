@@ -15,6 +15,133 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewRestoreChooseFilesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:text="@string/textViewRestoreChooseFilesTitle"
+                android:textSize="20sp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchRestoreIncludeSmsFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/switchRestoreIncludeSmsFile"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textViewRestoreSmsFileAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewRestoreSmsFileAbout" />
+
+            <Button
+                android:id="@+id/buttonRestoreChooseOtherSmsFile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/buttonRestoreChooseOtherSmsFile" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="?android:attr/listDivider" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchRestoreIncludeCallLogFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/switchRestoreIncludeCallLogFile"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textViewRestoreCallLogFileAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewRestoreCallLogFileAbout" />
+
+            <Button
+                android:id="@+id/buttonRestoreChooseOtherCallLogFile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/buttonRestoreChooseOtherCallLogFile" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/textViewRestoreBeginTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:text="@string/textViewRestoreBeginTitle"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textViewRestoreBeginWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewRestoreBeginWarning" />
+
+            <TextView
+                android:id="@+id/textViewRestoreBeginAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewRestoreBeginAbout" />
+
+            <Button
+                android:id="@+id/buttonRestoreBegin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/buttonRestoreBegin" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

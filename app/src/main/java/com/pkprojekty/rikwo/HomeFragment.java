@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
@@ -23,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -35,19 +38,24 @@ import com.pkprojekty.rikwo.Sms.RestoreSms;
 import com.pkprojekty.rikwo.Xml.FileHandler;
 
 import java.io.File;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
     private Context homeContext;
+    private Uri uriTree = Uri.EMPTY;
 
-    boolean ReadSmsPermissionGranted = false;
-    boolean ReadCallLogsPermissionGranted = false;
-    boolean WriteCallLogsPermissionGranted = false;
-    boolean ReadExternalStoragePermissionGranted = false;
-    boolean WriteExternalStoragePermissionGranted = false;
+    private boolean ReadSmsPermissionGranted;
+    private boolean ReadCallLogsPermissionGranted;
+    private boolean WriteCallLogsPermissionGranted;
+    private boolean ReadExternalStoragePermissionGranted;
+    private boolean WriteExternalStoragePermissionGranted;
 
     // READ_SMS permission
     private ActivityResultLauncher<String> requestReadSmsPermissionLauncher =
@@ -98,32 +106,44 @@ public class HomeFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         homeContext=context;
+        if (Uri.EMPTY.equals(uriTree)) { restoreChoosedDirectoryFromAppPreferences(); }
         // READ_SMS permission
+        ReadSmsPermissionGranted = false;
         if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
             ReadSmsPermissionGranted = true;
         } else { requestReadSmsPermissionLauncher.launch(Manifest.permission.READ_SMS); }
         // READ_CALL_LOG permission
+        ReadCallLogsPermissionGranted = false;
         if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
             ReadCallLogsPermissionGranted = true;
         } else { requestReadCallLogPermissionLauncher.launch(Manifest.permission.READ_CALL_LOG); }
         // WRITE_CALL_LOG permission
+        WriteCallLogsPermissionGranted = false;
         if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
             WriteCallLogsPermissionGranted = true;
         } else { requestWriteCallLogPermissionLauncher.launch(Manifest.permission.WRITE_CALL_LOG); }
         // READ_EXTERNAL_STORAGE permission
-        if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            ReadExternalStoragePermissionGranted = true;
-        } else { requestReadExternalStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE); }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+        ReadExternalStoragePermissionGranted = false;
+            if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                ReadExternalStoragePermissionGranted = true;
+            } else { requestReadExternalStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE); }
+        } else { ReadExternalStoragePermissionGranted = uriTree != null; }
         // WRITE_EXTERNAL_STORAGE permission
-        if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            WriteExternalStoragePermissionGranted = true;
-        } else { requestWriteExternalStoragePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE); }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            WriteExternalStoragePermissionGranted = false;
+            if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                WriteExternalStoragePermissionGranted = true;
+            } else { requestWriteExternalStoragePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE); }
+        } else { WriteExternalStoragePermissionGranted = uriTree != null; }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        restoreChoosedDirectoryFromAppPreferences();
 
         TextView textViewSmsCount = view.findViewById(R.id.textViewSmsCount);
         if (ReadSmsPermissionGranted) { showCountofMessages(textViewSmsCount); }
@@ -152,20 +172,13 @@ public class HomeFragment extends Fragment {
             else { if (!switchBackupSms.isChecked()) { buttonHomeMakeBackupNow.setEnabled(false); } }
         });
 
-        if (switchBackupSms.isChecked() || switchBackupCallLog.isChecked()) {
-            buttonHomeMakeBackupNow.setEnabled(true);
-        } else {
-            buttonHomeMakeBackupNow.setEnabled(false);
-        }
+        buttonHomeMakeBackupNow.setEnabled(!Uri.EMPTY.equals(uriTree) || switchBackupSms.isChecked() || switchBackupCallLog.isChecked());
 
-        buttonHomeMakeBackupNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ReadSmsPermissionGranted &&
-                    ReadCallLogsPermissionGranted &&
-                    ReadExternalStoragePermissionGranted &&
-                    WriteExternalStoragePermissionGranted) { backup(switchBackupSms.isChecked(), switchBackupCallLog.isChecked()); }
-            }
+        buttonHomeMakeBackupNow.setOnClickListener(view1 -> {
+            if (ReadSmsPermissionGranted &&
+                ReadCallLogsPermissionGranted &&
+                ReadExternalStoragePermissionGranted &&
+                WriteExternalStoragePermissionGranted) { backup(switchBackupSms.isChecked(), switchBackupCallLog.isChecked()); }
         });
 
 //        if (WriteCallLogsPermissionGranted &&
@@ -198,7 +211,7 @@ public class HomeFragment extends Fragment {
         int countMessagesInSent = backupSms.countMessagesInSent();
         int overallCount = countMessagesInDraft + countMessagesInInbox + countMessagesInOutbox + countMessagesInSent;
         String pluralMessage = (overallCount >= 2) ? "wiadomości" : "wiadomość";
-        String text = "Posiadasz łącznie " + overallCount + " " + pluralMessage + " wiadomości sms";
+        String text = "Posiadasz łącznie " + overallCount + " " + pluralMessage + " sms";
         textView.setText(text);
     }
     public void showCountofCallLog (TextView textView) {
@@ -209,17 +222,36 @@ public class HomeFragment extends Fragment {
         textView.setText(text);
     }
 
+    private void restoreChoosedDirectoryFromAppPreferences() {
+        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        if (preferences.contains("uriTree")) {
+            uriTree = Uri.parse(preferences.getString("uriTree",""));
+        }
+        System.out.println("Wybrany katalog: "+uriTree);
+    }
+
     public void backup(boolean smsSwitchState, boolean callLogSwitchState) {
         FileHandler fh = new FileHandler(homeContext);
+        System.out.println("Tworzenie kopii zapasowej w wybranym katalogu: "+uriTree);
+        ZoneId z = ZoneId.of("Europe/Warsaw");
+        //ZonedDateTime zdt = ZonedDateTime.now(z);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
         if (smsSwitchState) {
+            ZonedDateTime zdt = ZonedDateTime.now(z);
+            String smsFilename = zdt.format(formatter) + "-sms.xml";
+            DocumentFile smsFile = Objects.requireNonNull(DocumentFile.fromTreeUri(homeContext, uriTree)).createFile("text/xml", smsFilename);
             BackupSms backupSms = new BackupSms(homeContext);
             List<List<SmsData>> smsData = backupSms.getAllSms();
-            fh.storeSmsInXml(smsData);
+            fh.storeSmsInXml(smsData, smsFile);
         }
         if (callLogSwitchState) {
+            ZonedDateTime zdt = ZonedDateTime.now(z);
+            String callsFilename = zdt.format(formatter) + "-calls.xml";
+            DocumentFile callsFile = Objects.requireNonNull(DocumentFile.fromTreeUri(homeContext, uriTree)).createFile("text/xml", callsFilename);
             BackupCallLog backupCallLog = new BackupCallLog(homeContext);
             List<CallData> callData = backupCallLog.getAllCalls();
-            fh.storeCallLogInXml(callData);
+            fh.storeCallLogInXml(callData, callsFile);
         }
     }
 

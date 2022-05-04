@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/dariu/AndroidStudioProjects/RiKWO/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Users/dariu/AndroidStudioProjects/RiKWO/app/src/main/res/layout/fragment_localization.xml" value="0.33" />
+        <entry key="..\:/Users/dariu/AndroidStudioProjects/RiKWO/app/src/main/res/layout/fragment_restore.xml" value="0.3026315789473684" />
       </map>
     </option>
   </component>
