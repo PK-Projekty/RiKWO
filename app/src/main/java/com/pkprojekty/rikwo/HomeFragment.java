@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.Settings;
 import android.provider.Telephony;
 import android.view.LayoutInflater;
@@ -27,6 +29,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.pkprojekty.rikwo.CallLog.BackupCallLog;
@@ -37,10 +41,15 @@ import com.pkprojekty.rikwo.Sms.BackupSms;
 import com.pkprojekty.rikwo.Sms.RestoreSms;
 import com.pkprojekty.rikwo.Xml.FileHandler;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,6 +59,8 @@ import java.util.Objects;
 public class HomeFragment extends Fragment {
     private Context homeContext;
     private Uri uriTree = Uri.EMPTY;
+    MutableLiveData<Uri> choosedSmsBackupFile = new MutableLiveData<>();
+    MutableLiveData<Uri> choosedCallLogBackupFile = new MutableLiveData<>();
 
     private boolean ReadSmsPermissionGranted;
     private boolean ReadCallLogsPermissionGranted;
@@ -144,6 +155,51 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         restoreChoosedDirectoryFromAppPreferences();
+
+        TextView textViewHomeLastBackupLocalizationAbout = view.findViewById(R.id.textViewHomeLastBackupLocalizationAbout);
+        String[] topDir = uriTree.toString().split("%3A");
+        String dir = topDir[topDir.length-1].replace("%2F","/");
+        String lastBackupLocalizationAbout = "Lokalizacja: "+dir;
+        textViewHomeLastBackupLocalizationAbout.setText(lastBackupLocalizationAbout);
+
+        List<Uri> fileUriList = listDirectory(uriTree);
+        lastBackupInChoosedDirectory(fileUriList);
+
+        TextView textViewHomeLastSmsBackupAbout = view.findViewById(R.id.textViewHomeLastSmsBackupAbout);
+        choosedSmsBackupFile.observe(requireActivity(), new Observer<Uri>(){
+            @Override
+            public void onChanged(Uri uri) {
+                String backupFileName = DocumentFile.fromSingleUri(homeContext,choosedSmsBackupFile.getValue()).getName();
+                long epoch = DocumentFile.fromSingleUri(homeContext,choosedSmsBackupFile.getValue()).lastModified();
+                String backupLastModified = convertEpochIntoHumanReadableDatetime(epoch);
+                FileHandler fh = new FileHandler(homeContext);
+                int entries = fh.countEntriesInSmsXml(homeContext, choosedSmsBackupFile.getValue());
+                String pluralEntry = (entries >= 2 || entries == 0) ? "smsów" : "sms";
+                String text =
+                        "Kopia zapasowa: "+backupFileName+
+                                "\nData ostatniej modyfikacji: "+backupLastModified+
+                                "\nWskazana kopia składa się z "+entries+" "+pluralEntry;
+                textViewHomeLastSmsBackupAbout.setText(text);
+            }
+        });
+        TextView textViewHomeLastCallLogBackupAbout = view.findViewById(R.id.textViewHomeLastCallLogBackupAbout);
+        choosedCallLogBackupFile.observe(requireActivity(), new Observer<Uri>() {
+            @Override
+            public void onChanged(Uri uri) {
+                String backupFileName = DocumentFile.fromSingleUri(homeContext,choosedCallLogBackupFile.getValue()).getName();
+                long epoch = DocumentFile.fromSingleUri(homeContext,choosedCallLogBackupFile.getValue()).lastModified();
+                String backupLastModified = convertEpochIntoHumanReadableDatetime(epoch);
+                FileHandler fh = new FileHandler(homeContext);
+                int entries = fh.countEntriesInCallLogXml(homeContext,choosedCallLogBackupFile.getValue());
+                String pluralEntry = (entries >= 2 || entries == 0) ? "połączeń" : "połączenia";
+                String text =
+                        "Kopia zapasowa: "+backupFileName+
+                                "\nData ostatniej modyfikacji: "+backupLastModified+
+                                "\nWskazana kopia składa się z "+entries+" "+pluralEntry;
+                textViewHomeLastCallLogBackupAbout.setText(text);
+            }
+        });
+        Button button = view.findViewById(R.id.buttonHomeRestoreBackupNow);
 
         TextView textViewSmsCount = view.findViewById(R.id.textViewSmsCount);
         if (ReadSmsPermissionGranted) { showCountofMessages(textViewSmsCount); }
@@ -253,6 +309,121 @@ public class HomeFragment extends Fragment {
             List<CallData> callData = backupCallLog.getAllCalls();
             fh.storeCallLogInXml(callData, callsFile);
         }
+
+        List<Uri> fileUriList = listDirectory(uriTree);
+        lastBackupInChoosedDirectory(fileUriList);
+    }
+
+    public List<Uri> listDirectory(Uri uriTree) {
+        // the uri from which we query the files
+        Uri uriFolder = DocumentsContract.buildChildDocumentsUriUsingTree(uriTree, DocumentsContract.getTreeDocumentId(uriTree));
+
+        List<Uri> uriList = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            // let's query the files
+            cursor = requireActivity().getContentResolver().query(uriFolder,
+                    new String[]{DocumentsContract.Document.COLUMN_DOCUMENT_ID},
+                    null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    // build the uri for the file
+                    Uri uriFile = DocumentsContract.buildDocumentUriUsingTree(uriTree, cursor.getString(0));
+                    //add to the list
+                    if (DocumentFile.fromSingleUri(homeContext,uriFile).isFile()) {
+                        uriList.add(uriFile);
+                    } else if (DocumentFile.fromSingleUri(homeContext,uriFile).isDirectory()) {
+                        System.out.println("To jest katalog! "+uriFile);
+                    }
+                    System.out.println(uriFile);
+                } while (cursor.moveToNext());
+                //System.out.println("--------------------");
+            }
+        } catch (Exception e) {
+            // TODO: handle error
+        } finally {
+            if (cursor!=null) cursor.close();
+        }
+        return uriList;
+    }
+
+    private void lastBackupInChoosedDirectory(List<Uri> listOfFilesUri) {
+        DateTimeFormatter dtf  = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        ZoneId z = ZoneId.of("Europe/Warsaw");
+
+        String fileName;
+        String backupType;
+        String creationDatePartFromFilename;
+        LocalDateTime creationDate;
+        long lastModified;
+
+        long tmpSmsLastModified = 0;
+        long tmpCallLogLastModified = 0;
+
+        Uri latestSmsBackupFile = Uri.EMPTY;
+        Uri latestCallLogBackupFile = Uri.EMPTY;
+
+        for (Uri uriFile : listOfFilesUri) {
+            // Last modified date from metadata
+            lastModified = DocumentFile.fromSingleUri(homeContext, uriFile).lastModified();
+            //System.out.println(lastModified);
+            // What to do when dates: lastModified, and creation are different?
+            // Could this be a case in which backups are malformed?
+            // Perhaps when user done backup, he would restore it on different time zone whatsoever
+            // Nie wiem czemu mnie wzieło na pisanie w innym języku niż jedynym słusznym...
+            // creation date from filename
+            fileName = DocumentFile.fromSingleUri(homeContext, uriFile).getName();
+            backupType = fileName.split("-")[1];
+            //System.out.println(backupType);
+            //creationDatePartFromFilename = fileName.split("-")[0];
+            //System.out.println(creationDatePartFromFilename);
+            //creationDate = LocalDateTime.parse(creationDatePartFromFilename, dtf);
+            //System.out.println(creationDate.atZone(z).toInstant().toEpochMilli());
+            if (backupType.equals("sms.xml")) {
+                if (Uri.EMPTY.equals(latestSmsBackupFile)) {
+                    tmpSmsLastModified = lastModified;
+                    latestSmsBackupFile = uriFile;
+                    //System.out.println("Pierwszy plik z kopią zapasową wiadomości sms: "+tmpSmsLastModified);
+                } else {
+                    if (lastModified >= tmpSmsLastModified) {
+                        tmpSmsLastModified = lastModified;
+                        latestSmsBackupFile = uriFile;
+                        //System.out.println("Znaleziono nowszą kopię wiadomości sms: "+tmpSmsLastModified);
+                    }
+                }
+            }
+            if (backupType.equals("calls.xml")) {
+                if (Uri.EMPTY.equals(latestSmsBackupFile)) {
+                    tmpCallLogLastModified = lastModified;
+                    latestCallLogBackupFile = uriFile;
+                    //System.out.println("Pierwszy plik z kopią zapasową rejestru połączeń: "+tmpCallLogLastModified);
+                } else {
+                    if (lastModified >= tmpCallLogLastModified) {
+                        tmpCallLogLastModified = lastModified;
+                        latestCallLogBackupFile = uriFile;
+                        //System.out.println("Znaleziono nowszą kopię rejestru połączeń: "+tmpCallLogLastModified);
+                    }
+                }
+            }
+            //System.out.println(tmpSmsLastModified + ", " + tmpCallLogLastModified);
+        }
+        //System.out.println("Najnowsza kopia zapasowa wiadomości sms: " + latestSmsBackupFile);
+        //System.out.println("Najnowsza kopia zapasowa rejestru połączeń: " + latestCallLogBackupFile);
+        //choosedSmsBackupFile = latestSmsBackupFile;
+        choosedSmsBackupFile.setValue(latestSmsBackupFile);
+        //choosedCallLogBackupFile = latestCallLogBackupFile;
+        choosedCallLogBackupFile.setValue(latestCallLogBackupFile);
+    }
+
+    private String convertEpochIntoHumanReadableDatetime(Long epoch) {
+        String humanReadableDatetime = "";
+        // DocumentFile.fromSingleUri(restoreContext,choosedCallLogBackupFile).lastModified();
+        Instant instant = Instant.ofEpochMilli(epoch);
+        ZoneId z = ZoneId.of("Europe/Warsaw");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        ZonedDateTime datetime = instant.atZone(z);
+        humanReadableDatetime = datetime.format(formatter);
+        return humanReadableDatetime;
     }
 
     public void restore() {

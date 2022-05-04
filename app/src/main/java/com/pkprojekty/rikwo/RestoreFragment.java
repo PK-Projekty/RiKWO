@@ -221,6 +221,18 @@ public class RestoreFragment extends Fragment {
                     buttonRestoreChooseOtherSmsFile.setText("Wskaż inną kopię wiadomości");
                 }
             });
+            String backupFileName = DocumentFile.fromSingleUri(restoreContext,choosedSmsBackupFile.getValue()).getName();
+            long epoch = DocumentFile.fromSingleUri(restoreContext,choosedSmsBackupFile.getValue()).lastModified();
+            String backupLastModified = convertEpochIntoHumanReadableDatetime(epoch);
+            FileHandler fh = new FileHandler(restoreContext);
+            int entries = fh.countEntriesInSmsXml(restoreContext, choosedSmsBackupFile.getValue());
+            String pluralEntry = (entries >= 2 || entries == 0) ? "smsów" : "sms";
+            String text =
+                    "Kopia zapasowa: "+backupFileName+
+                            "\nData ostatniej modyfikacji: "+backupLastModified+
+                            "\nWskazana kopia składa się z "+entries+" "+pluralEntry;
+            textViewRestoreSmsFileAbout.setText(text);
+            buttonRestoreChooseOtherSmsFile.setText("Wskaż inną kopię wiadomości");
         }
         buttonRestoreChooseOtherSmsFile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,6 +271,18 @@ public class RestoreFragment extends Fragment {
                     buttonRestoreChooseOtherCallLogFile.setText("Wskaż inną kopię rejestru");
                 }
             });
+            String backupFileName = DocumentFile.fromSingleUri(restoreContext,choosedCallLogBackupFile.getValue()).getName();
+            long epoch = DocumentFile.fromSingleUri(restoreContext,choosedCallLogBackupFile.getValue()).lastModified();
+            String backupLastModified = convertEpochIntoHumanReadableDatetime(epoch);
+            FileHandler fh = new FileHandler(restoreContext);
+            int entries = fh.countEntriesInCallLogXml(restoreContext,choosedCallLogBackupFile.getValue());
+            String pluralEntry = (entries >= 2 || entries == 0) ? "połączeń" : "połączenia";
+            String text =
+                    "Kopia zapasowa: "+backupFileName+
+                            "\nData ostatniej modyfikacji: "+backupLastModified+
+                            "\nWskazana kopia składa się z "+entries+" "+pluralEntry;
+            textViewRestoreCallLogFileAbout.setText(text);
+            buttonRestoreChooseOtherCallLogFile.setText("Wskaż inną kopię rejestru");
         }
         buttonRestoreChooseOtherCallLogFile.setOnClickListener(new View.OnClickListener() {
             @Override

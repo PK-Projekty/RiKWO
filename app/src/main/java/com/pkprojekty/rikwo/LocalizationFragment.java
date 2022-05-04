@@ -77,7 +77,7 @@ public class LocalizationFragment extends Fragment {
         restoreSwitchStateFromAppPreferences(switchBackupLocalizationLocal);
         switchBackupLocalizationLocal.setOnCheckedChangeListener((compoundButton, b) -> storeSwitchStateInAppPreferences(switchBackupLocalizationLocal));
 
-        TextView textViewCurrentlyChoosedLocalDirecotry = view.findViewById(R.id.textViewCurrentlyChoosedLocalDirecotry);
+        TextView textViewCurrentlyChoosedLocalDirectory = view.findViewById(R.id.textViewCurrentlyChoosedLocalDirecotry);
         System.out.println(uriTree);
         String[] topDir = uriTree.toString().split("%3A");
         String dir = topDir[topDir.length-1].replace("%2F","/");
@@ -89,7 +89,7 @@ public class LocalizationFragment extends Fragment {
             switchBackupLocalizationLocal.setEnabled(true);
             currentChoosedDir.setValue("Obecnie wybrany katalog to: " + dir);
         }
-        currentChoosedDir.observe(requireActivity(), text -> textViewCurrentlyChoosedLocalDirecotry.setText(text));
+        currentChoosedDir.observe(requireActivity(), text -> textViewCurrentlyChoosedLocalDirectory.setText(text));
 
         Button buttonChooseBackupLocalDirectory = view.findViewById(R.id.buttonChooseBackupLocalDirectory);
         buttonChooseBackupLocalDirectory.setOnClickListener(view1 -> {
