@@ -4,17 +4,14 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.DocumentsContract;
-import android.provider.Settings;
-import android.provider.Telephony;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +22,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
@@ -35,16 +33,11 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.pkprojekty.rikwo.CallLog.BackupCallLog;
-import com.pkprojekty.rikwo.CallLog.RestoreCallLog;
 import com.pkprojekty.rikwo.Entities.CallData;
 import com.pkprojekty.rikwo.Entities.SmsData;
 import com.pkprojekty.rikwo.Sms.BackupSms;
-import com.pkprojekty.rikwo.Sms.RestoreSms;
 import com.pkprojekty.rikwo.Xml.FileHandler;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -63,17 +56,19 @@ public class HomeFragment extends Fragment {
     MutableLiveData<Uri> choosedSmsBackupFile = new MutableLiveData<>();
     MutableLiveData<Uri> choosedCallLogBackupFile = new MutableLiveData<>();
 
-    private boolean ReadSmsPermissionGranted;
-    private boolean ReadCallLogsPermissionGranted;
+    MutableLiveData<Boolean> ReadSmsPermissionGranted = new MutableLiveData<>();
+    MutableLiveData<Boolean> ReadCallLogsPermissionGranted = new MutableLiveData<>();
     private boolean WriteCallLogsPermissionGranted;
-    private boolean ReadExternalStoragePermissionGranted;
-    private boolean WriteExternalStoragePermissionGranted;
+    MutableLiveData<Boolean> ReadExternalStoragePermissionGranted = new MutableLiveData<>();
+    MutableLiveData<Boolean> WriteExternalStoragePermissionGranted = new MutableLiveData<>();
+    MutableLiveData<Boolean> ReadWriteExternalStoragePermissionGranted = new MutableLiveData<>();
 
     // READ_SMS permission
     private ActivityResultLauncher<String> requestReadSmsPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     if (ContextCompat.checkSelfPermission(homeContext, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
+                        ReadSmsPermissionGranted.setValue(true);
                         Toast.makeText(homeContext, "Permission granted", Toast.LENGTH_SHORT).show(); }
                 } else { Toast.makeText(homeContext, "No Permission granted", Toast.LENGTH_SHORT).show(); }
             });
@@ -82,6 +77,7 @@ public class HomeFragment extends Fragment {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     if (ContextCompat.checkSelfPermission(homeContext, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+                        ReadCallLogsPermissionGranted.setValue(true);
                         Toast.makeText(homeContext, "Permission granted", Toast.LENGTH_SHORT).show(); }
                 } else { Toast.makeText(homeContext, "No Permission granted", Toast.LENGTH_SHORT).show(); }
             });
@@ -98,6 +94,7 @@ public class HomeFragment extends Fragment {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     if (ContextCompat.checkSelfPermission(homeContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        ReadExternalStoragePermissionGranted.setValue(true);
                         Toast.makeText(homeContext, "Permission granted", Toast.LENGTH_SHORT).show(); }
                 } else { Toast.makeText(homeContext, "No Permission granted", Toast.LENGTH_SHORT).show(); }
             });
@@ -106,6 +103,7 @@ public class HomeFragment extends Fragment {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     if (ContextCompat.checkSelfPermission(homeContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        WriteExternalStoragePermissionGranted.setValue(true);
                         Toast.makeText(homeContext, "Permission granted", Toast.LENGTH_SHORT).show(); }
                 } else { Toast.makeText(homeContext, "No Permission granted", Toast.LENGTH_SHORT).show(); }
             });
@@ -120,15 +118,51 @@ public class HomeFragment extends Fragment {
         homeContext=context;
         if (Uri.EMPTY.equals(uriTree)) { restoreChoosedDirectoryFromAppPreferences(); }
         // READ_SMS permission
-        ReadSmsPermissionGranted = false;
+        //ReadSmsPermissionGranted = false;
+        ReadSmsPermissionGranted.setValue(false);
         if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
-            ReadSmsPermissionGranted = true;
-        } else { requestReadSmsPermissionLauncher.launch(Manifest.permission.READ_SMS); }
+            //ReadSmsPermissionGranted = true;
+            ReadSmsPermissionGranted.setValue(true);
+        } else {
+            // requestReadSmsPermissionLauncher.launch(Manifest.permission.READ_SMS);
+            String title = "Uprawnienia aplikacji";
+            String message = "Aby można było wykonać kopię zapasową niezbędne są uprawnienia do odczytu wiadomości sms." +
+                    "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do odczytu wiadomości sms dla tej aplikacji." +
+                    "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa wiadomości sms nie zostanie wykonana.";
+            new AlertDialog.Builder(homeContext)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton("Kontynuuj", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            requestReadSmsPermissionLauncher.launch(Manifest.permission.READ_SMS);
+                        }
+                    })
+                    .setNegativeButton("Zrezygnuj",null).create().show();
+        }
         // READ_CALL_LOG permission
-        ReadCallLogsPermissionGranted = false;
+        //ReadCallLogsPermissionGranted = false;
+        ReadCallLogsPermissionGranted.setValue(false);
         if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
-            ReadCallLogsPermissionGranted = true;
-        } else { requestReadCallLogPermissionLauncher.launch(Manifest.permission.READ_CALL_LOG); }
+            //ReadCallLogsPermissionGranted = true;
+            ReadCallLogsPermissionGranted.setValue(true);
+        } else {
+            // requestReadCallLogPermissionLauncher.launch(Manifest.permission.READ_CALL_LOG);
+            String title = "Uprawnienia aplikacji";
+            String message = "Aby można było wykonać kopię zapasową niezbędne są uprawnienia do odczytu rejestru połączeń." +
+                    "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do odczytu rejestru połączeń dla tej aplikacji." +
+                    "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa rejestru połączeń nie zostanie wykonana.";
+            new AlertDialog.Builder(homeContext)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton("Kontynuuj", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            requestReadCallLogPermissionLauncher.launch(Manifest.permission.READ_CALL_LOG);
+                        }
+                    })
+                    .setNegativeButton("Zrezygnuj",null).create().show();
+        }
         // WRITE_CALL_LOG permission
         WriteCallLogsPermissionGranted = false;
         if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
@@ -136,18 +170,71 @@ public class HomeFragment extends Fragment {
         } else { requestWriteCallLogPermissionLauncher.launch(Manifest.permission.WRITE_CALL_LOG); }
         // READ_EXTERNAL_STORAGE permission
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-        ReadExternalStoragePermissionGranted = false;
+        ReadExternalStoragePermissionGranted.setValue(false);
             if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                ReadExternalStoragePermissionGranted = true;
-            } else { requestReadExternalStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE); }
-        } else { ReadExternalStoragePermissionGranted = uriTree != null; }
+                ReadExternalStoragePermissionGranted.setValue(true);
+            } else {
+                // requestReadExternalStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+                String title = "Uprawnienia aplikacji";
+                String message = "Aby można było wykonać kopię zapasową niezbędne są uprawnienia do odczytu z pamięci masowej." +
+                        "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do odczytu z pamięci masowej dla tej aplikacji." +
+                        "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa nie zostanie wykonana.";
+                new AlertDialog.Builder(homeContext)
+                        .setTitle(title)
+                        .setMessage(message)
+                        .setPositiveButton("Kontynuuj", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                requestReadExternalStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+                            }
+                        })
+                        .setNegativeButton("Zrezygnuj",null).create().show();
+            }
+        } else {
+            //System.out.println("CAN READ: "+DocumentFile.fromTreeUri(homeContext,uriTree).canRead());
+            //ReadExternalStoragePermissionGranted.setValue(uriTree != null);
+            if (uriTree != Uri.EMPTY) {
+                System.out.println("CAN READ: " + DocumentFile.fromTreeUri(homeContext, uriTree).canRead());
+                ReadExternalStoragePermissionGranted.setValue(DocumentFile.fromTreeUri(homeContext, uriTree).canRead());
+            } else {
+                ReadExternalStoragePermissionGranted.setValue(false);
+            }
+        }
         // WRITE_EXTERNAL_STORAGE permission
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            WriteExternalStoragePermissionGranted = false;
+            WriteExternalStoragePermissionGranted.setValue(false);
             if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                WriteExternalStoragePermissionGranted = true;
-            } else { requestWriteExternalStoragePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE); }
-        } else { WriteExternalStoragePermissionGranted = uriTree != null; }
+                WriteExternalStoragePermissionGranted.setValue(true);
+            } else {
+                // requestWriteExternalStoragePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                String title = "Uprawnienia aplikacji";
+                String message = "Aby można było wykonać kopię zapasową niezbędne są uprawnienia do zapisu w pamięci masowej." +
+                        "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do zapisu w pamięci masowej dla tej aplikacji." +
+                        "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa nie zostanie wykonana.";
+                new AlertDialog.Builder(homeContext)
+                        .setTitle(title)
+                        .setMessage(message)
+                        .setPositiveButton("Kontynuuj", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                requestReadExternalStoragePermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+                            }
+                        })
+                        .setNegativeButton("Zrezygnuj",null).create().show();
+            }
+
+        } else {
+            //WriteExternalStoragePermissionGranted.setValue(uriTree != null);
+            if (uriTree != Uri.EMPTY) {
+                System.out.println("CAN WRITE: " + DocumentFile.fromTreeUri(homeContext, uriTree).canWrite());
+                WriteExternalStoragePermissionGranted.setValue(DocumentFile.fromTreeUri(homeContext, uriTree).canWrite());
+            } else {
+                WriteExternalStoragePermissionGranted.setValue(false);
+            }
+        }
+
+
+
     }
 
     @Override
@@ -158,62 +245,110 @@ public class HomeFragment extends Fragment {
         restoreChoosedDirectoryFromAppPreferences();
 
         TextView textViewHomeLastBackupLocalizationAbout = view.findViewById(R.id.textViewHomeLastBackupLocalizationAbout);
-        String[] topDir = uriTree.toString().split("%3A");
-        String dir = topDir[topDir.length-1].replace("%2F","/");
-        String lastBackupLocalizationAbout = "Lokalizacja: "+dir;
-        textViewHomeLastBackupLocalizationAbout.setText(lastBackupLocalizationAbout);
-
-        List<Uri> fileUriList = listDirectory(uriTree);
-        lastBackupInChoosedDirectory(fileUriList);
-
         TextView textViewHomeLastSmsBackupAbout = view.findViewById(R.id.textViewHomeLastSmsBackupAbout);
-        choosedSmsBackupFile.observe(requireActivity(), new Observer<Uri>(){
-            @Override
-            public void onChanged(Uri uri) {
-                String backupFileName = DocumentFile.fromSingleUri(homeContext,choosedSmsBackupFile.getValue()).getName();
-                long epoch = DocumentFile.fromSingleUri(homeContext,choosedSmsBackupFile.getValue()).lastModified();
-                String backupLastModified = convertEpochIntoHumanReadableDatetime(epoch);
-                FileHandler fh = new FileHandler(homeContext);
-                int entries = fh.countEntriesInSmsXml(homeContext, choosedSmsBackupFile.getValue());
-                String pluralEntry = (entries >= 2 || entries == 0) ? "smsów" : "sms";
-                String text =
-                        "Kopia zapasowa: "+backupFileName+
-                                "\nData ostatniej modyfikacji: "+backupLastModified+
-                                "\nWskazana kopia składa się z "+entries+" "+pluralEntry;
-                textViewHomeLastSmsBackupAbout.setText(text);
-            }
-        });
         TextView textViewHomeLastCallLogBackupAbout = view.findViewById(R.id.textViewHomeLastCallLogBackupAbout);
-        choosedCallLogBackupFile.observe(requireActivity(), new Observer<Uri>() {
-            @Override
-            public void onChanged(Uri uri) {
-                String backupFileName = DocumentFile.fromSingleUri(homeContext,choosedCallLogBackupFile.getValue()).getName();
-                long epoch = DocumentFile.fromSingleUri(homeContext,choosedCallLogBackupFile.getValue()).lastModified();
-                String backupLastModified = convertEpochIntoHumanReadableDatetime(epoch);
-                FileHandler fh = new FileHandler(homeContext);
-                int entries = fh.countEntriesInCallLogXml(homeContext,choosedCallLogBackupFile.getValue());
-                String pluralEntry = (entries >= 2 || entries == 0) ? "połączeń" : "połączenia";
-                String text =
-                        "Kopia zapasowa: "+backupFileName+
-                                "\nData ostatniej modyfikacji: "+backupLastModified+
-                                "\nWskazana kopia składa się z "+entries+" "+pluralEntry;
-                textViewHomeLastCallLogBackupAbout.setText(text);
-            }
-        });
         Button buttonHomeRestoreBackupNow = view.findViewById(R.id.buttonHomeRestoreBackupNow);
-        buttonHomeRestoreBackupNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_restoreFragment);
+
+
+
+        if (uriTree != Uri.EMPTY) {
+            ReadExternalStoragePermissionGranted.setValue(DocumentFile.fromTreeUri(homeContext, uriTree).canRead());
+            WriteExternalStoragePermissionGranted.setValue(DocumentFile.fromTreeUri(homeContext, uriTree).canWrite());
+            if (!ReadExternalStoragePermissionGranted.getValue() && !WriteExternalStoragePermissionGranted.getValue()) {
+                String[] topDir = uriTree.toString().split("%3A");
+                String dir = topDir[topDir.length-1].replace("%2F","/");
+                String lastBackupLocalizationAbout = "Lokalizacja: "+dir;
+                //textViewHomeLastBackupLocalizationAbout.setText(lastBackupLocalizationAbout);
+                lastBackupLocalizationAbout += "\nBrak dostępu do pamięci masowej!\n\nProszę zweryfikować uprawnienia dostępu do pamięci masowej, lub wskazać inną lokalizację dla kopii zapasowych.";
+                textViewHomeLastSmsBackupAbout.setVisibility(View.GONE);
+                textViewHomeLastCallLogBackupAbout.setVisibility(View.GONE);
+                buttonHomeRestoreBackupNow.setVisibility(View.GONE);
+                View dividerItemDecoration = view.findViewById(R.id.divider5);
+                dividerItemDecoration.setVisibility(View.GONE);
+                textViewHomeLastBackupLocalizationAbout.setText(lastBackupLocalizationAbout);
             }
-        });
+        } else {
+            ReadExternalStoragePermissionGranted.setValue(false);
+            WriteExternalStoragePermissionGranted.setValue(false);
+            String lastBackupLocalizationAbout = textViewHomeLastBackupLocalizationAbout.getText()+"\n\nWybierz katalog, w którym chcesz przechowywać kopie zapasowe wiadomości sms i rejestru połączeń.";
+            textViewHomeLastBackupLocalizationAbout.setText(lastBackupLocalizationAbout);
+            textViewHomeLastSmsBackupAbout.setVisibility(View.GONE);
+            textViewHomeLastCallLogBackupAbout.setVisibility(View.GONE);
+            buttonHomeRestoreBackupNow.setText("Wybierz katalog");
+            buttonHomeRestoreBackupNow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_localizationFragment);
+                }
+            });
+        }
+
+        //
+
+        if (ReadExternalStoragePermissionGranted.getValue() && WriteExternalStoragePermissionGranted.getValue()) {
+            textViewHomeLastSmsBackupAbout.setVisibility(View.VISIBLE);
+            textViewHomeLastCallLogBackupAbout.setVisibility(View.VISIBLE);
+            buttonHomeRestoreBackupNow.setVisibility(View.VISIBLE);
+            View dividerItemDecoration = view.findViewById(R.id.divider5);
+            dividerItemDecoration.setVisibility(View.VISIBLE);
+
+            List<Uri> fileUriList = listDirectory(uriTree);
+            lastBackupInChoosedDirectory(fileUriList);
+
+            String[] topDir = uriTree.toString().split("%3A");
+            String dir = topDir[topDir.length-1].replace("%2F","/");
+            String lastBackupLocalizationAbout = "Lokalizacja: "+dir;
+            textViewHomeLastBackupLocalizationAbout.setText(lastBackupLocalizationAbout);
+
+            choosedSmsBackupFile.observe(requireActivity(), new Observer<Uri>() {
+                @Override
+                public void onChanged(Uri uri) {
+                    String backupFileName = DocumentFile.fromSingleUri(homeContext, choosedSmsBackupFile.getValue()).getName();
+                    long epoch = DocumentFile.fromSingleUri(homeContext, choosedSmsBackupFile.getValue()).lastModified();
+                    String backupLastModified = convertEpochIntoHumanReadableDatetime(epoch);
+                    FileHandler fh = new FileHandler(homeContext);
+                    int entries = fh.countEntriesInSmsXml(homeContext, choosedSmsBackupFile.getValue());
+                    String pluralEntry = (entries >= 2 || entries == 0) ? "smsów" : "sms";
+                    String text =
+                            "Kopia zapasowa: " + backupFileName +
+                                    "\nData ostatniej modyfikacji: " + backupLastModified +
+                                    "\nWskazana kopia składa się z " + entries + " " + pluralEntry;
+                    textViewHomeLastSmsBackupAbout.setText(text);
+                }
+            });
+
+            choosedCallLogBackupFile.observe(requireActivity(), new Observer<Uri>() {
+                @Override
+                public void onChanged(Uri uri) {
+                    String backupFileName = DocumentFile.fromSingleUri(homeContext, choosedCallLogBackupFile.getValue()).getName();
+                    long epoch = DocumentFile.fromSingleUri(homeContext, choosedCallLogBackupFile.getValue()).lastModified();
+                    String backupLastModified = convertEpochIntoHumanReadableDatetime(epoch);
+                    FileHandler fh = new FileHandler(homeContext);
+                    int entries = fh.countEntriesInCallLogXml(homeContext, choosedCallLogBackupFile.getValue());
+                    String pluralEntry = (entries >= 2 || entries == 0) ? "połączeń" : "połączenia";
+                    String text =
+                            "Kopia zapasowa: " + backupFileName +
+                                    "\nData ostatniej modyfikacji: " + backupLastModified +
+                                    "\nWskazana kopia składa się z " + entries + " " + pluralEntry;
+                    textViewHomeLastCallLogBackupAbout.setText(text);
+                }
+            });
+
+            buttonHomeRestoreBackupNow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_restoreFragment);
+                }
+            });
+        }
 
         TextView textViewSmsCount = view.findViewById(R.id.textViewSmsCount);
-        if (ReadSmsPermissionGranted) { showCountofMessages(textViewSmsCount); }
+        //if (ReadSmsPermissionGranted) { showCountofMessages(textViewSmsCount); }
+        if (ReadSmsPermissionGranted.getValue()) { showCountofMessages(textViewSmsCount); }
         else { textViewSmsCount.setText(getResources().getString(R.string.textViewSmsCount)); }
 
         TextView textViewCallLogCount = view.findViewById(R.id.textViewCallLogCount);
-        if (ReadCallLogsPermissionGranted) { showCountofCallLog(textViewCallLogCount); }
+        if (ReadCallLogsPermissionGranted.getValue()) { showCountofCallLog(textViewCallLogCount); }
         else { textViewCallLogCount.setText(getResources().getString(R.string.textViewCallLogCount)); }
 
         Button buttonHomeMakeBackupNow = view.findViewById(R.id.buttonHomeMakeBackupNow);
@@ -238,10 +373,47 @@ public class HomeFragment extends Fragment {
         buttonHomeMakeBackupNow.setEnabled(!Uri.EMPTY.equals(uriTree) || switchBackupSms.isChecked() || switchBackupCallLog.isChecked());
 
         buttonHomeMakeBackupNow.setOnClickListener(view1 -> {
-            if (ReadSmsPermissionGranted &&
-                ReadCallLogsPermissionGranted &&
-                ReadExternalStoragePermissionGranted &&
-                WriteExternalStoragePermissionGranted) { backup(switchBackupSms.isChecked(), switchBackupCallLog.isChecked()); }
+            //if (ReadSmsPermissionGranted &&
+            if (ReadSmsPermissionGranted.getValue() &&
+                ReadCallLogsPermissionGranted.getValue() &&
+                ReadExternalStoragePermissionGranted.getValue() &&
+                WriteExternalStoragePermissionGranted.getValue()) { backup(switchBackupSms.isChecked(), switchBackupCallLog.isChecked()); }
+        });
+
+        ReadSmsPermissionGranted.observe(requireActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (ReadSmsPermissionGranted.getValue()) {
+                    switchBackupSms.setChecked(true);
+                    switchBackupSms.setEnabled(true);
+                } else {
+                    switchBackupSms.setChecked(false);
+                    switchBackupSms.setEnabled(false);
+                }
+            }
+        });
+        ReadCallLogsPermissionGranted.observe(requireActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (ReadCallLogsPermissionGranted.getValue()) {
+                    switchBackupCallLog.setChecked(true);
+                    switchBackupCallLog.setEnabled(true);
+                } else {
+                    switchBackupCallLog.setChecked(false);
+                    switchBackupCallLog.setEnabled(false);
+                }
+            }
+        });
+        ReadWriteExternalStoragePermissionGranted.setValue(ReadExternalStoragePermissionGranted.getValue() && WriteExternalStoragePermissionGranted.getValue());
+        ReadWriteExternalStoragePermissionGranted.observe(requireActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (ReadWriteExternalStoragePermissionGranted.getValue() && (ReadSmsPermissionGranted.getValue()||ReadCallLogsPermissionGranted.getValue())) {
+                    buttonHomeMakeBackupNow.setEnabled(true);
+                } else {
+                    buttonHomeMakeBackupNow.setEnabled(false);
+                }
+            }
         });
 
 //        if (WriteCallLogsPermissionGranted &&
