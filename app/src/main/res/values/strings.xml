@@ -2,11 +2,19 @@
     <string name="app_name">RiKWO</string>
 
     <!-- Home Fragment Backup Strings -->
+    <string name="textViewHomePermissionsTitle">Informacje o uprawnieniach</string>
+    <string name="textViewHomePermissionsAboutCallLogAccess">Dostęp do rejestru połączeń</string>
+    <string name="textViewHomePermissionsAboutSmsAccess">Dostęp do wiadomości sms</string>
+    <string name="textViewHomePermissionsAboutDefaultSmsApp">Aplikacja domyślna dla wiadomości sms</string>
+    <string name="textViewHomePermissionsAboutBackupLocation">Dostęp do lokalizacji kopii zapasowych</string>
+    <string name="buttonHomePermissionsDetails">Więcej szczegółów</string>
+
+    <!-- Home Fragment Backup Strings -->
     <string name="textViewHomeLastBackupTitle">Ostatnia kopia zapasowa</string>
     <string name="textViewHomeLastBackupLocalizationAbout">Nie wybrano lokalizacji dla kopii zapasowych</string>
     <string name="textViewHomeLastSmsBackupAbout">Brak kopii zapasowych dla wiadomości sms</string>
     <string name="textViewHomeLastCallLogBackupAbout">Brak kopii zapasowych dla rejestru połączeń</string>
-    <string name="buttonHomeRestoreBackupNow">Przywróć kopię zapasową teraz</string>
+    <string name="buttonHomeRestoreBackupNow">Przywróć kopię zapasową</string>
     <string name="textViewSmsAbout">Informacje o wiadomościach sms</string>
     <string name="textViewSmsCount">Nie posiadasz żadnych wiadomości sms</string>
     <string name="switchBackupSmsLabel">Uwzględnij wiadomości w kopii zapasowej</string>

@@ -49,7 +49,7 @@ public class LocalizationFragment extends Fragment {
                         String dir = topDir[topDir.length-1].replace("%2F","/");
                         System.out.println(dir);
                         if (dir.isEmpty()) {
-                            currentChoosedDir.setValue(getResources().getString(R.string.textViewSmsCount));
+                            currentChoosedDir.setValue(getResources().getString(R.string.textViewCurrentlyChoosedLocalDirectory));
                         } else {
                             currentChoosedDir.setValue("Obecnie wybrany katalog to: " + dir);
                         }
@@ -84,7 +84,7 @@ public class LocalizationFragment extends Fragment {
         System.out.println(dir);
         if (dir.isEmpty()) {
             switchBackupLocalizationLocal.setEnabled(false);
-            currentChoosedDir.setValue(getResources().getString(R.string.textViewSmsCount));
+            currentChoosedDir.setValue(getResources().getString(R.string.textViewCurrentlyChoosedLocalDirectory));
         } else {
             switchBackupLocalizationLocal.setEnabled(true);
             currentChoosedDir.setValue("Obecnie wybrany katalog to: " + dir);

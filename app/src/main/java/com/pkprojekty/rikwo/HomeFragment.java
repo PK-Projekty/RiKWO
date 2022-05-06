@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
+import android.provider.Telephony;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,10 +59,12 @@ public class HomeFragment extends Fragment {
 
     MutableLiveData<Boolean> ReadSmsPermissionGranted = new MutableLiveData<>();
     MutableLiveData<Boolean> ReadCallLogsPermissionGranted = new MutableLiveData<>();
-    private boolean WriteCallLogsPermissionGranted;
+    MutableLiveData<Boolean> WriteCallLogsPermissionGranted = new MutableLiveData<>();
     MutableLiveData<Boolean> ReadExternalStoragePermissionGranted = new MutableLiveData<>();
     MutableLiveData<Boolean> WriteExternalStoragePermissionGranted = new MutableLiveData<>();
     MutableLiveData<Boolean> ReadWriteExternalStoragePermissionGranted = new MutableLiveData<>();
+    MutableLiveData<Boolean> IsDefaultSmsApp = new MutableLiveData<>();
+
 
     // READ_SMS permission
     private ActivityResultLauncher<String> requestReadSmsPermissionLauncher =
@@ -86,6 +89,10 @@ public class HomeFragment extends Fragment {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     if (ContextCompat.checkSelfPermission(homeContext, Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+                        WriteCallLogsPermissionGranted.setValue(true);
+                        Toast.makeText(homeContext, "Permission granted", Toast.LENGTH_SHORT).show(); }
+                    if (ContextCompat.checkSelfPermission(homeContext, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+                        ReadCallLogsPermissionGranted.setValue(true);
                         Toast.makeText(homeContext, "Permission granted", Toast.LENGTH_SHORT).show(); }
                 } else { Toast.makeText(homeContext, "No Permission granted", Toast.LENGTH_SHORT).show(); }
             });
@@ -164,10 +171,26 @@ public class HomeFragment extends Fragment {
                     .setNegativeButton("Zrezygnuj",null).create().show();
         }
         // WRITE_CALL_LOG permission
-        WriteCallLogsPermissionGranted = false;
+        WriteCallLogsPermissionGranted.setValue(false);
         if (ActivityCompat.checkSelfPermission(homeContext, Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
-            WriteCallLogsPermissionGranted = true;
-        } else { requestWriteCallLogPermissionLauncher.launch(Manifest.permission.WRITE_CALL_LOG); }
+            WriteCallLogsPermissionGranted.setValue(true);
+        } else {
+            // requestWriteCallLogPermissionLauncher.launch(Manifest.permission.WRITE_CALL_LOG);
+            String title = "Uprawnienia aplikacji";
+            String message = "Aby można było wykonać kopię zapasową niezbędne są uprawnienia do zapisu rejestru połączeń." +
+                    "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do zapisu rejestru połączeń dla tej aplikacji." +
+                    "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa rejestru połączeń nie zostanie przywrócona.";
+            new AlertDialog.Builder(homeContext)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton("Kontynuuj", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            requestWriteCallLogPermissionLauncher.launch(Manifest.permission.WRITE_CALL_LOG);
+                        }
+                    })
+                    .setNegativeButton("Zrezygnuj",null).create().show();
+        }
         // READ_EXTERNAL_STORAGE permission
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
         ReadExternalStoragePermissionGranted.setValue(false);
@@ -238,9 +261,17 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        IsDefaultSmsApp.setValue(homeContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(homeContext)));
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        IsDefaultSmsApp.setValue(homeContext.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(homeContext)));
 
         restoreChoosedDirectoryFromAppPreferences();
 
@@ -248,8 +279,6 @@ public class HomeFragment extends Fragment {
         TextView textViewHomeLastSmsBackupAbout = view.findViewById(R.id.textViewHomeLastSmsBackupAbout);
         TextView textViewHomeLastCallLogBackupAbout = view.findViewById(R.id.textViewHomeLastCallLogBackupAbout);
         Button buttonHomeRestoreBackupNow = view.findViewById(R.id.buttonHomeRestoreBackupNow);
-
-
 
         if (uriTree != Uri.EMPTY) {
             ReadExternalStoragePermissionGranted.setValue(DocumentFile.fromTreeUri(homeContext, uriTree).canRead());
@@ -263,8 +292,6 @@ public class HomeFragment extends Fragment {
                 textViewHomeLastSmsBackupAbout.setVisibility(View.GONE);
                 textViewHomeLastCallLogBackupAbout.setVisibility(View.GONE);
                 buttonHomeRestoreBackupNow.setVisibility(View.GONE);
-                View dividerItemDecoration = view.findViewById(R.id.divider5);
-                dividerItemDecoration.setVisibility(View.GONE);
                 textViewHomeLastBackupLocalizationAbout.setText(lastBackupLocalizationAbout);
             }
         } else {
@@ -289,8 +316,6 @@ public class HomeFragment extends Fragment {
             textViewHomeLastSmsBackupAbout.setVisibility(View.VISIBLE);
             textViewHomeLastCallLogBackupAbout.setVisibility(View.VISIBLE);
             buttonHomeRestoreBackupNow.setVisibility(View.VISIBLE);
-            View dividerItemDecoration = view.findViewById(R.id.divider5);
-            dividerItemDecoration.setVisibility(View.VISIBLE);
 
             List<Uri> fileUriList = listDirectory(uriTree);
             lastBackupInChoosedDirectory(fileUriList);
@@ -404,6 +429,43 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+
+        IsDefaultSmsApp.observe(requireActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                TextView textViewHomePermissionsAboutDefaultSmsApp = view.findViewById(R.id.textViewHomePermissionsAboutDefaultSmsApp);
+                String homePermissionsAboutDefaultSmsAppText = getResources().getString(R.string.textViewHomePermissionsAboutDefaultSmsApp)+": "+((IsDefaultSmsApp.getValue())?"TAK":"NIE");
+                textViewHomePermissionsAboutDefaultSmsApp.setText(homePermissionsAboutDefaultSmsAppText);
+            }
+        });
+
+        ReadSmsPermissionGranted.observe(requireActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                TextView textViewHomePermissionsAboutSmsAccess = view.findViewById(R.id.textViewHomePermissionsAboutSmsAccess);
+                String homePermissionsAboutSmsAccessText = getResources().getString(R.string.textViewHomePermissionsAboutSmsAccess)+": "+((ReadSmsPermissionGranted.getValue())?"TAK":"NIE");
+                textViewHomePermissionsAboutSmsAccess.setText(homePermissionsAboutSmsAccessText);
+            }
+        });
+
+        ReadCallLogsPermissionGranted.observe(requireActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                TextView textViewHomePermissionsAboutCallLogAccess = view.findViewById(R.id.textViewHomePermissionsAboutCallLogAccess);
+                String homePermissionsAboutCallLogAccessText = getResources().getString(R.string.textViewHomePermissionsAboutCallLogAccess)+": "+((ReadCallLogsPermissionGranted.getValue()&&WriteCallLogsPermissionGranted.getValue()) ? "TAK" : "NIE");
+                textViewHomePermissionsAboutCallLogAccess.setText(homePermissionsAboutCallLogAccessText);
+            }
+        });
+
+        WriteCallLogsPermissionGranted.observe(requireActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                TextView textViewHomePermissionsAboutCallLogAccess = view.findViewById(R.id.textViewHomePermissionsAboutCallLogAccess);
+                String homePermissionsAboutCallLogAccessText = getResources().getString(R.string.textViewHomePermissionsAboutCallLogAccess)+": "+((ReadCallLogsPermissionGranted.getValue()&&WriteCallLogsPermissionGranted.getValue()) ? "TAK" : "NIE");
+                textViewHomePermissionsAboutCallLogAccess.setText(homePermissionsAboutCallLogAccessText);
+            }
+        });
+
         ReadWriteExternalStoragePermissionGranted.setValue(ReadExternalStoragePermissionGranted.getValue() && WriteExternalStoragePermissionGranted.getValue());
         ReadWriteExternalStoragePermissionGranted.observe(requireActivity(), new Observer<Boolean>() {
             @Override
@@ -416,6 +478,21 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        TextView textViewHomePermissionsAboutDefaultSmsApp = view.findViewById(R.id.textViewHomePermissionsAboutDefaultSmsApp);
+        String homePermissionsAboutDefaultSmsAppText = getResources().getString(R.string.textViewHomePermissionsAboutDefaultSmsApp)+": "+((IsDefaultSmsApp.getValue())?"TAK":"NIE");
+        textViewHomePermissionsAboutDefaultSmsApp.setText(homePermissionsAboutDefaultSmsAppText);
+
+        TextView textViewHomePermissionsAboutSmsAccess = view.findViewById(R.id.textViewHomePermissionsAboutSmsAccess);
+        String homePermissionsAboutSmsAccessText = getResources().getString(R.string.textViewHomePermissionsAboutSmsAccess)+": "+((ReadSmsPermissionGranted.getValue())?"TAK":"NIE");
+        textViewHomePermissionsAboutSmsAccess.setText(homePermissionsAboutSmsAccessText);
+
+        TextView textViewHomePermissionsAboutCallLogAccess = view.findViewById(R.id.textViewHomePermissionsAboutCallLogAccess);
+        String homePermissionsAboutCallLogAccessText = getResources().getString(R.string.textViewHomePermissionsAboutCallLogAccess)+": "+((ReadCallLogsPermissionGranted.getValue()&&WriteCallLogsPermissionGranted.getValue()) ? "TAK" : "NIE");
+        textViewHomePermissionsAboutCallLogAccess.setText(homePermissionsAboutCallLogAccessText);
+
+        TextView textViewHomePermissionsAboutBackupLocation = view.findViewById(R.id.textViewHomePermissionsAboutBackupLocation);
+        String homePermissionsAboutBackupLocationText = getResources().getString(R.string.textViewHomePermissionsAboutBackupLocation)+": "+((ReadWriteExternalStoragePermissionGranted.getValue()) ? "TAK" : "NIE");
+        textViewHomePermissionsAboutBackupLocation.setText(homePermissionsAboutBackupLocationText);
 //        if (WriteCallLogsPermissionGranted &&
 //            ReadExternalStoragePermissionGranted &&
 //            WriteExternalStoragePermissionGranted) { restore(); }
