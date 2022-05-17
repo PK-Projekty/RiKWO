@@ -42,6 +42,43 @@
     <string name="textViewRestoreBeginAbout">Aby kontynuować przywracanie wskazanych danych, kliknij na przycisku rozpocznij przywracanie.</string>
     <string name="buttonRestoreBegin">Rozpocznij przywracanie</string>
 
+    <!-- Restore Fragment Strings -->
+    <string name="textViewPrivacyTitle">Polityka prywatności</string>
+    <string name="textViewPrivacyAbout">Twoja prywatność jest dla nas bardzo ważna. Niniejsza Polityka prywatności dotyczy korzystania z naszej aplikacji mobilnej na platformie Android. Przeczytaj uważnie naszą Politykę prywatności i daj nam znać, jeśli masz jakiekolwiek pytania.</string>
+    <string name="textViewWhatInformationDoWeCollectTitle">Jakie informacje zbieramy</string>
+    <string name="textViewWhatInformationDoWeCollectPersonalInformationSubTitle">Informacje osobiste</string>
+    <string name="textViewWhatInformationDoWeCollectPersonalInformationAbout">NIE gromadzimy, nie udostępniamy, nie sprzedajemy, nie wysyłamy, nie przechowujemy ani nie wykorzystujemy żadnych danych osobowych podczas pobierania lub uaktualniania naszej aplikacji.</string>
+    <string name="textViewWhatInformationDoWeCollectNonPersonalInformationSubTitle">Informacje nieosobowe</string>
+    <string name="textViewWhatInformationDoWeCollectNonPersonalInformationAboutP1">Informacje nieosobowe to informacje, które nie mogą dotyczyć konkretnej osoby, takie jak typ urządzenia, producent urządzenia, wersja systemu operacyjnego, częstotliwość korzystania z aplikacji, itp.</string>
+    <string name="textViewWhatInformationDoWeCollectNonPersonalInformationAboutP2">Nie gromadzimy żadnych danych nieosobowych.</string>
+    <string name="textViewWhatInformationDoWeCollectNonPersonalInformationAboutP3">Jeśli dane nieosobowe zostaną połączone z danymi osobowymi, informacje te będą traktowane jako dane osobowe.</string>
+    <string name="textViewHowWeUseYourDataTitle">Jak wykorzystujemy Twoje dane</string>
+    <string name="textViewHowWeUseYourDataPersonalInformationSubTitle">Informacje osobiste</string>
+    <string name="textViewHowWeUseYourDataPersonalInformationAbout">Ponieważ nie gromadzimy Danych Osobowych, nie możemy w żaden sposób wykorzystywać Twoich Danych Osobowych.</string>
+    <string name="textViewHowWeUseYourDataNonPersonalInformationSubTitle">Informacje nieosobowe</string>
+    <string name="textViewHowWeUseYourDataNonPersonalInformationAbout">Ponieważ nie gromadzimy Danych Nieosobowych, nie możemy w żaden sposób wykorzystywać Twoich Danych Nieosobowych.</string>
+    <string name="textViewHowYourDataCanBeDisclosedTitle">W jaki sposób Twoje dane mogą zostać ujawnione</string>
+    <string name="textViewHowYourDataCanBeDisclosedPersonalInformationSubTitle">Informacje osobiste</string>
+    <string name="textViewHowYourDataCanBeDisclosedPersonalInformationAbout">Nie przechowujemy Danych Osobowych i dlatego nie ujawniamy Twoich Danych Osobowych.</string>
+    <string name="textViewHowYourDataCanBeDisclosedNonPersonalInformationSubTitle">Informacje nieosobowe</string>
+    <string name="textViewHowYourDataCanBeDisclosedNonPersonalInformationAbout">Nie przechowujemy Danych Nieosobowych i dlatego nie ujawniamy Twoich Danych Nieosobowych. Nie łączymy Danych Nieosobowych z Danymi Osobowymi.</string>
+    <string name="textViewThirdPartyServicesTitle">Usługi stron trzecich</string>
+    <string name="textViewThirdPartyServicesAbout">Nasza aplikacja nie wykorzystuje usług stron trzecich. Żadne z danych, które przetwarzasz przy użyciu naszej aplikacji nie są udostępniane stronom trzecim.</string>
+    <string name="textViewSecurityTitle">Bezpieczeństwo</string>
+    <string name="textViewSecurityAbout">Nie zbieramy danych osobowych.</string>
+    <string name="textViewDevicePermissionsToAccessPersonalDataTitle">Uprawnienia urządzenia do dostępu do danych osobowych</string>
+    <string name="textViewDevicePermissionsToAccessPersonalDataAboutP1">W zależności od konkretnego urządzenia użytkownika, ta Aplikacja może zażądać pewnych uprawnień, które pozwolą jej uzyskać dostęp do danych urządzenia użytkownika, jak opisano poniżej.</string>
+    <string name="textViewDevicePermissionsToAccessPersonalDataAboutP2">Domyślnie uprawnienia te muszą zostać udzielone przez użytkownika, zanim będzie można uzyskać dostęp do odpowiednich informacji. Udzielone uprawnienie może zostać w każdej chwili cofnięte przez użytkownika. Aby cofnąć te uprawnienia, użytkownicy mogą odwołać się do ustawień urządzenia lub skontaktować się z właścicielem w celu uzyskania pomocy pod danymi kontaktowymi podanymi w niniejszym dokumencie. Dokładna procedura kontrolowania uprawnień aplikacji może zależeć od urządzenia i oprogramowania użytkownika.</string>
+    <string name="textViewDevicePermissionsToAccessPersonalDataAboutP3">Należy pamiętać, że cofnięcie takich uprawnień może wpłynąć na prawidłowe działanie tej Aplikacji. Jeśli użytkownik udzieli któregokolwiek z uprawnień wymienionych poniżej, odpowiednie dane osobowe mogą być przetwarzane (tj. dostępne, modyfikowane lub usuwane) przez tę Aplikację.</string>
+    <string name="textViewDevicePermissionsToAccessPersonalDataSmsSubTitle">Dostęp do wiadomości sms</string>
+    <string name="textViewDevicePermissionsToAccessPersonalDataSmsAbout">Służy do uzyskiwania dostępu do wiadomości SMS w celu zapisania ich lokalnie na urządzeniu użytkownika.</string>
+    <string name="textViewDevicePermissionsToAccessPersonalDataCallLogSubTitle">Dostęp do rejestru połączeń</string>
+    <string name="textViewDevicePermissionsToAccessPersonalDataCallLogAbout">Służy do uzyskiwania dostępu do rejestru połączeń w celu zapisania jego zawartości lokalnie na urządzeniu użytkownika.</string>
+    <string name="textViewDevicePermissionsToAccessPersonalDataMemorySubTitle">Dostęp do pamięci wewnętrznej</string>
+    <string name="textViewDevicePermissionsToAccessPersonalDataMemoryAbout">Służy do odczytywania i tworzenia plików w folderze wskazanym przez użytkownika w pamięci wewnętrznej urządzenia.</string>
+    <string name="textViewSensitiveInformationTitle">Informacje wrażliwe</string>
+    <string name="textViewSensitiveInformationAbout">Prosimy o nieprzesyłanie i nieujawnianie żadnych wrażliwych Danych Osobowych (np. informacji związanych z pochodzeniem rasowym lub etnicznym, poglądami politycznymi, religią lub innymi przekonaniami, stanem zdrowia, orientacją seksualną, przeszłością kryminalną lub członkostwem w organizacjach, w tym członkostwo w związkach zawodowych) za pośrednictwem usług firm trzecich lub w inny sposób do nas.</string>
+
     <!-- Fragments Placeholder Strings -->
     <string name="hello_home_fragment">Hello home fragment</string>
     <string name="hello_backup_fragment">Hello backup fragment</string>
