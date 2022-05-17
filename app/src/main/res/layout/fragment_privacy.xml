@@ -5,7 +5,7 @@
     android:id="@+id/privacyFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PrivacyFragment">
+    tools:context=".UI.PrivacyFragment">
 
     <TextView
         android:id="@+id/textViewPrivacy1"

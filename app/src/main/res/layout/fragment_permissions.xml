@@ -5,7 +5,7 @@
     android:id="@+id/permissionsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PermissionsFragment">
+    tools:context=".UI.PermissionsFragment">
 
     <TextView
         android:id="@+id/textViewPermissions1"

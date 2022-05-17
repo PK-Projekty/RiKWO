@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.pkprojekty.rikwo.HomeFragment"
+        android:name="com.pkprojekty.rikwo.UI.HomeFragment"
         android:label="@string/homeFragmentTitle"
         tools:layout="@layout/fragment_home" >
         <action
@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/backupFragment"
-        android:name="com.pkprojekty.rikwo.BackupFragment"
+        android:name="com.pkprojekty.rikwo.UI.BackupFragment"
         android:label="@string/backupFragmentTitle"
         tools:layout="@layout/fragment_backup" >
         <action
@@ -64,7 +64,7 @@
     </fragment>
     <fragment
         android:id="@+id/restoreFragment"
-        android:name="com.pkprojekty.rikwo.RestoreFragment"
+        android:name="com.pkprojekty.rikwo.UI.RestoreFragment"
         android:label="@string/restoreFragmentTitle"
         tools:layout="@layout/fragment_restore" >
         <action
@@ -75,7 +75,7 @@
     </fragment>
     <fragment
         android:id="@+id/logsFragment"
-        android:name="com.pkprojekty.rikwo.LogsFragment"
+        android:name="com.pkprojekty.rikwo.UI.LogsFragment"
         android:label="@string/logsFragmentTitle"
         tools:layout="@layout/fragment_logs" >
         <action
@@ -86,7 +86,7 @@
     </fragment>
     <fragment
         android:id="@+id/permissionsFragment"
-        android:name="com.pkprojekty.rikwo.PermissionsFragment"
+        android:name="com.pkprojekty.rikwo.UI.PermissionsFragment"
         android:label="@string/permissionsFragmentTitle"
         tools:layout="@layout/fragment_permissions" >
         <action
@@ -97,7 +97,7 @@
     </fragment>
     <fragment
         android:id="@+id/localizationFragment"
-        android:name="com.pkprojekty.rikwo.LocalizationFragment"
+        android:name="com.pkprojekty.rikwo.UI.LocalizationFragment"
         android:label="@string/localizationFragmentTitle"
         tools:layout="@layout/fragment_localization" >
         <action
@@ -108,7 +108,7 @@
     </fragment>
     <fragment
         android:id="@+id/encryptionFragment"
-        android:name="com.pkprojekty.rikwo.EncryptionFragment"
+        android:name="com.pkprojekty.rikwo.UI.EncryptionFragment"
         android:label="@string/encryptionFragmentTitle"
         tools:layout="@layout/fragment_encryption" >
         <action
@@ -119,7 +119,7 @@
     </fragment>
     <fragment
         android:id="@+id/privacyFragment"
-        android:name="com.pkprojekty.rikwo.PrivacyFragment"
+        android:name="com.pkprojekty.rikwo.UI.PrivacyFragment"
         android:label="@string/privacyFragmentTitle"
         tools:layout="@layout/fragment_privacy" >
         <action
@@ -130,7 +130,7 @@
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.pkprojekty.rikwo.AboutFragment"
+        android:name="com.pkprojekty.rikwo.UI.AboutFragment"
         android:label="@string/aboutFragmentTitle"
         tools:layout="@layout/fragment_about" >
         <action

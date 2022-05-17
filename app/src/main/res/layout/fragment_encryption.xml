@@ -5,7 +5,7 @@
     android:id="@+id/encryptionFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EncryptionFragment">
+    tools:context=".UI.EncryptionFragment">
 
     <TextView
         android:id="@+id/textViewEncryption1"

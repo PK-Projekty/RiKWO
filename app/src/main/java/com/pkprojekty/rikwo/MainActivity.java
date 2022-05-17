@@ -1,5 +1,6 @@
 package com.pkprojekty.rikwo;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -8,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,14 +17,16 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.pkprojekty.rikwo.Permissions.Permissions;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private AppBarConfiguration appBarConfiguration;
-
 
     public static final String KEY_TASK_DESC = "key_task_desc";
     @Override
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
         NavigationUI.setupWithNavController(navView,navController);
+
     }
 
     @Override
