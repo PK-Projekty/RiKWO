@@ -42,7 +42,7 @@
     <string name="textViewRestoreBeginAbout">Aby kontynuować przywracanie wskazanych danych, kliknij na przycisku rozpocznij przywracanie.</string>
     <string name="buttonRestoreBegin">Rozpocznij przywracanie</string>
 
-    <!-- Restore Fragment Strings -->
+    <!-- Privacy Fragment Strings -->
     <string name="textViewPrivacyTitle">Polityka prywatności</string>
     <string name="textViewPrivacyAbout">Twoja prywatność jest dla nas bardzo ważna. Niniejsza Polityka prywatności dotyczy korzystania z naszej aplikacji mobilnej na platformie Android. Przeczytaj uważnie naszą Politykę prywatności i daj nam znać, jeśli masz jakiekolwiek pytania.</string>
     <string name="textViewWhatInformationDoWeCollectTitle">Jakie informacje zbieramy</string>
@@ -78,6 +78,16 @@
     <string name="textViewDevicePermissionsToAccessPersonalDataMemoryAbout">Służy do odczytywania i tworzenia plików w folderze wskazanym przez użytkownika w pamięci wewnętrznej urządzenia.</string>
     <string name="textViewSensitiveInformationTitle">Informacje wrażliwe</string>
     <string name="textViewSensitiveInformationAbout">Prosimy o nieprzesyłanie i nieujawnianie żadnych wrażliwych Danych Osobowych (np. informacji związanych z pochodzeniem rasowym lub etnicznym, poglądami politycznymi, religią lub innymi przekonaniami, stanem zdrowia, orientacją seksualną, przeszłością kryminalną lub członkostwem w organizacjach, w tym członkostwo w związkach zawodowych) za pośrednictwem usług firm trzecich lub w inny sposób do nas.</string>
+
+    <!-- Privacy Fragment Strings -->
+    <string name="textViewAboutTitle">RiKWO</string>
+    <string name="iconViewContentDescription">RiKWO Application Logo</string>
+    <string name="textViewAboutAppTitle">O aplikacji</string>
+    <string name="textViewAboutAppInfo">Aplikacja mobilna służąca do wykonywania i przywracania kopii zapasowych rejestru połączeń i wiadomości sms na platformę Android."</string>
+    <string name="textViewAboutTeamTitle">Skład zespołu</string>
+    <string name="textViewAboutTeamInfo">• Dariusz Świąder\n• Filip Kieś\n• Hubert Kowalczyk</string>
+    <string name="textViewAboutProjectTitle">O projekcie</string>
+    <string name="textViewAboutProjectInfo">Aplikacja ta została zrealizowana w ramach projektu Repozytoria i Kontrola Wersji Oprogramowania. Celem projektu było nabycie podstawowych umiejętności z zakresu  współtworzenia kodu, oraz obsługi narzędzi wspomagających pracę w zespole.</string>
 
     <!-- Fragments Placeholder Strings -->
     <string name="hello_home_fragment">Hello home fragment</string>
