@@ -109,6 +109,19 @@
     <string name="switchPermissionsMemoryWrite">Zapis do pamięci telefonu</string>
     <string name="textViewPermissionsMemoryWriteAbout">To uprawnienie jest wymagane do prawidłowego wykonywania i przywracania kopii zapasowych wiadomości sms i rejestru połączeń. Po jego udzieleniu aplikacja będzie w stanie zapisać wykonane kopie zapasowe we wskazanej przez Ciebie lokalizacji.</string>
 
+    <!-- Backup Fragment Strings -->
+    <string name="textViewBackupTitle">Wykonaj kopię zapasową teraz</string>
+    <string name="textViewBackupLocationTitle">Informacje o wskazanej lokalizacji</string>
+    <string name="textViewBackupLocationAbout">Nie wskazano lokalizacji kopii zapasowych</string>
+    <string name="buttonBackupChooseLocation">Wskaż katalog</string>
+    <string name="textViewBackupSmsTitle">Informacje o wiadomościach sms</string>
+    <string name="textViewBackupSmsAbout">Nie posiadasz żadnych wiadomości sms</string>
+    <string name="switchBackupSmsUse">Uwzględnij wiadomości w kopii zapasowej</string>
+    <string name="textViewBackupCallLogTitle">Informacje o rejestrze połączeń</string>
+    <string name="textViewBackupCallLogAbout">Nie posiadasz żadnych wpisów w rejestrze połączeń</string>
+    <string name="switchBackupCallLogUse">Uwzględnij rejestr w kopii zapasowej</string>
+    <string name="buttonBackupDoItNow">Wykonaj kopię</string>
+
     <!-- Fragments Placeholder Strings -->
     <string name="hello_home_fragment">Hello home fragment</string>
     <string name="hello_backup_fragment">Hello backup fragment</string>

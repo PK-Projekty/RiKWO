@@ -320,19 +320,39 @@ public class HomeFragment extends Fragment {
         //restore state of call log switch
         restoreSwitchStateFromAppPreferences("switchBackupCallLog",switchBackupCallLog);
         switchBackupSms.setOnCheckedChangeListener((compoundButton, b) -> {
-            storeSwitchStateInAppPreferences( "switchBackupSms",switchBackupSms);
+            if (ReadSmsPermissionGranted.getValue() && !Uri.EMPTY.equals(uriTree)) {
+                storeSwitchStateInAppPreferences("switchBackupSms", switchBackupSms);
+            }
             if (b) { buttonHomeMakeBackupNow.setEnabled(true); }
             else { if (!switchBackupCallLog.isChecked()) { buttonHomeMakeBackupNow.setEnabled(false); } }
         });
         switchBackupCallLog.setOnCheckedChangeListener((compoundButton, b) -> {
-            storeSwitchStateInAppPreferences("switchBackupCallLog",switchBackupCallLog);
+            if (ReadCallLogsPermissionGranted.getValue() && !Uri.EMPTY.equals(uriTree)) {
+                storeSwitchStateInAppPreferences("switchBackupCallLog", switchBackupCallLog);
+            }
             if (b) { buttonHomeMakeBackupNow.setEnabled(true); }
             else { if (!switchBackupSms.isChecked()) { buttonHomeMakeBackupNow.setEnabled(false); } }
         });
         // updating state of sms switch which depends on read sms permission
-        ReadSmsPermissionGranted.observe(requireActivity(), aBoolean -> switchBackupSms.setEnabled(ReadSmsPermissionGranted.getValue() && !Uri.EMPTY.equals(choosedSmsBackupFile.getValue())));
+        ReadSmsPermissionGranted.observe(requireActivity(), aBoolean -> {
+            if (ReadSmsPermissionGranted.getValue() && !Uri.EMPTY.equals(uriTree)) {
+                restoreSwitchStateFromAppPreferences("switchBackupSms",switchBackupSms);
+                switchBackupSms.setEnabled(true);
+            } else {
+                switchBackupSms.setEnabled(false);
+                switchBackupSms.setChecked(false);
+            }
+        });
         // updating state of call log switch which depends on read call log permission
-        ReadCallLogsPermissionGranted.observe(requireActivity(), aBoolean -> switchBackupCallLog.setEnabled(ReadCallLogsPermissionGranted.getValue() && !Uri.EMPTY.equals(choosedCallLogBackupFile.getValue())));
+        ReadCallLogsPermissionGranted.observe(requireActivity(), aBoolean -> {
+            if (ReadCallLogsPermissionGranted.getValue() && !Uri.EMPTY.equals(uriTree)){
+                restoreSwitchStateFromAppPreferences("switchBackupCallLog", switchBackupCallLog);
+                switchBackupCallLog.setEnabled(true);
+            } else {
+                switchBackupCallLog.setEnabled(false);
+                switchBackupCallLog.setChecked(false);
+            }
+        });
         // make backup now button available, when:
         // - sms switch is on
         // - choosed sms backup is available -> choosedSmsBackupFile
@@ -346,8 +366,7 @@ public class HomeFragment extends Fragment {
         buttonHomeMakeBackupNow.setOnClickListener(view1 -> {
             if (ReadExternalStoragePermissionGranted.getValue() == null) { ReadExternalStoragePermissionGranted.setValue(false); }
             if (WriteExternalStoragePermissionGranted.getValue() == null) { WriteExternalStoragePermissionGranted.setValue(false); }
-            if (ReadSmsPermissionGranted.getValue() &&
-                    ReadCallLogsPermissionGranted.getValue() &&
+            if ((ReadSmsPermissionGranted.getValue() || ReadCallLogsPermissionGranted.getValue()) &&
                     ReadExternalStoragePermissionGranted.getValue() &&
                     WriteExternalStoragePermissionGranted.getValue()) { backup(switchBackupSms.isChecked(), switchBackupCallLog.isChecked()); }
         });
