@@ -240,6 +240,7 @@ public class RestoreFragment extends Fragment {
             System.out.println("DEFAULT SMS APP: " + Telephony.Sms.getDefaultSmsPackage(restoreContext));
             if (!permissions.isDefaultSmsApp()) {
                 defaultSmsApp = Telephony.Sms.getDefaultSmsPackage(restoreContext);
+                storeDefaultSmsAppNameInAppPreferences(defaultSmsApp);
             }
             IsDefaultSmsApp.setValue(permissions.isDefaultSmsApp());
             System.out.println("CURRENT DEFAULT SMS APP: " + Telephony.Sms.getDefaultSmsPackage(restoreContext));
@@ -257,6 +258,13 @@ public class RestoreFragment extends Fragment {
         } else {
             ReadExternalStoragePermissionGranted.setValue(false);
         }
+    }
+
+    private void storeDefaultSmsAppNameInAppPreferences(String value) {
+        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("defaultSmsApp", value);
+        editor.apply();
     }
 
     public void restoreBackup(View view) {

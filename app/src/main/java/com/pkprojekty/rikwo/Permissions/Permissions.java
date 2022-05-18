@@ -1,9 +1,12 @@
 package com.pkprojekty.rikwo.Permissions;
 
 import android.Manifest;
+import android.app.role.RoleManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.provider.Telephony;
 import android.widget.Toast;
 
@@ -22,6 +25,14 @@ public class Permissions {
 
     public Permissions(Fragment fragment) {
         this.fragment = fragment;
+
+        // READ_SMS permission
+        this.requestDefaultSmsAppLauncher =
+                fragment.registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (!isDefaultSmsApp()) {
+                        Toast.makeText(fragment.getContext(), "Not set as default sms app", Toast.LENGTH_SHORT).show();
+                    } else { Toast.makeText(fragment.getContext(), "Set as default sms app", Toast.LENGTH_SHORT).show(); }
+                });
 
         // READ_SMS permission
         this.requestReadSmsPermissionLauncher =
@@ -88,11 +99,51 @@ public class Permissions {
 
     }
 // ----------------------------------------
+    private final ActivityResultLauncher<Intent> requestDefaultSmsAppLauncher;
+
     public boolean isDefaultSmsApp() {
         return fragment.requireActivity().getPackageName().equals(
                 Telephony.Sms.getDefaultSmsPackage(fragment.requireContext())
         );
     }
+
+    public void askForDefaultSmsApp(String defaultSmsApp) {
+        String title = "Domyślna aplikacja SMS";
+        String message = "Aplikacja jest ustawiona jako domyślna dla wiadomości sms. Proszę zmienić domyślną aplikację dla wiadomości sms na dotychczas używaną." +
+                "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o zmianę obecnie domyślnej aplikacji dla wiadomości sms." +
+                "\n\nPo kliknięciu zrezygnuj nie zostaniesz poproszony o zmianę domyślnej aplikacji dla wiadomości sms.";
+        new AlertDialog.Builder(fragment.requireContext())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Kontynuuj", (dialogInterface, i) -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        RoleManager roleManager = fragment.requireContext().getSystemService(RoleManager.class);
+                        if (roleManager.isRoleAvailable(RoleManager.ROLE_SMS)) {
+                            if (roleManager.isRoleHeld(RoleManager.ROLE_SMS)) {
+                                System.out.println("ELO");
+                                Intent roleRequestIntent = new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+                                fragment.startActivity(roleRequestIntent);
+                            } else {
+                                Intent roleRequestIntent = roleManager.createRequestRoleIntent(RoleManager.ROLE_SMS);
+                                requestDefaultSmsAppLauncher.launch(roleRequestIntent);
+                            }
+                        }
+                    } else {
+                        if (defaultSmsApp.isEmpty()) {
+                            Intent setSmsAppIntent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+                            fragment.startActivity(setSmsAppIntent);
+                        } else {
+                            Intent setSmsAppIntent =
+                                    new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+                            setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
+                                    defaultSmsApp);
+                            requestDefaultSmsAppLauncher.launch(setSmsAppIntent);
+                        }
+                    }
+                })
+                .setNegativeButton("Zrezygnuj", null).create().show();
+    }
+
 
 // ----------------------------------------
     private boolean ReadSmsPermissionGranted;
@@ -152,8 +203,8 @@ public class Permissions {
         if (!hasReadCallLogsPermission()) {
             if (fragment.shouldShowRequestPermissionRationale(Manifest.permission.READ_CALL_LOG)) {
                 String title = "Uprawnienia aplikacji";
-                String message = "Aby można było wykonać kopię zapasową niezbędne są uprawnienia do odczytu rejestru połączeń." +
-                        "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do odczytu rejestru połączeń dla tej aplikacji." +
+                String message = "Aby można było wykonać kopię zapasową niezbędne są uprawnienia do odczytu z rejestru połączeń." +
+                        "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do odczytu z rejestru połączeń dla tej aplikacji." +
                         "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa rejestru połączeń nie zostanie wykonana.";
                 new AlertDialog.Builder(fragment.requireContext())
                         .setTitle(title)
@@ -190,9 +241,9 @@ public class Permissions {
         if (!hasWriteCallLogsPermission()) {
             if (fragment.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALL_LOG)) {
                 String title = "Uprawnienia aplikacji";
-                String message = "Aby można było wykonać kopię zapasową niezbędne są uprawnienia do odczytu rejestru połączeń." +
-                        "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do odczytu rejestru połączeń dla tej aplikacji." +
-                        "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa rejestru połączeń nie zostanie wykonana.";
+                String message = "Aby można było przywrócić kopię zapasową niezbędne są uprawnienia do zapisu w rejestrze połączeń." +
+                        "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do zapisu w rejestru połączeń dla tej aplikacji." +
+                        "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa rejestru połączeń nie zostanie przywrócona.";
                 new AlertDialog.Builder(fragment.requireContext())
                         .setTitle(title)
                         .setMessage(message)
@@ -228,9 +279,9 @@ public class Permissions {
         if (!hasReadExternalStoragePermission()) {
             if (fragment.shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 String title = "Uprawnienia aplikacji";
-                String message = "Aby można było wykonać kopię zapasową niezbędne są uprawnienia do odczytu z pamięci masowej." +
+                String message = "Aby można było wykonać, bądź przywrócić kopię zapasową niezbędne są uprawnienia do odczytu z pamięci masowej." +
                         "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do odczytu z pamięci masowej dla tej aplikacji." +
-                        "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa nie zostanie wykonana.";
+                        "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa nie zostanie wykonana, ani przywrócona.";
                 new AlertDialog.Builder(fragment.requireContext())
                         .setTitle(title)
                         .setMessage(message)
@@ -266,9 +317,9 @@ public class Permissions {
         if (!hasWriteExternalStoragePermission()) {
             if (fragment.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 String title = "Uprawnienia aplikacji";
-                String message = "Aby można było wykonać kopię zapasową niezbędne są uprawnienia do zapisu w pamięci masowej." +
+                String message = "Aby można było wykonać, bądź przywrócić kopię zapasową niezbędne są uprawnienia do zapisu w pamięci masowej." +
                         "\n\nPo kliknięciu kontynuuj zostaniesz poproszony o nadanie uprawnienia do zapisu w pamięci masowej dla tej aplikacji." +
-                        "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa nie zostanie wykonana.";
+                        "\n\nMożesz także zrezygnować co spowoduje, że kopia zapasowa nie zostanie wykonana, ani przywrócona.";
                 new AlertDialog.Builder(fragment.requireContext())
                         .setTitle(title)
                         .setMessage(message)

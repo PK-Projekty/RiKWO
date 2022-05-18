@@ -79,7 +79,7 @@
     <string name="textViewSensitiveInformationTitle">Informacje wrażliwe</string>
     <string name="textViewSensitiveInformationAbout">Prosimy o nieprzesyłanie i nieujawnianie żadnych wrażliwych Danych Osobowych (np. informacji związanych z pochodzeniem rasowym lub etnicznym, poglądami politycznymi, religią lub innymi przekonaniami, stanem zdrowia, orientacją seksualną, przeszłością kryminalną lub członkostwem w organizacjach, w tym członkostwo w związkach zawodowych) za pośrednictwem usług firm trzecich lub w inny sposób do nas.</string>
 
-    <!-- Privacy Fragment Strings -->
+    <!-- About App Fragment Strings -->
     <string name="textViewAboutTitle">RiKWO</string>
     <string name="iconViewContentDescription">RiKWO Application Logo</string>
     <string name="textViewAboutAppTitle">O aplikacji</string>
@@ -88,6 +88,26 @@
     <string name="textViewAboutTeamInfo">• Dariusz Świąder\n• Filip Kieś\n• Hubert Kowalczyk</string>
     <string name="textViewAboutProjectTitle">O projekcie</string>
     <string name="textViewAboutProjectInfo">Aplikacja ta została zrealizowana w ramach projektu Repozytoria i Kontrola Wersji Oprogramowania. Celem projektu było nabycie podstawowych umiejętności z zakresu  współtworzenia kodu, oraz obsługi narzędzi wspomagających pracę w zespole.</string>
+
+    <!-- Permissions Fragment Strings -->
+    <string name="textViewPermissionsSmsGroupTitle">Dostęp do wiadomości sms</string>
+    <string name="textViewPermissionsSmsGroupAbout">Ta grupa uprawnień jest wymagana w celach związanych z kopiami zapasowymi wiadomości sms.</string>
+    <string name="switchPermissionsSmsRead">Odczyt sms</string>
+    <string name="textViewPermissionsSmsReadAbout">To uprawnienie jest wymagane do prawidłowego wykonania kopii zapasowej wiadomości sms. Po jego udzieleniu aplikacja będzie w stanie odczytać wszystkie wiadomości sms znajdujące się na Twoim telefonie.</string>
+    <string name="switchPermissionsSmsDefault">Domyślna aplikacja dla sms</string>
+    <string name="textViewPermissionsSmsDefaultAbout">Ta opcja jest wymagana do prawidłowego przywrócenia kopii zapasowej wiadomości sms. Po jego udzieleniu aplikacja będzie w stanie zapisać w telefonie wszystkie wiadomości sms znajdujące się we wskazanej przez Ciebie kopii zapasowej. Domyślnie ta opcja powinna być wyłączona. Kiedy ta opcja jest włączona nie możesz korzystać ze swojej dotychczasowej aplikacji do obsługi wiadomości sms. Podczas przywracania kopii zapasowej wiadomości sms zostaniesz poproszony o tymczasowe ustawienie tej aplikacji jako domyślnej.</string>
+    <string name="textViewPermissionsCallLogGroupTitle">Dostęp do rejestru połączeń</string>
+    <string name="textViewPermissionsCallLogGroupAbout">Ta grupa uprawnień jest wymagana w celach związanych z kopiami zapasowymi rejestru połączeń.</string>
+    <string name="switchPermissionsCallLogRead">Odczyt z rejestru połączeń</string>
+    <string name="textViewPermissionsCallLogReadAbout">To uprawnienie jest wymagane do prawidłowego wykonania kopii zapasowej rejestru połączeń. Po jego udzieleniu aplikacja będzie w stanie odczytać wszystkie pozycje z rejestru połączeń znajdującego się na Twoim telefonie.</string>
+    <string name="switchPermissionsCallLogWrite">Zapis do rejestru połączeń</string>
+    <string name="textViewPermissionsCallLogWriteAbout">To uprawnienie jest wymagane do prawidłowego przywrócenia kopii zapasowej rejestru połączeń. Po jego udzieleniu aplikacja będzie w stanie zapisać w rejestrze połączeń wszystkie pozycje znajdujące się we wskazanej przez Ciebie kopii zapasowej.</string>
+    <string name="textViewPermissionsMemoryGroupTitle">Dostęp do pamięci telefonu</string>
+    <string name="textViewPermissionsMemoryGroupAbout">Ta grupa uprawnień jest wymagana w celu przechowywania kopii zapasowych lokalnie.</string>
+    <string name="switchPermissionsMemoryRead">Odczyt z pamięci telefonu</string>
+    <string name="textViewPermissionsMemoryReadAbout">To uprawnienie jest wymagane do prawidłowego wykonywania i przywracania kopii zapasowych wiadomości sms i rejestru połączeń. Po jego udzieleniu aplikacja będzie w stanie odczytać kopie zapasowe znajdujące się we wskazanej przez Ciebie lokalizacji.</string>
+    <string name="switchPermissionsMemoryWrite">Zapis do pamięci telefonu</string>
+    <string name="textViewPermissionsMemoryWriteAbout">To uprawnienie jest wymagane do prawidłowego wykonywania i przywracania kopii zapasowych wiadomości sms i rejestru połączeń. Po jego udzieleniu aplikacja będzie w stanie zapisać wykonane kopie zapasowe we wskazanej przez Ciebie lokalizacji.</string>
 
     <!-- Fragments Placeholder Strings -->
     <string name="hello_home_fragment">Hello home fragment</string>

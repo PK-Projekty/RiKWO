@@ -94,6 +94,9 @@
             app:destination="@id/homeFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_permissionsFragment_to_localizationFragment"
+            app:destination="@id/localizationFragment" />
     </fragment>
     <fragment
         android:id="@+id/localizationFragment"
