@@ -3,18 +3,24 @@ package com.pkprojekty.rikwo.UI;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.provider.DocumentsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -27,6 +33,8 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.pkprojekty.rikwo.Permissions.Permissions;
 import com.pkprojekty.rikwo.R;
 
+import org.w3c.dom.Text;
+
 import java.util.Objects;
 
 /**
@@ -37,6 +45,9 @@ public class LocalizationFragment extends Fragment {
 
     private Context localizationContext;
     private Uri uriTree = Uri.EMPTY;
+    private TextView providertv,localizationtv, frequencytv;
+    private LinearLayout linearProvider, linearLocalization, linearFrequency;
+    private String data;
 
     MutableLiveData<String> currentChoosedDir = new MutableLiveData<>();
     // https://stackoverflow.com/questions/14457711/android-listening-for-variable-changes
@@ -114,6 +125,37 @@ public class LocalizationFragment extends Fragment {
 
         // section: Restore backup
         chooseLocalBackupLocation(view);
+
+        //create elements from view to restore settings
+        localizationtv = view.findViewById(R.id.textViewCurrentLocalization);
+        providertv = view.findViewById(R.id.textViewCurrentProvider);
+        frequencytv = view.findViewById(R.id.textViewCurrentFrequency);
+        linearProvider = view.findViewById(R.id.linearProvider);
+        linearLocalization = view.findViewById(R.id.linearLocalization);
+        linearFrequency = view.findViewById(R.id.linearFrequency);
+
+        //restore settings
+        restoreSettings();
+
+        //operation when clicked option from view
+        linearProvider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProviderAlertDialog();
+            }
+        });
+        linearLocalization.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LocalizationAlertDialog();
+            }
+        });
+        linearFrequency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FrequencyAlertDialog();
+            }
+        });
 
         return view;
     }
@@ -215,5 +257,140 @@ public class LocalizationFragment extends Fragment {
         editor.apply();
     }
 
+    private void LocalizationAlertDialog() {
+        final String[] arr = getResources().getStringArray(R.array.localization);
+        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
 
+        AlertDialog.Builder alertdialog = new AlertDialog.Builder(getActivity());
+        alertdialog.setTitle("Wybierz usługodawcę");
+        alertdialog.setSingleChoiceItems(arr, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                data=arr[i];
+            }
+        });
+
+        alertdialog.setPositiveButton("Wybierz", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(data.equals("Chmura")) {
+                    linearProvider.setEnabled(true);
+                    editor.putBoolean("ProviderIsEnabled", true);
+                }
+                else {
+                    linearProvider.setEnabled(false);
+                    providertv.setText(R.string.textViewCurrentProvider);
+                    editor.putBoolean("ProviderIsEnabled", false);
+                    editor.putString("Provider",providertv.getText().toString());
+                }
+                localizationtv.setText(data);
+                editor.putString("Localization",localizationtv.getText().toString());
+                editor.apply();
+                Toast.makeText(getActivity(), "Zapisano dane", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alertdialog.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getActivity(), "Anulowano wybór", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alertdialog.create();
+        alertdialog.show();
+
+    }
+
+    private void ProviderAlertDialog() {
+        final String[] arr = getResources().getStringArray(R.array.provider);
+        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        AlertDialog.Builder alertdialog = new AlertDialog.Builder(getActivity());
+        alertdialog.setTitle("Wybierz usługodawcę");
+        alertdialog.setSingleChoiceItems(arr, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                data=arr[i];
+            }
+        });
+        alertdialog.setPositiveButton("Wybierz", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                providertv.setText(data);
+                editor.putString("Provider", data);
+                editor.apply();
+                Toast.makeText(getActivity(), "Zapisano dane", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alertdialog.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getActivity(), "Anulowano wybów", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alertdialog.create();
+        alertdialog.show();
+    }
+    private void FrequencyAlertDialog() {
+        final String[] arr = getResources().getStringArray(R.array.freq);
+        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        AlertDialog.Builder alertdialog = new AlertDialog.Builder(getActivity());
+        alertdialog.setTitle("Wybierz usługodawcę");
+        alertdialog.setSingleChoiceItems(arr, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                data=arr[i];
+            }
+        });
+        alertdialog.setPositiveButton("Wybierz", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                frequencytv.setText(data);
+                editor.putString("Frequency",data);
+                editor.apply();
+                Toast.makeText(getActivity(), "Zapisano dane", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alertdialog.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getActivity(), "Anulowano wybów", Toast.LENGTH_SHORT).show();
+            }
+        });
+        alertdialog.create();
+        alertdialog.show();
+    }
+
+    private void restoreSettings(){
+        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        String localization = preferences.getString("Localization","");
+        Boolean provIsEnabled = preferences.getBoolean("ProviderIsEnabled",false);
+        String provider = preferences.getString("Provider","");
+        String frequency = preferences.getString("Frequency","");
+
+        //ustawianie zapamiętanych wartości dla lokalizacji
+        if(preferences.contains("Localization"))
+            localizationtv.setText(localization);
+        else
+            localizationtv.setText(R.string.textViewCurrentLocalization);
+
+        //ustawianie czy opcja odblokowana czy zablokowana i ustawianie odpowiednych wartości
+        if(preferences.contains("ProviderIsEnabled")) {
+            linearProvider.setEnabled(provIsEnabled);
+            if(preferences.contains("Provider"))
+                providertv.setText(provider);
+            else
+                providertv.setText(R.string.textViewCurrentProvider);
+        }
+
+        //ustawianie wartości dla częstotliwosci wykonywania kopii zapasowych
+        if(preferences.contains("Frequency"))
+            frequencytv.setText(frequency);
+        else
+            frequencytv.setText(R.string.textViewCurrentFreq);
+    }
 }

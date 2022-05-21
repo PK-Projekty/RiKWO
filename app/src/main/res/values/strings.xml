@@ -29,6 +29,14 @@
     <string name="switchBackupLocalizationLocal">Przechowuj kopie zapasową lokalnie</string>
     <string name="buttonChooseBackupLocalDirectory">Wybierz katalog</string>
 
+    <!-- Localization Fragment Choose String -->
+    <string name="textViewLocalizacionTitle">Wybierz lokalizację kopii zapasowej</string>
+    <string name="textViewCurrentLocalization">Nie wybrano lokalizacji</string>
+    <string name="textViewProviderTitle">Wybierz usługodawcę</string>
+    <string name="textViewCurrentProvider">Nie wybrano usługodawcy</string>
+    <string name="textViewFreqTitle">Wybierz częstotliwość wykonywania kopii</string>
+    <string name="textViewCurrentFreq">Nie wybrano częstotliwości</string>
+
     <!-- Restore Fragment Strings -->
     <string name="textViewRestoreChooseFilesTitle">Co chciałbyś przywrócić?</string>
     <string name="switchRestoreIncludeSmsFile">Wiadomości sms</string>
