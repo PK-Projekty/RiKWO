@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="localization">
+        <item>Local</item>
+        <item>E-mail</item>
+        <item>Chmura</item>
+    </string-array>
+
+    <string-array name="provider">
+        <item>Dysk Google</item>
+        <item>OneDrive</item>
+        <item>Dropbox</item>
+    </string-array>
+
+    <string-array name="freq">
+        <item>Codziennie</item>
+        <item>Co tydzień</item>
+        <item>Co miesiąc</item>
+        <item>Nigdy</item>
+    </string-array>
+</resources>

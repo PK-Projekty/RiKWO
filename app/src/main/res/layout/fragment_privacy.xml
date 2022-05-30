@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/privacyFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginBottom="20dp"
+    tools:context=".UI.PrivacyFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/textViewPrivacyTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewPrivacyTitle"
+            android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/textViewPrivacyAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewPrivacyAbout" />
+
+        <TextView
+            android:id="@+id/textViewWhatInformationDoWeCollectTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewWhatInformationDoWeCollectTitle"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textViewWhatInformationDoWeCollectPersonalInformationSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewWhatInformationDoWeCollectPersonalInformationSubTitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewWhatInformationDoWeCollectPersonalInformationAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/textViewWhatInformationDoWeCollectPersonalInformationAbout" />
+
+        <TextView
+            android:id="@+id/textViewWhatInformationDoWeCollectNonPersonalInformationSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewWhatInformationDoWeCollectNonPersonalInformationSubTitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewWhatInformationDoWeCollectNonPersonalInformationAboutP1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewWhatInformationDoWeCollectNonPersonalInformationAboutP1" />
+
+        <TextView
+            android:id="@+id/textViewWhatInformationDoWeCollectNonPersonalInformationAboutP2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewWhatInformationDoWeCollectNonPersonalInformationAboutP2" />
+
+        <TextView
+            android:id="@+id/textViewWhatInformationDoWeCollectNonPersonalInformationAboutP3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewWhatInformationDoWeCollectNonPersonalInformationAboutP3" />
+
+        <TextView
+            android:id="@+id/textViewHowWeUseYourDataTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewHowWeUseYourDataTitle"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textViewHowWeUseYourDataPersonalInformationSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewHowWeUseYourDataPersonalInformationSubTitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewHowWeUseYourDataPersonalInformationAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewHowWeUseYourDataPersonalInformationAbout" />
+
+        <TextView
+            android:id="@+id/textViewHowWeUseYourDataNonPersonalInformationSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewHowWeUseYourDataNonPersonalInformationSubTitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewHowWeUseYourDataNonPersonalInformationAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewHowWeUseYourDataNonPersonalInformationAbout" />
+
+        <TextView
+            android:id="@+id/textViewHowYourDataCanBeDisclosedTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewHowYourDataCanBeDisclosedTitle"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textViewHowYourDataCanBeDisclosedPersonalInformationSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewHowYourDataCanBeDisclosedPersonalInformationSubTitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewHowYourDataCanBeDisclosedPersonalInformationAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewHowYourDataCanBeDisclosedPersonalInformationAbout" />
+
+        <TextView
+            android:id="@+id/textViewHowYourDataCanBeDisclosedNonPersonalInformationSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewHowYourDataCanBeDisclosedNonPersonalInformationSubTitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewHowYourDataCanBeDisclosedNonPersonalInformationAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewHowYourDataCanBeDisclosedNonPersonalInformationAbout" />
+
+        <TextView
+            android:id="@+id/textViewThirdPartyServicesTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewThirdPartyServicesTitle"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textViewThirdPartyServicesAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewThirdPartyServicesAbout" />
+
+        <TextView
+            android:id="@+id/textViewSecurityTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewSecurityTitle"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textViewSecurityAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewSecurityAbout" />
+
+        <TextView
+            android:id="@+id/textViewDevicePermissionsToAccessPersonalDataTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewDevicePermissionsToAccessPersonalDataTitle"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textViewDevicePermissionsToAccessPersonalAboutP1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewDevicePermissionsToAccessPersonalDataAboutP1" />
+
+        <TextView
+            android:id="@+id/textViewDevicePermissionsToAccessPersonalAboutP2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewDevicePermissionsToAccessPersonalDataAboutP2" />
+
+        <TextView
+            android:id="@+id/textViewDevicePermissionsToAccessPersonalAboutP3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewDevicePermissionsToAccessPersonalDataAboutP3" />
+
+        <TextView
+            android:id="@+id/textViewDevicePermissionsToAccessPersonalDataSmsSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewDevicePermissionsToAccessPersonalDataSmsSubTitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewDevicePermissionsToAccessPersonalDataSmsAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewDevicePermissionsToAccessPersonalDataSmsAbout" />
+
+        <TextView
+            android:id="@+id/textViewDevicePermissionsToAccessPersonalDataCallLogSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewDevicePermissionsToAccessPersonalDataCallLogSubTitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewDevicePermissionsToAccessPersonalDataCallLogAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewDevicePermissionsToAccessPersonalDataCallLogAbout" />
+
+        <TextView
+            android:id="@+id/textViewDevicePermissionsToAccessPersonalDataMemorySubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewDevicePermissionsToAccessPersonalDataMemorySubTitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewDevicePermissionsToAccessPersonalDataMemoryAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewDevicePermissionsToAccessPersonalDataMemoryAbout" />
+
+        <TextView
+            android:id="@+id/textViewSensitiveInformationTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewSensitiveInformationTitle"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textViewSensitiveInformationAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/textViewSensitiveInformationAbout" />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

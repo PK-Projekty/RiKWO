@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/permissionsFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.PermissionsFragment">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewPermissionsSmsGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewPermissionsSmsGroupTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsSmsGroupTitle"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textViewPermissionsSmsGroupAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsSmsGroupAbout" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchPermissionsSmsRead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/switchPermissionsSmsRead"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewPermissionsSmsReadAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsSmsReadAbout" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchPermissionsSmsDefault"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/switchPermissionsSmsDefault"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewPermissionsSmsDefaultAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsSmsDefaultAbout" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewPermissionsCallLogGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardViewPermissionsSmsGroup">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewPermissionsCallLogGroupTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsCallLogGroupTitle"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textViewPermissionsCallLogGroupAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsCallLogGroupAbout" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchPermissionsCallLogRead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/switchPermissionsCallLogRead"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewPermissionsCallLogReadAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsCallLogReadAbout" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchPermissionsCallLogWrite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/switchPermissionsCallLogWrite"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewPermissionsCallLogWriteAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsCallLogWriteAbout" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewHomePermissions3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardViewPermissionsCallLogGroup">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewPermissionsMemoryGroupTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsMemoryGroupTitle"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textViewPermissionsMemoryGroupAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsMemoryGroupAbout" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchPermissionsMemoryRead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/switchPermissionsMemoryRead"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewPermissionsMemoryReadAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsMemoryReadAbout" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchPermissionsMemoryWrite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/switchPermissionsMemoryWrite"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewPermissionsMemoryWriteAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/textViewPermissionsMemoryWriteAbout" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

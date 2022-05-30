@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.pkprojekty.rikwo.UI.HomeFragment"
+        android:label="@string/homeFragmentTitle"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_backupFragment"
+            app:destination="@id/backupFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_homeFragment_to_restoreFragment"
+            app:destination="@id/restoreFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_homeFragment_to_logsFragment"
+            app:destination="@id/logsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_homeFragment_to_permissionsFragment"
+            app:destination="@id/permissionsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_homeFragment_to_localizationFragment"
+            app:destination="@id/localizationFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_homeFragment_to_encryptionFragment"
+            app:destination="@id/encryptionFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_homeFragment_to_privacyFragment"
+            app:destination="@id/privacyFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_homeFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/backupFragment"
+        android:name="com.pkprojekty.rikwo.UI.BackupFragment"
+        android:label="@string/backupFragmentTitle"
+        tools:layout="@layout/fragment_backup" >
+        <action
+            android:id="@+id/action_backupFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_backupFragment_to_localizationFragment"
+            app:destination="@id/localizationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/restoreFragment"
+        android:name="com.pkprojekty.rikwo.UI.RestoreFragment"
+        android:label="@string/restoreFragmentTitle"
+        tools:layout="@layout/fragment_restore" >
+        <action
+            android:id="@+id/action_restoreFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/logsFragment"
+        android:name="com.pkprojekty.rikwo.UI.LogsFragment"
+        android:label="@string/logsFragmentTitle"
+        tools:layout="@layout/fragment_logs" >
+        <action
+            android:id="@+id/action_logsFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/permissionsFragment"
+        android:name="com.pkprojekty.rikwo.UI.PermissionsFragment"
+        android:label="@string/permissionsFragmentTitle"
+        tools:layout="@layout/fragment_permissions" >
+        <action
+            android:id="@+id/action_permissionsFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_permissionsFragment_to_localizationFragment"
+            app:destination="@id/localizationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/localizationFragment"
+        android:name="com.pkprojekty.rikwo.UI.LocalizationFragment"
+        android:label="@string/localizationFragmentTitle"
+        tools:layout="@layout/fragment_localization" >
+        <action
+            android:id="@+id/action_localizationFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/encryptionFragment"
+        android:name="com.pkprojekty.rikwo.UI.EncryptionFragment"
+        android:label="@string/encryptionFragmentTitle"
+        tools:layout="@layout/fragment_encryption" >
+        <action
+            android:id="@+id/action_encryptionFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/privacyFragment"
+        android:name="com.pkprojekty.rikwo.UI.PrivacyFragment"
+        android:label="@string/privacyFragmentTitle"
+        tools:layout="@layout/fragment_privacy" >
+        <action
+            android:id="@+id/action_privacyFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.pkprojekty.rikwo.UI.AboutFragment"
+        android:label="@string/aboutFragmentTitle"
+        tools:layout="@layout/fragment_about" >
+        <action
+            android:id="@+id/action_aboutFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+    </fragment>
+
+</navigation>
