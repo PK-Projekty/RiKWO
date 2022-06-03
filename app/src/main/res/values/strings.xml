@@ -30,7 +30,7 @@
     <string name="buttonChooseBackupLocalDirectory">Wybierz katalog</string>
 
     <!-- Localization Fragment Choose String -->
-    <string name="textViewLocalizacionTitle">Wybierz lokalizację kopii zapasowej</string>
+    <string name="textViewLocalizationTitle">Wybierz lokalizację kopii zapasowej</string>
     <string name="textViewCurrentLocalization">Nie wybrano lokalizacji</string>
     <string name="textViewProviderTitle">Wybierz usługodawcę</string>
     <string name="textViewCurrentProvider">Nie wybrano usługodawcy</string>
@@ -153,5 +153,8 @@
     <string name="itemsGroupOthersTitle">Pozostałe</string>
     <string name="privacyFragmentTitle">Polityka prywatności</string>
     <string name="aboutFragmentTitle">O RiKWO</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="webViewTitle">Zaloguj</string>
 
 </resources>

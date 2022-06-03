@@ -8,56 +8,6 @@
     tools:context=".UI.LocalizationFragment">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textViewPhoneLocalizationTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/textViewPhoneLocalizationTitle"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/textViewCurrentlyChoosedLocalDirecotry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/textViewCurrentlyChoosedLocalDirectory" />
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/switchBackupLocalizationLocal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:text="@string/switchBackupLocalizationLocal" />
-
-            <Button
-                android:id="@+id/buttonChooseBackupLocalDirectory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/buttonChooseBackupLocalDirectory" />
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -66,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/linearLocalization"
@@ -81,7 +31,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/textViewLocalizacionTitle"
+                android:text="@string/textViewLocalizationTitle"
                 android:textSize="20sp" />
 
             <TextView
@@ -89,7 +39,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp" />
-                <!--android:text="@string/textViewCurrentLocalization" />-->
+
+            <TextView
+                android:id="@+id/textViewCurrentlyChoosedLocalDirecotry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/textViewCurrentlyChoosedLocalDirectory" />
+
+            <Button
+                android:id="@+id/buttonChooseBackupLocalDirectory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/buttonChooseBackupLocalDirectory" />
+
+            <!--android:text="@string/textViewCurrentLocalization" />-->
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -99,6 +63,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -136,6 +101,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
