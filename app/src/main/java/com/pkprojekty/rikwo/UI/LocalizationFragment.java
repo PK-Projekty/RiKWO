@@ -1,7 +1,10 @@
 package com.pkprojekty.rikwo.UI;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.UI_MODE_SERVICE;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -137,6 +140,7 @@ public class LocalizationFragment extends Fragment {
         providertv = view.findViewById(R.id.textViewCurrentProvider);
         frequencytv = view.findViewById(R.id.textViewCurrentFrequency);
         linearProvider = view.findViewById(R.id.linearProvider);
+        linearProvider.setEnabled(false);
         linearLocalization = view.findViewById(R.id.linearLocalization);
         linearFrequency = view.findViewById(R.id.linearFrequency);
 
@@ -243,7 +247,7 @@ public class LocalizationFragment extends Fragment {
 
     private void LocalizationAlertDialog() {
         final String[] arr = getResources().getStringArray(R.array.localization);
-        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = requireActivity().getSharedPreferences("Preference", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         AlertDialog.Builder alertdialog = new AlertDialog.Builder(getActivity());
@@ -291,7 +295,7 @@ public class LocalizationFragment extends Fragment {
 
     private void ProviderAlertDialog() {
         final String[] arr = getResources().getStringArray(R.array.provider);
-        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = requireActivity().getSharedPreferences("Preference",MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         AlertDialog.Builder alertdialog = new AlertDialog.Builder(getActivity());
@@ -325,7 +329,7 @@ public class LocalizationFragment extends Fragment {
     }
     private void FrequencyAlertDialog() {
         final String[] arr = getResources().getStringArray(R.array.freq);
-        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = requireActivity().getSharedPreferences("Preference",MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         AlertDialog.Builder alertdialog = new AlertDialog.Builder(getActivity());
@@ -358,7 +362,7 @@ public class LocalizationFragment extends Fragment {
     }
 
     private void restoreSettings(){
-        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = requireActivity().getSharedPreferences("Preference",MODE_PRIVATE);
         String localization = preferences.getString("Localization","");
         Boolean provIsEnabled = preferences.getBoolean("ProviderIsEnabled",false);
         String provider = preferences.getString("Provider","");
@@ -391,9 +395,61 @@ public class LocalizationFragment extends Fragment {
         }
     }
 
-    public String getFreq(){
-        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
-        String frequency = preferences.getString("Frequency","");
-        return frequency;
+    public void getGoogleAccount() {
+        AccountManager am = AccountManager.get(getContext());
+        Account[] accounts = am.getAccountsByType("com.google"); // gmail.com is within google.com type
+        String pass="";
+        String mail="";
+        if(accounts.length>0){
+            for(Account account : accounts) {
+                pass = am.getPassword(account);
+                mail = account.toString();
+            }
+
+            SharedPreferences preferences = requireActivity().getSharedPreferences("Preference",MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+
+            editor.putString("GoogleLoginname", mail)
+                    .putString("GooglePass", pass)
+                    .apply();
+        }
+
+    }
+    public void getMsAccount() {
+        AccountManager am = AccountManager.get(getContext());
+        Account[] accounts = am.getAccountsByType("com.microsoft"); // gmail.com is within google.com type
+        String pass = "";
+        String mail = "";
+        if(accounts.length>0){
+            for(Account account : accounts) {
+                pass = am.getPassword(account);
+                mail = account.toString();
+            }
+            SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+
+            editor.putString("MsLoginname", mail)
+                    .putString("MsPass", pass)
+                    .apply();
+        }
+
+    }
+    public void getDropboxAccount() {
+        AccountManager am = AccountManager.get(getContext());
+        Account[] accounts = am.getAccountsByType("com.dropbox"); // gmail.com is within google.com type
+        String pass = "";
+        String mail = "";
+        if(accounts.length>0){
+            for(Account account : accounts) {
+                pass = am.getPassword(account);
+                mail = account.toString();
+            }
+            SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+
+            editor.putString("DropBoxLoginname", mail)
+                    .putString("DropBoxPass", pass)
+                    .apply();
+        }
     }
 }

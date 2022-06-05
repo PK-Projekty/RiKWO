@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
         NavigationUI.setupWithNavController(navView,navController);
 
-//        Intent service = new Intent(MainActivity.this, Services.class);
-//        startService(service);
+        Intent service = new Intent(MainActivity.this, Services.class);
+        startService(service);
 
     }
 
