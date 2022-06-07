@@ -33,7 +33,7 @@ public class NotificationWorker extends Worker {
         Data data1 = new Data.Builder()
                 .putString(KEY_TASK_OUTPUT, "Task Finished Successfully")
                 .build();
-        activity.EmailButton();
+        //Services.EmailButton();
 
         return Result.success();
     }
