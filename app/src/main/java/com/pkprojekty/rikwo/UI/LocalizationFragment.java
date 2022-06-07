@@ -238,7 +238,7 @@ public class LocalizationFragment extends Fragment {
     }
 
     private void storeChoosedDirectoryInAppPreferences(Uri value) {
-        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = requireActivity().getSharedPreferences("Preference",MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("uriTree", String.valueOf(value));
         editor.apply();
