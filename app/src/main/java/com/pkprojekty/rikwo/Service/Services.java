@@ -22,17 +22,28 @@ import java.io.File;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class Services extends Service {
 
     private Handler handler = new Handler();
     public static final String KEY_TASK_DESC = "key_task_desc";
 
-    private String freq,directory, localization, uriTree;
+    private String freq,directory, localization, uriTree, email, password;
     private boolean smsSwitchState, callLogSwitchState;
     private Timer timer = null;
     private DocumentFile smsFile;
@@ -59,9 +70,8 @@ public class Services extends Service {
         uriTree = preferences.getString("uriTree","");
         callLogSwitchState = preferences.getBoolean("switchBackupCallLogUse",false);
         smsSwitchState = preferences.getBoolean("switchBackupSmsUse", false);
-
-        System.out.print(callLogSwitchState);
-        System.out.print(smsSwitchState);
+        email = preferences.getString("Email", "");
+        password = preferences.getString("Password","");
 
 
 //        Data data = new Data.Builder()
@@ -85,78 +95,76 @@ public class Services extends Service {
             if(freq.equals("Nigdy"))
                 s=0;
 
-//            if(localization.equals("Local"))
-//                timer.scheduleAtFixedRate(new createLocalBackup(), 0, s*2*1000);
-            if(localization.equals("E-mail"))
-                timer.scheduleAtFixedRate(new sendEmail(), 0, s*2*1000);
+            if(localization.equals("Local"))
+                timer.scheduleAtFixedRate(new createLocalBackup(), 0, s*24*60*60*1000);
+//            if(localization.equals("E-mail"))
+//                timer.scheduleAtFixedRate(new sendEmail(), 0, s*2*1000);
 //            if(localization.equals("Chmura"))
 //                timer.scheduleAtFixedRate(new createBackupToCloud(), 0, s*2*1000);
-            timer.scheduleAtFixedRate(new createBackup(), 0, s*2*1000);
-            System.out.println(freq);
-            System.out.println(directory);
             //s*24*60*60*1000
+            //s*2*1000
         }
     }
 
 
     //EXAMPLE
-    class createBackup extends TimerTask {
-        @Override
-        public void run() {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    //backup();
-                    Toast.makeText(getApplicationContext(),"Wykonano kopie", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-    }
-    class sendEmail extends TimerTask {
-
+    class createLocalBackup extends TimerTask {
         @Override
         public void run() {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     backup();
-                    Log.i("Send email", "");
-                    String[] TO = {""};
-                    String[] CC = {""};
-                    //backup file name and location
-                    String smsFileName = smsFile.toString();
-                    String callFileName = callsFile.toString();
-                    File smsLocation = new File(directory, smsFileName);
-                    File callLocation = new File(directory, callFileName);
-                    Uri pathSMS = Uri.fromFile(smsLocation);
-                    Uri pathCall = Uri.fromFile(callLocation);
-                    //sending mail without user interaction
-                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-                    emailIntent.setData(Uri.parse("mailto:"))
-                            .setType("text/plain")
-                            .putExtra(Intent.EXTRA_EMAIL, TO)
-                            .putExtra(Intent.EXTRA_CC, CC)
-                            .putExtra(Intent.EXTRA_SUBJECT, "Kopia zapasowa")
-                            .putExtra(Intent.EXTRA_TEXT, "Kopia zapasowa z aplikacji")
-                            .putExtra(Intent.EXTRA_STREAM, pathSMS)
-                            .putExtra(Intent.EXTRA_STREAM, pathCall);
-                    try{
-                        startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-                        //finish();
-                        Log.i("Finished sending email...","");
-                    }
-                    catch (android.content.ActivityNotFoundException ex)
-                    {
-                        Toast.makeText(getApplicationContext(), "There is no email client installed.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    smsFile.delete();
-                    callsFile.delete();
+                    Toast.makeText(getApplicationContext(),"Wykonano kopie", Toast.LENGTH_SHORT).show();
                 }
             });
         }
+
     }
+//    class sendEmail extends TimerTask {
+//
+//        @Override
+//        public void run() {
+//            handler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    backup();
+//                    Log.i("Send email", "");
+//                    String[] TO = {"thehuberts11@gmail.com"};
+//                    String[] CC = {""};
+//                    //backup file name and location
+//                    String smsFileName = smsFile.toString();
+//                    String callFileName = callsFile.toString();
+//                    File smsLocation = new File(directory, smsFileName);
+//                    File callLocation = new File(directory, callFileName);
+//                    Uri pathSMS = Uri.fromFile(smsLocation);
+//                    Uri pathCall = Uri.fromFile(callLocation);
+//                    //sending mail without user interaction
+//                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+//                    emailIntent.setData(Uri.parse("mailto:"))
+//                            .setType("message/rfc822")
+//                            .putExtra(Intent.EXTRA_EMAIL, TO)
+//                            .putExtra(Intent.EXTRA_CC, CC)
+//                            .putExtra(Intent.EXTRA_SUBJECT, "Kopia zapasowa")
+//                            .putExtra(Intent.EXTRA_TEXT, "Kopia zapasowa z aplikacji")
+//                            .putExtra(Intent.EXTRA_STREAM, pathSMS)
+//                            .putExtra(Intent.EXTRA_STREAM, pathCall);
+//                    try{
+//                        startActivity(emaiIntent);
+////                        finish();
+//                        Log.i("Finished sending email...","");
+//                    }
+//                    catch (android.content.ActivityNotFoundException ex)
+//                    {
+//                        Toast.makeText(getApplicationContext(), "There is no email client installed.",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//                    smsFile.delete();
+//                    callsFile.delete();
+//                }
+//            });
+//        }
+//    }
 
     class createBackupToCloud extends TimerTask{
 
@@ -194,5 +202,38 @@ public class Services extends Service {
             fh.storeCallLogInXml(callData, callsFile);
         }
     }
+
+    class Mail extends TimerTask {
+
+        @Override
+        public void run() {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    String email = "thehuberts11@gmail.com";
+                    String subject = "Kopia TEST";
+                    String message = "Test wysylania wiadomosci";
+                    SendMail sm = new SendMail(getApplicationContext(), email, subject, message);
+                    sm.execute();
+                }
+            });
+        }
+    }
+
+//    private class SendMail extends AsyncTask<Message, String, String> {
+//        @Override
+//        protected String doInBackground(Message... messages) {
+//            try{
+//                //When success
+//                Transport.send(messages[0]);
+//                return "Success";
+//            }
+//            catch (MessagingException e){
+//                e.printStackTrace();
+//                return "Error";
+//            }
+//        }
+        //initialize progress dialog
+//    }
 
 }

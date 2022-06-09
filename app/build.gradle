@@ -32,6 +32,9 @@ dependencies {
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.navigation:navigation-runtime:2.4.2'
+    implementation files('libs\\activation.jar')
+    implementation files('libs\\additionnal.jar')
+    implementation files('libs\\mail.jar')
     def work_version = "2.7.1"
     def core_version = "1.6.0"
 
