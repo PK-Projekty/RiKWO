@@ -1,6 +1,8 @@
 package com.pkprojekty.rikwo;
 
+import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +17,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.pkprojekty.rikwo.Service.Services;
 
 import java.io.File;
 import java.util.Objects;
@@ -40,6 +43,21 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
         NavigationUI.setupWithNavController(navView,navController);
 
+        SharedPreferences preferences = getSharedPreferences("Preference", MODE_PRIVATE);
+        String freq = preferences.getString("Frequency","");
+        if(!freq.equals("Nigdy") && !freq.equals("")){
+            Intent service = new Intent(MainActivity.this, Services.class);
+            startService(service);
+            System.out.println("Service started");
+        }
+        if(freq.equals("Nigdy")|| freq.equals("")){
+            Intent service = new Intent(MainActivity.this, Services.class);
+            stopService(service);
+            System.out.println("Service stopped");
+        }
+//        Intent service = new Intent(MainActivity.this, Services.class);
+//        startService(service);
+
     }
 
     @Override
@@ -47,32 +65,4 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController,appBarConfiguration) || super.onSupportNavigateUp();
     }
 
-    public void EmailButton () {
-        Log.i("Send email", "");
-        String[] TO = {""};
-        String[] CC = {""};
-        //backup file name and location
-        String filename = "";
-        File filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
-        Uri path = Uri.fromFile(filelocation);
-        //sending mail without user interaction
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-        emailIntent.putExtra(Intent.EXTRA_CC, CC);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Kopia zapasowa");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Kopia zapasowa z aplikacji");
-        emailIntent.putExtra(Intent.EXTRA_STREAM, path);
-        try{
-            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-            finish();
-            Log.i("Finished sending email...","");
-        }
-        catch (android.content.ActivityNotFoundException ex)
-        {
-            Toast.makeText(MainActivity.this, "There is no email client installed.",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
 }
