@@ -2,6 +2,7 @@ package com.pkprojekty.rikwo;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,8 +43,20 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
         NavigationUI.setupWithNavController(navView,navController);
 
-        Intent service = new Intent(MainActivity.this, Services.class);
-        startService(service);
+        SharedPreferences preferences = getSharedPreferences("Preference", MODE_PRIVATE);
+        String freq = preferences.getString("Frequency","");
+        if(!freq.equals("Nigdy") && !freq.equals("")){
+            Intent service = new Intent(MainActivity.this, Services.class);
+            startService(service);
+            System.out.println("Service started");
+        }
+        if(freq.equals("Nigdy")|| freq.equals("")){
+            Intent service = new Intent(MainActivity.this, Services.class);
+            stopService(service);
+            System.out.println("Service stopped");
+        }
+//        Intent service = new Intent(MainActivity.this, Services.class);
+//        startService(service);
 
     }
 

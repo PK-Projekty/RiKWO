@@ -63,16 +63,7 @@ public class Services extends Service {
         }else {
             timer = new Timer();
         }
-        SharedPreferences preferences = getSharedPreferences("Preference", MODE_PRIVATE);
-        freq = preferences.getString("Frequency","");
-        directory = preferences.getString("Directory","");
-        localization = preferences.getString("Localization","");
-        uriTree = preferences.getString("uriTree","");
-        callLogSwitchState = preferences.getBoolean("switchBackupCallLogUse",false);
-        smsSwitchState = preferences.getBoolean("switchBackupSmsUse", false);
-        email = preferences.getString("Email", "");
-        password = preferences.getString("Password","");
-
+        restoreSettings();
 
 //        Data data = new Data.Builder()
 //                .putString(KEY_TASK_DESC, "Hey im sending the work data")
@@ -96,7 +87,7 @@ public class Services extends Service {
                 s=0;
 
             if(localization.equals("Local"))
-                timer.scheduleAtFixedRate(new createLocalBackup(), 0, s*24*60*60*1000);
+                timer.scheduleAtFixedRate(new createLocalBackup(), 0, s*10*1000);
 //            if(localization.equals("E-mail"))
 //                timer.scheduleAtFixedRate(new sendEmail(), 0, s*2*1000);
 //            if(localization.equals("Chmura"))
@@ -114,57 +105,70 @@ public class Services extends Service {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    restoreSettings();
                     backup();
                     Toast.makeText(getApplicationContext(),"Wykonano kopie", Toast.LENGTH_SHORT).show();
                 }
             });
         }
-
     }
-//    class sendEmail extends TimerTask {
-//
-//        @Override
-//        public void run() {
-//            handler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    backup();
-//                    Log.i("Send email", "");
-//                    String[] TO = {"thehuberts11@gmail.com"};
-//                    String[] CC = {""};
-//                    //backup file name and location
-//                    String smsFileName = smsFile.toString();
-//                    String callFileName = callsFile.toString();
-//                    File smsLocation = new File(directory, smsFileName);
-//                    File callLocation = new File(directory, callFileName);
-//                    Uri pathSMS = Uri.fromFile(smsLocation);
-//                    Uri pathCall = Uri.fromFile(callLocation);
-//                    //sending mail without user interaction
-//                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
-//                    emailIntent.setData(Uri.parse("mailto:"))
-//                            .setType("message/rfc822")
-//                            .putExtra(Intent.EXTRA_EMAIL, TO)
-//                            .putExtra(Intent.EXTRA_CC, CC)
-//                            .putExtra(Intent.EXTRA_SUBJECT, "Kopia zapasowa")
-//                            .putExtra(Intent.EXTRA_TEXT, "Kopia zapasowa z aplikacji")
-//                            .putExtra(Intent.EXTRA_STREAM, pathSMS)
-//                            .putExtra(Intent.EXTRA_STREAM, pathCall);
-//                    try{
-//                        startActivity(emaiIntent);
-////                        finish();
-//                        Log.i("Finished sending email...","");
-//                    }
-//                    catch (android.content.ActivityNotFoundException ex)
-//                    {
-//                        Toast.makeText(getApplicationContext(), "There is no email client installed.",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-//                    smsFile.delete();
-//                    callsFile.delete();
-//                }
-//            });
-//        }
-//    }
+
+    private void restoreSettings(){
+        SharedPreferences preferences = getSharedPreferences("Preference", MODE_PRIVATE);
+        freq = preferences.getString("Frequency","");
+        directory = preferences.getString("Directory","");
+        localization = preferences.getString("Localization","");
+        uriTree = preferences.getString("uriTree","");
+        callLogSwitchState = preferences.getBoolean("switchBackupCallLogUse",false);
+        smsSwitchState = preferences.getBoolean("switchBackupSmsUse", false);
+        email = preferences.getString("Email", "");
+        password = preferences.getString("Password","");
+    }
+
+    class sendEmail extends TimerTask {
+
+        @Override
+        public void run() {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    backup();
+                    Log.i("Send email", "");
+                    String[] TO = {"thehuberts11@gmail.com"};
+                    String[] CC = {""};
+                    //backup file name and location
+                    String smsFileName = smsFile.toString();
+                    String callFileName = callsFile.toString();
+                    File smsLocation = new File(directory, smsFileName);
+                    File callLocation = new File(directory, callFileName);
+                    Uri pathSMS = Uri.fromFile(smsLocation);
+                    Uri pathCall = Uri.fromFile(callLocation);
+                    //sending mail without user interaction
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    emailIntent.setData(Uri.parse("mailto:"))
+                            .setType("message/rfc822")
+                            .putExtra(Intent.EXTRA_EMAIL, TO)
+                            .putExtra(Intent.EXTRA_CC, CC)
+                            .putExtra(Intent.EXTRA_SUBJECT, "Kopia zapasowa")
+                            .putExtra(Intent.EXTRA_TEXT, "Kopia zapasowa z aplikacji")
+                            .putExtra(Intent.EXTRA_STREAM, pathSMS)
+                            .putExtra(Intent.EXTRA_STREAM, pathCall);
+                    try{
+                        startActivity(Intent.createChooser(emailIntent, "Wybierz klienta poczty"));
+//                        finish();
+                        Log.i("Finished sending email...","");
+                    }
+                    catch (android.content.ActivityNotFoundException ex)
+                    {
+                        Toast.makeText(getApplicationContext(), "There is no email client installed.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    smsFile.delete();
+                    callsFile.delete();
+                }
+            });
+        }
+    }
 
     class createBackupToCloud extends TimerTask{
 
@@ -173,6 +177,7 @@ public class Services extends Service {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    restoreSettings();
                     backup();
 
                 }

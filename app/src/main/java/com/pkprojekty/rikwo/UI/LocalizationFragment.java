@@ -280,6 +280,7 @@ public class LocalizationFragment extends Fragment {
                         editor.putBoolean("buttonDirectory", buttonChooseBackupLocalDirectory.isEnabled())
                                 .putString("Localization",localizationtv.getText().toString())
                                 .apply();
+                        getGoogleAccount();
                         Toast.makeText(getActivity(), "Zapisano dane", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -397,7 +398,7 @@ public class LocalizationFragment extends Fragment {
 
     public void getGoogleAccount() {
         AccountManager am = AccountManager.get(getContext());
-        Account[] accounts = am.getAccountsByType("com.google"); // gmail.com is within google.com type
+        Account[] accounts = am.getAccountsByType("gmail.com"); // gmail.com is within google.com type
         String pass="";
         String mail="";
         if(accounts.length>0){
@@ -412,7 +413,10 @@ public class LocalizationFragment extends Fragment {
             editor.putString("GoogleLoginname", mail)
                     .putString("GooglePass", pass)
                     .apply();
+
         }
+        System.out.println(mail);
+        System.out.println(pass);
 
     }
     public void getMsAccount() {

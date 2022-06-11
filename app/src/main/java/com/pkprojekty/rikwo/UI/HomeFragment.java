@@ -374,7 +374,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void restoreSwitchStateFromAppPreferences(String key, SwitchMaterial switchMaterial) {
-        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = requireActivity().getSharedPreferences("Preference",MODE_PRIVATE);
         if (preferences.contains(key)) {
             boolean switchState = preferences.getBoolean(key,false);
             switchMaterial.setChecked(switchState);
@@ -382,7 +382,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void storeSwitchStateInAppPreferences(String key, SwitchMaterial switchMaterial) {
-        SharedPreferences preferences = requireActivity().getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = requireActivity().getSharedPreferences("Preference",MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(key,switchMaterial.isChecked());
         editor.apply();
